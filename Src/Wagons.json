@@ -1,0 +1,349 @@
+{
+  "Locomotive": {
+    "files": ["resources/tr_wagons/trn_locomotive_tr.png"],
+    "dimensions": [256, 66],
+    "offset": [[128,60]],
+    
+    "cargo": "",
+    "units": "",
+    "capacity": 0,
+    "weight": 500
+  },
+  "Locomotive_vu": {
+    "files": ["resources/tr_wagons/trn_locomotive_vu.png"],
+    "dimensions": [192, 107],
+    "offset": [[96,100]],
+    
+    "cargo": "",
+    "units": "",
+    "capacity": 0,
+    "weight": 8000
+  },
+  "Tender": {
+    "files": ["resources/tr_wagons/trn_tender_tr.png"],
+    "dimensions": [128, 44],
+    "offset": [[64,40]],
+    
+    "cargo": "Coal",
+    "units": "tons",
+    "capacity": 1000,
+    "weight": 100
+  },
+  "Tender_vu": {
+    "files": ["resources/tr_wagons/trn_tender_vu.png"],
+    "dimensions": [64, 44],
+    "offset": [[32,40]],
+    
+    "cargo": "Coal",
+    "units": "tons",
+    "capacity": 1000,
+    "weight": 1000
+  },
+  "Merchandise": {
+    "files": ["resources/tr_wagons/trn_merchandise_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+    
+    "cargo": "Any",
+    "units": "",
+    "capacity": 3,
+    "weight": 100
+  },
+  "Merchandise_vu": {
+    "files": ["resources/tr_wagons/trn_merchandise_vu.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+    
+    "cargo": "Any",
+    "units": "",
+    "capacity": 3,
+    "weight": 500
+  },
+  "Livestock": {
+    "files": ["resources/tr_wagons/trn_livestock_tr.png"],
+    "dimensions": [128, 52],
+    "offset": [[64,48]],
+    
+    "cargo": "Livestock",
+    "units": "",
+    "capacity": 3,
+    "weight": 100
+  },
+  "Livestock_vu": {
+    "files": ["resources/tr_wagons/trn_livestock_vu.png"],
+    "dimensions": [128, 52],
+    "offset": [[64,48]],
+    
+    "cargo": "Livestock",
+    "units": "",
+    "capacity": 3,
+    "weight": 500
+  },
+  "Cannon": {
+    "files": ["resources/tr_wagons/trn_cannon_tr.png"],
+    "dimensions": [128, 58],
+    "offset": [[64,54]],
+    
+    "capacity": 50,
+    "units": "",
+    "cargo": "cannonballs",
+    "weight": 100
+  },
+  "Cannon_vu": {
+    "files": ["resources/tr_wagons/trn_cannon_vu.png"],
+    "dimensions": [128, 58],
+    "offset": [[64,54]],
+    
+    "cargo": "cannonballs",
+    "units": "cannonballs",
+    "capacity": 50,
+    "weight": 1000
+  },
+  "Machinegun": {
+    "files": ["resources/tr_wagons/trn_machinegun_tr.png"],
+    "dimensions": [128, 50],
+    "offset": [[64,46]],
+    
+    "cargo": "bullets",
+    "units": "bullets",
+    "capacity": 100,
+    "weight": 100
+  },
+  "Machinegun_vu": {
+    "files": ["resources/tr_wagons/trn_machinegun_vu.png"],
+    "dimensions": [128, 50],
+    "offset": [[64,46]],
+    
+    "cargo": "bullets",
+    "units": "bullets",
+    "capacity": 100,
+    "weight": 1000
+  },
+  "Command": {
+    "files": ["resources/tr_wagons/trn_command_control_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+
+    "cargo": "",
+    "units": "",
+    "capacity": 0,
+    "weight": 100
+  },
+  "Command_vu": {
+    "files": ["resources/tr_wagons/trn_command_control_vu.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "",
+    "units": "",
+    "capacity": 0,
+    "weight": 1000
+  },
+  "Barracks": {
+    "files": ["resources/tr_wagons/trn_barracks_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,44]],
+    
+    "cargo": "soldiers",
+    "units": "soldiers",
+    "capacity": 50,
+    "weight": 100
+  },
+  "Barracks_vu": {
+    "files": ["resources/tr_wagons/trn_barracks_vu.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "soldiers",
+    "units": "soldiers",
+    "capacity": 50,
+    "weight": 1000
+  },
+  "Wreck": {
+    "files": ["resources/tr_wagons/trn_wreck2_tr.png"],
+    "dimensions": [128, 52],
+    "offset": [[0,12]],
+
+    "cargo": "",
+    "units": "",
+    "capacity": 0,
+    "weight": 10
+  },
+  "Wreck_vu": {
+    "files": ["resources/tr_wagons/trn_wreck2_vu.png"],
+    "dimensions": [128, 52],
+    "offset": [[0,51]],
+    
+    "cargo": "",
+    "units": "",
+    "capacity": 0,
+    "weight": 1000
+  },
+
+  "OilTanker": {
+    "files": [
+      "resources/tr_wagons/18502_zi4.png",
+      "resources/tr_wagons/18502_zi4.png",
+      "resources/tr_wagons/18502_zi4.png"
+    ],
+    "dimensions": [194, 61],
+    "offset": [[97,52], [97,52], [97,52]],
+    
+    "cargo": "Oil",
+    "units": "liters",
+    "capacity": 1000,
+    "weight": 100
+  },
+  "Wood": {
+    "files": [
+      "resources/tr_wagons/15_zi4.png",
+      "resources/tr_wagons/23_zi4.png",
+      "resources/tr_wagons/27_zi4.png"
+    ],
+    "dimensions": [136, 68],
+    "offset": [[0,42], [0,42], [0,42]],
+    
+    "cargo": "Wood",
+    "units": "tons",
+    "capacity": 1000,
+    "weight": 100
+  },
+  "Iron": {
+    "files": [
+      "resources/tr_wagons/iron1.png",
+      "resources/tr_wagons/iron2.png",
+      "resources/tr_wagons/iron3.png"
+    ],
+    "name": "Iron Wagon",
+    "dimensions": [116, 68],
+    "offset": [[58,54], [58,60], [58,60]],
+    
+    "cargo": "Iron",
+    "units": "tons",
+    "capacity": 1500,
+    "weight": 100
+  },
+  "Copper": {
+    "files": [
+      "resources/tr_wagons/copper1.png",
+      "resources/tr_wagons/copper2.png",
+      "resources/tr_wagons/copper3.png"
+    ],
+    "name": "Copper Wagon",
+    "dimensions": [116, 68],
+    "offset": [[0,40], [0,40], [0,40]],
+    
+    "cargo": "Copper",
+    "units": "tons",
+    "capacity": 1500,    
+    "weight": 1000
+  },
+  "Container": {
+    "files": [
+      "resources/tr_wagons/13555_zi4.png",
+      "resources/tr_wagons/13563_zi4.png",
+      "resources/tr_wagons/13571_zi4.png"
+    ],
+    "name": "Container Wagon",
+    "dimensions": [299, 60],
+    "offset": [[150,58], [150,60], [150,52]],
+    
+    "cargo": "Container",
+    "units": "containers",
+    "capacity": 4,
+    "weight": 1000
+  },
+
+
+
+
+  "liquid1": {
+    "files": ["resources/tr_wagons/18349_zi4.png"],
+    "dimensions": [153, 68],
+    "offset": 10
+  },
+
+  "Drill": {
+    "files": [
+      "resources/tr_wagons/trn_drill_tr.png"],
+    "dimensions": [128, 48],
+    "offset": [35],
+    "capacity": 0,
+    "units": "",
+    "cargo": "",
+    "weight": 1000
+  },
+  "liquid3": {
+    "files": ["resources/tr_wagons/18482_zi4.png"],
+    "dimensions": [208, 68],
+    "offset": 10
+  },
+  "liquid4": {
+    "files": ["resources/tr_wagons/18636_zi4.png"],
+    "dimensions": [208, 68],
+    "offset": 10
+  },
+
+  
+  "Livestock2": {
+    "files": ["resources/tr_wagons/255_zi4.png",
+    "resources/tr_wagons/259_zi4.png",
+    "resources/tr_wagons/267_zi4.png"],
+    "dimensions": [128, 52],
+    "offset": [45,45,45],
+    "capacity": 25,
+    "units": "",
+    "cargo": "Livestock",
+    "weight": 500
+  },
+  "Iron2": {
+    "files": ["resources/tr_wagons/788_zi4.png"],
+    "dimensions": [180, 68],
+    "offset": 16,
+    "capacity": 1500,
+    "units": "Tons",
+    "cargo": "Iron",
+    "weight": 1000
+  },
+
+  "ore3": {
+    "files": ["resources/tr_wagons/155_zi4.png"],
+    "dimensions": [136, 68],
+    "offset": 10
+  },
+  "diamonds": {
+    "files": ["resources/tr_wagons/331_zi4.png"],
+    "dimensions": [120, 68],
+    "offset": 10
+  },
+  "fenced": {
+    "files": ["resources/tr_wagons/255_zi4.png"],
+    "dimensions": [136, 68],
+    "offset": 10
+  },
+  "plattform1": {
+    "files": ["resources/tr_wagons/83_zi4.png"],
+    "dimensions": [136, 68],
+    "offset": 10
+  },
+  "metal": {
+    "files": ["resources/tr_wagons/83_zi4.png"],
+    "dimensions": [136, 68],
+    "offset": 10
+  },
+  "mail": {
+    "files": ["resources/tr_wagons/18659_zi4.png"],
+    "dimensions": [136, 52],
+    "offset": 25
+  },
+  "passengers": {
+    "files": ["resources/tr_wagons/347_zi4.png"],
+    "dimensions": [136, 52],
+    "offset": 10
+  },
+  "water": {
+    "files": ["resources/tr_wagons/291_zi4.png"],
+    "dimensions": [136, 52],
+    "offset": 8
+  }
+}

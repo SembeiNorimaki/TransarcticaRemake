@@ -1,0 +1,102 @@
+{
+  "Barcelona": {
+    "name": "Barcelona",
+    "resources": {
+      "Oil": {
+        "Qty": 2,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Meat": {
+        "Qty": 3,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Container": {
+        "Qty": 1,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Iron": {
+        "Qty": 4,
+        "Sell": 2,
+        "Buy": 1
+      }
+    }
+  },
+  "Madrid": {
+    "name": "Madrid",
+    "resources": {
+      "Resource1": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource2": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource3": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource4": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      }
+    }
+  },
+  "Valencia": {
+    "name": "Valencia",
+    "resources": {
+      "Resource1": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource2": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource3": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource4": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      }
+    }
+  },
+  "Sevilla": {
+    "name": "Sevilla",
+    "resources": {
+      "Resource1": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource2": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource3": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Resource4": {
+        "Qty": 10,
+        "Sell": 2,
+        "Buy": 1
+      }
+    }
+  }
+}

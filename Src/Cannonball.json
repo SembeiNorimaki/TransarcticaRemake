@@ -1,0 +1,14 @@
+{
+  "move": [
+    "resources/cannonball/cannon_ball.png"
+  ],
+  "explode": [
+    "resources/cannonball/1.png",
+    "resources/cannonball/2.png",
+    "resources/cannonball/3.png",
+    "resources/cannonball/4.png",
+    "resources/cannonball/5.png",
+    "resources/cannonball/6.png",
+    "resources/cannonball/7.png"
+  ]
+}

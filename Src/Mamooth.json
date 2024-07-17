@@ -1,0 +1,22 @@
+{
+  "idle": {
+    "0":   ["resources/units/mamooth_E.png" ],
+    "45":  ["resources/units/mamooth_NE.png"],
+    "90":  ["resources/units/mamooth_N.png" ],
+    "135": ["resources/units/mamooth_NW.png"],
+    "180": ["resources/units/mamooth_W.png" ],
+    "225": ["resources/units/mamooth_SW.png"],
+    "270": ["resources/units/mamooth_S.png" ],
+    "315": ["resources/units/mamooth_SE.png"]
+  },
+  "move": {
+    "0":   ["resources/units/mamooth_E.png" ],
+    "45":  ["resources/units/mamooth_NE.png"],
+    "90":  ["resources/units/mamooth_N.png" ],
+    "135": ["resources/units/mamooth_NW.png"],
+    "180": ["resources/units/mamooth_W.png" ],
+    "225": ["resources/units/mamooth_SW.png"],
+    "270": ["resources/units/mamooth_S.png" ],
+    "315": ["resources/units/mamooth_SE.png"]
+  }
+}

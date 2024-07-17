@@ -1,0 +1,10 @@
+{
+    "fuel": "fuel.png",
+    "gold": "gold.png",
+    "frame": "frame.png",
+    "button_map": "button_minimap.png",
+    "button_find": "button_findengine.png",
+    "button_book": "button_save.png",
+    "button_play":"play.png",
+    "button_pause": "pause.png"
+}
