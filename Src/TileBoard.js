@@ -32,6 +32,14 @@ class TileBoard {
   }
 
 
+  buildCity(boardPos) {
+    this.board[boardPos.y][boardPos.x].setTileId(0xA0);
+  }
+  buildIndustry(boardPos) {
+    this.board[boardPos.y][boardPos.x].setTileId(0xFE);
+  }
+
+
   showtilesDataCity(cameraPos) {
     let topLeft = cameraToBoard(cameraPos).sub(createVector(14,0));
     let row0 = topLeft.y;
@@ -81,23 +89,19 @@ class TileBoard {
     let col, row, screenPos;
     let startRow = row0;
     
+    let orderIdx = 0;
+
     for (let j=0; j<15;j++) {
       col = col0;
       row = startRow;
       for (let i=0; i<15; i++) {
         if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
           screenPos = boardToScreen(createVector(col, row), cameraPos)  
-          screenPos.add(
-            tileCodes[0x00].offset[0],
-            tileCodes[0x00].offset[1]
-          );
-          canvas.image(tileCodes[0x00].img, 
-            screenPos.x - TILE_WIDTH_HALF, 
-            screenPos.y - TILE_HEIGHT_HALF);
-
+          Tile.draw(mainCanvas, 0x00, screenPos);
           //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
         } else {
-          this.board[row][col].show(canvas, row, col, cameraPos);
+          this.board[row][col].show(canvas, cameraPos, orderIdx);
+          orderIdx++;
         }
         col++;
         row--;
@@ -107,16 +111,11 @@ class TileBoard {
       for (let i=0; i<14; i++) {
         if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
           screenPos = boardToScreen(createVector(col, row), cameraPos);
-          screenPos.add(
-            tileCodes[0x00].offset[0],
-            tileCodes[0x00].offset[1]
-          );
-          canvas.image(tileCodes[0x00].img,
-            screenPos.x - TILE_WIDTH_HALF, 
-            screenPos.y - TILE_HEIGHT_HALF)
+          Tile.draw(mainCanvas, 0x00, screenPos);
           //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
         } else {
-          this.board[row][col].show(canvas, row, col, cameraPos);
+          this.board[row][col].show(canvas, cameraPos, orderIdx);
+          orderIdx++;
         }
         col++;
         row--;

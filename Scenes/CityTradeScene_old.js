@@ -14,6 +14,10 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+class TradeScene {
+  
+}
+
 class CityTradeScene {
   constructor(cityName) {
     this.cityName = cityName;
@@ -60,18 +64,7 @@ class CityTradeScene {
         ));
         wagon.fillWagon();
         this.buyableWagons.push(wagon);
-
-
-        // this.clickableObjects.push(new ClickableRegion(
-        //   createVector(1200 + i*wagonsData[wagonName].dimensions[0] - wagonsData[wagonName].offset.at(-1)[0] - 140*row, 
-        //     420 + row*TILE_HEIGHT_HALF*2 - wagonsData[wagonName].offset.at(-1)[1]), // position
-        //   createVector(100,100), // halfsize
-        //   [wagonsData[wagonName].img.at(-1), wagonsData[wagonName].img.at(-1)], // image
-        //   resourceName,// text
-        //   ""// callback
-        // ));
       }
-
       row++;
     }
   }
@@ -100,12 +93,36 @@ class CityTradeScene {
   // Move train left and right
   processKey(key) {
     if (key == "ArrowLeft") {
-      console.log("Left arrow")
       this.horizontalTrain.gearDown();
     } else if (key == "ArrowRight") {
-      console.log("Right arrow")
       this.horizontalTrain.gearUp();
     }
+  }
+
+  buyWagon() {
+    // Add wagon to the train (it also updates the weight)
+    game.playerTrain.addWagon(this.buyableWagons[this.selectedBuyableWagonIdx].name, 0);
+    // Fill the wagon
+    game.playerTrain.wagons.at(-1).fillWagon();
+    // Substract wagon cost from player gold
+    game.playerTrain.gold -= citiesData[this.cityName].resources[this.buyableWagons[this.selectedBuyableWagonIdx].cargo].Buy;
+    // remove the wagon from the city
+    this.buyableWagons[this.selectedBuyableWagonIdx] = null;
+    // deselect the removed wagon
+    this.selectedBuyableWagonIdx = null;
+    // hide panel
+    this.infoPanel.active = false;
+  }
+
+  sellWagon() {
+    // Add selling price to player's gold
+    game.playerTrain.gold += citiesData[this.cityName].resources[game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo].Sell;
+    // Remove wagon from the train (it also updates the weight)
+    game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
+    // deselect wagon
+    this.selectedTrainWagonIdx = null;
+    // hide panel
+    this.infoPanel.active = false;
   }
 
   onClick(mousePos) {    
@@ -121,15 +138,15 @@ class CityTradeScene {
         let price = "N/A";
         let button = null;
         if(wagon.cargo in citiesData["Barcelona"].resources) {
-          price = citiesData["Barcelona"].resources[wagon.cargo].Buy
+          price = citiesData["Barcelona"].resources[wagon.cargo].Sell
           button = "Sell";
         }
 
+        // display wagon in the panel
         let infoPanelData = wagon.infoPanelData;
         infoPanelData.lines.push(`Price: ${price}`);
         infoPanelData.buttons = button;
         this.infoPanel.fillData(infoPanelData);
-
       }
     } 
 
@@ -138,21 +155,13 @@ class CityTradeScene {
       let buttonClicked = this.infoPanel.onClick(mousePos);
       if (buttonClicked) {
         if (this.selectedBuyableWagonIdx !== null) {
-          console.log("buying a wagon")
-          game.playerTrain.addWagon(this.buyableWagons[this.selectedBuyableWagonIdx].name, 0);
-          game.playerTrain.wagons.at(-1).fillWagon();
-          this.buyableWagons[this.selectedBuyableWagonIdx] = null;
-          this.selectedBuyableWagonIdx = null;
-          this.infoPanel.active = false;
+          console.log("buying a wagon");
+          this.buyWagon();
         } else if (this.selectedTrainWagonIdx !==null) {
-          console.log("selling a wagon")
-          game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
-          this.selectedTrainWagonIdx = null;
-          this.infoPanel.active = false;
+          console.log("selling a wagon");
+          this.sellWagon();
+          
         }
-        
-        //game.playerTrain.wagons.at(-1).fillWagon();
-        //this.industry.industryAvailableQty--;
       }
     }
 
@@ -224,13 +233,6 @@ class CityTradeScene {
     }
 
     this.horizontalTrain.update();
-
-    // this.vel += this.acc;
-    // if (this.vel > this.maxVel) {
-    //   this.vel = this.maxVel;
-    //   this.acc = 0;
-    // }
-    // this.trainPosition.x += this.vel;
   }
 
   showHud() {
@@ -248,17 +250,8 @@ class CityTradeScene {
 
   show() {
     mainCanvas.image(this.backgroundImg, 0, 0);    
-    
-    // mainCanvas.image(wagonsData["Iron"].img[1], 750, 570);
-    // mainCanvas.image(wagonsData["Iron"].img[2], 900, 570);
-    // mainCanvas.image(wagonsData["Iron"].img[2], 1050, 570);
-    // mainCanvas.image(wagonsData["Copper"].img[1], 800, 470);
-    // mainCanvas.image(wagonsData["Copper"].img[2], 950, 470);
-    // mainCanvas.image(wagonsData["Copper"].img[2], 1100, 470);
-
     this.trafficLight.show();
     this.horizontalTrain.show(createVector(0,0));
-    
 
     let i=0;
     for (let wagon of this.buyableWagons) {
@@ -277,12 +270,20 @@ class CityTradeScene {
     }
     this.infoPanel.show();
 
-    // mainCanvas.push();
-    // mainCanvas.stroke("red")
-    // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
-    // mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
-    // mainCanvas.pop();
+    // show red debug lines
+    mainCanvas.push();
+    mainCanvas.stroke("red")
+    mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
+    mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
+    mainCanvas.line(0,750,mainCanvasDim[0],750)
+    mainCanvas.pop();
 
     this.showHud();
+  }
+}
+
+class IndustryTradeScene extends CityTradeScene {
+  constructor() {
+
   }
 }

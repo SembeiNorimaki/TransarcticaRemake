@@ -4,8 +4,8 @@
     "resources": {
       "Oil": {
         "Qty": 2,
-        "Sell": 2,
-        "Buy": 1
+        "Sell": 20,
+        "Buy": 10
       },
       "Meat": {
         "Qty": 3,
@@ -21,6 +21,23 @@
         "Qty": 4,
         "Sell": 2,
         "Buy": 1
+      }
+    },
+    "objectives": {
+      "title": "Deliver 500 tonnes of grain and 400 tonnes of coal to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of grain and 400 tonnes of coal to survive the winter."  
+      ],
+      "resources": {
+        "Grain": {
+          "needed": 500,
+          "delivered": 0
+        },
+        "Coal": {
+          "needed": 400,
+          "delivered": 0
+        }
       }
     }
   },
@@ -47,7 +64,8 @@
         "Sell": 2,
         "Buy": 1
       }
-    }
+    },
+    "objectives": {}
   },
   "Valencia": {
     "name": "Valencia",
@@ -72,7 +90,8 @@
         "Sell": 2,
         "Buy": 1
       }
-    }
+    },
+    "objectives": {}
   },
   "Sevilla": {
     "name": "Sevilla",
@@ -97,6 +116,7 @@
         "Sell": 2,
         "Buy": 1
       }
-    }
+    },
+    "objectives": {}
   }
 }

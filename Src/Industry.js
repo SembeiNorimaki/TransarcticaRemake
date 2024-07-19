@@ -15,10 +15,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Industry {
-  constructor(position, name) {
-    this.position = position;
+  constructor(industryData) {
+    this.name = industryData.name;
+    this.position = null;
     this.size = [8*TILE_WIDTH_HALF, 14*TILE_HEIGHT_HALF];
-    this.name = "Chemical";
     this.resourceName = "Iron";
     this.accepts = "Copper"
     this.wagonType = "Iron";
@@ -43,9 +43,9 @@ class Industry {
 
     let screenPos = boardToScreen(this.position, cameraPos);
     mainCanvas.image(
-      industryData[this.name].img2, 
-      screenPos.x-industryData[this.name].offset[0]*2, 
-      screenPos.y-industryData[this.name].offset[1]*3
+      industriesInfo[this.name].img2, 
+      screenPos.x-industriesInfo[this.name].offset[0]*2, 
+      screenPos.y-industriesInfo[this.name].offset[1]*3
     );
     mainCanvas.circle(screenPos.x, screenPos.y, 20);
     mainCanvas.rect(screenPos.x-this.size[0]/2,screenPos.y-this.size[1], this.size[0], this.size[1])

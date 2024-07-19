@@ -1,7 +1,6 @@
 {
-  "events": {
-    "15,4": "Taoudeni",
-    "27,4": "Casablanca",
-    "2,2":  "Chemical1"     
-  }
+  "4,100": "Madrid",
+  "4,700": "Barcelona",
+  "9,100": "Sevilla",
+  "9,700": "Valencia"
 }

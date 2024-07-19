@@ -19,11 +19,20 @@ class NavigationScene {
     this.selectedIntersection = null;
     this.camera = new Camera(boardToCamera(createVector(1,0)));
     this.tileBoard = new TileBoard(mapBoard);
-    this.locomotive = new Locomotive(createVector(8, 4), 180.0);
+    this.locomotive = new Locomotive(createVector(11, 4), 180.0);
   }
 
   initialize() {
-    
+    // populate cities in the tileBoard
+    for (let [locationStr, name] of Object.entries(citiesLocations)) {
+      let aux = locationStr.split(",")
+      this.tileBoard.buildCity(createVector(int(aux[0]), int(aux[1])));
+    }
+    for (let [locationStr, name] of Object.entries(industriesLocations)) {
+      let aux = locationStr.split(",")
+      this.tileBoard.buildIndustry(createVector(int(aux[0]), int(aux[1])));
+    }
+
   }
 
   processKey(key) {
@@ -160,13 +169,13 @@ class NavigationScene {
 
 
     // show cities
-    for (let [loc, name] of Object.entries(citiesLocations)) {
-      let pos = loc.split(',');
-      pos = createVector(int(pos[0]), int(pos[1]));
-      let pos2 = boardToScreen(pos, this.camera.position);
-      //pos2.sub(tileCodes[0xA0].offset)
-      Tile.draw(mainCanvas, 0xA0, pos2);
-    }
+    // for (let [loc, name] of Object.entries(citiesLocations)) {
+    //   let pos = loc.split(',');
+    //   pos = createVector(int(pos[0]), int(pos[1]));
+    //   let pos2 = boardToScreen(pos, this.camera.position);
+    //   //pos2.sub(tileCodes[0xA0].offset)
+    //   //Tile.draw(mainCanvas, 0xA0, pos2);
+    // }
 
     // show the center of the screen in red lines
 

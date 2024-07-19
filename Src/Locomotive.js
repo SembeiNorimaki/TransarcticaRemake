@@ -63,22 +63,6 @@ class Locomotive {
     }
   }
 
-  // showHorizontalTrain(pos) {
-  //   let auxPos = pos.copy()
-  //   this.wagons[0].setPos(pos);
-  //   this.wagons[0].showHorizontal();
-      
-  //   for (let i=1; i<this.wagons.length; i++) {
-  //     auxPos.x -= this.wagons[i].halfSize.x*2+5;
-  //     this.wagons[i].setPos(auxPos);
-  //     this.wagons[i].showHorizontal();
-  //     //mainCanvas.textAlign(CENTER, CENTER);
-  //     mainCanvas.text(`${this.wagons[i].usedSpace} / ${this.wagons[i].capacity}`, 
-  //       auxPos.x+this.wagons[i].halfSize.x, auxPos.y + 30);   
-  //     //mainCanvas.textAlign(LEFT);
-  //   }
-  // }
-
   checkFrontSensor() {
     let deltaX = this.currentTileFrontSensor.x - this.prevTileFrontSensor.x;
     let deltaY = this.currentTileFrontSensor.y - this.prevTileFrontSensor.y;
@@ -244,8 +228,8 @@ class Locomotive {
     mainCanvas.image(locomotiveData[this.orientation.toString()].imgList[this.spriteIdx], 
     this.screenPos.x+locomotiveData[this.orientation.toString()].offset[0], 
     this.screenPos.y+locomotiveData[this.orientation.toString()].offset[1]);
-    mainCanvas.circle(this.screenPos.x, this.screenPos.y, 10)
+    // mainCanvas.circle(this.screenPos.x, this.screenPos.y, 10)
     let screenPos2 = boardToScreen(this.frontSensor, game.navigationScene.camera.position);
-    mainCanvas.circle(screenPos2.x, screenPos2.y, 10)
+    // mainCanvas.circle(screenPos2.x, screenPos2.y, 10)
   }
 }

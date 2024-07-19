@@ -58,7 +58,14 @@ class Tile {
     "Rail_BDc" : {45: "D", 225: "B"},
     "Rail_CD" :  {135: "C", 315: "D"},
     "Rail_CDa" : {135: "C", 315: "D"},
-    "Rail_CDb" : {135: "C", 315: "D"}    
+    "Rail_CDb" : {135: "C", 315: "D"},
+    
+    "Bridge_A" : {180: "A", 0: "D"},
+    "Bridge_D" : {180: "A", 0: "D"},
+    "Bridge_AD" : {180: "A", 0: "D"},
+    "Bridge_B" : {90: "C", 270: "B"},
+    "Bridge_C" : {90: "C", 270: "B"},
+    "Bridge_BC" : {90: "C", 270: "B"},
   }
 
   static entryToOrientation = {
@@ -79,7 +86,14 @@ class Tile {
     "Rail_BDc" : {"D": 225, "B": 45},
     "Rail_CD" :  {"C": 315, "D": 135},
     "Rail_CDa" : {"C": 315, "D": 135},
-    "Rail_CDb" : {"C": 315, "D": 135}    
+    "Rail_CDb" : {"C": 315, "D": 135},
+    
+    "Bridge_A" :  {"A": 0, "D": 180},
+    "Bridge_D" :  {"A": 0, "D": 180},
+    "Bridge_AD" : {"A": 0, "D": 180},
+    "Bridge_B" :  {"B": 90, "C": 270},
+    "Bridge_C" :  {"B": 90, "C": 270},
+    "Bridge_BC" : {"B": 90, "C": 270},
   }
 
   static sideToDelta = {
@@ -105,6 +119,10 @@ class Tile {
       tileCodes[tileId].img, 
       screenPos.x - TILE_WIDTH_HALF, 
       screenPos.y - TILE_HEIGHT_HALF);
+  }
+
+  static draw2D(canvas, tileId, screenPos) {
+    canvas.rect(screenPos.x-10, screenPos.y-10, 20, 20);
   }
 
   static drawOutline(canvas, screenPos) {
@@ -167,16 +185,21 @@ class Tile {
     canvas.pop();
   }
 
-  constructor(position, tileId) {
+  constructor(boardPosition, tileId) {
+    this.tileId = null;
+    this.tileName = null;
+    this.offset = null;
+    this.img = null;
+
     this.setTileId(tileId);
-    this.position = position;
+
+    this.boardPosition = boardPosition;
     this.isSelected = false;
     this.isRail = this.tileName.startsWith("Rail");
     this.isIntersection = this.tileName in Tile.tileChanges;
     
   }
 
-  
   setTileId(tileId) {
     this.tileId = tileId;
     this.tileName = tileCodes[tileId].imgName;
@@ -192,41 +215,45 @@ class Tile {
     }
   }
 
-  show(canvas, row, col, cameraPos) {
-    let screenPos = boardToScreen(createVector(col, row), cameraPos);    
-    
+  show(canvas, cameraPos, auxText) {
+    let screenPos = boardToScreen(this.boardPosition, cameraPos);    
+
+    // Bridges need 
     if (this.tileId == 0x50) {
       Tile.draw(mainCanvas, 0x00, screenPos.copy());
-      Tile.draw(mainCanvas, 0x50, screenPos.copy());
-      return;
     } else if (this.tileId == 0x51) {
       Tile.draw(mainCanvas, 0x02, screenPos.copy());
-      Tile.draw(mainCanvas, 0x51, screenPos.copy());
-      return;
     } else if (this.tileId == 0x52) {
       Tile.draw(mainCanvas, 0x05, screenPos.copy());
-      Tile.draw(mainCanvas, 0x52, screenPos.copy());
+    }
+    else if (this.tileId == 0x53) {
+      Tile.draw(mainCanvas, 0x00, screenPos.copy());
+    } else if (this.tileId == 0x54) {
+      Tile.draw(mainCanvas, 0x03, screenPos.copy());
+    } else if (this.tileId == 0x55) {
+      Tile.draw(mainCanvas, 0x04, screenPos.copy());
+    }
+    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF) {
+      Tile.draw(canvas, 0x01, screenPos);
+    }
+    
+    if (this.tileId == 0xFE) {
+      Tile.draw(canvas, 0x00, screenPos);
+      let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
+      if (posStr in industriesLocations) {
+        
+        canvas.image(industriesInfo[game.industries[industriesLocations[posStr]].name].imgNav,
+          screenPos.x - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[0], 
+          screenPos.y - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[1]);
+        
+        // Tile.draw(canvas, 0x02, screenPos);
+      }
       return;
     }
 
-    // if (this.tileId >= 0xA0) {
-    //   canvas.image(
-    //     tileCodes[0x01].img, 
-    //     screenPos.x - TILE_WIDTH_HALF, 
-    //     screenPos.y - TILE_HEIGHT_HALF);
-    // } 
-
-    screenPos.add(
-      tileCodes[this.tileId].offset[0],
-      tileCodes[this.tileId].offset[1]
-    );
-
-    canvas.image(
-      tileCodes[this.tileId].img, 
-      screenPos.x - TILE_WIDTH_HALF, 
-      screenPos.y - TILE_HEIGHT_HALF);
-    
-    canvas.text(this.position.array(), screenPos.x, screenPos.y); 
+    Tile.draw(canvas, this.tileId, screenPos);
+    // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
+    canvas.text(auxText, screenPos.x, screenPos.y); 
 
     if (this.isSelected) {
       Tile.drawOutline(canvas, screenPos);

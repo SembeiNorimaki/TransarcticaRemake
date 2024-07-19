@@ -16,7 +16,11 @@
 
 class City {
   constructor(cityData) {
-    this.cityData = cityData;
+    // this.cityData = cityData;
     this.name = cityData.name;
+    this.resources = cityData.resources;
+    this.objectiveData = cityData.objectives;
+
+    this.objective = new Objective(this.objectiveData.title, this.objectiveData.summary);
   }  
 }

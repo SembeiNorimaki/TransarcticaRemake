@@ -41,7 +41,7 @@ let hudData = {};
 // let roadsData = {};
 let locomotiveData = {};
 let citiesData = {}
-let industryData = {};
+let industriesData = {};
 let trafficLightData = {};
 let cannonballData = {};
 let unitsData = {};
@@ -50,6 +50,8 @@ let unitsData = {};
 let events;
 let industriesLocations = {};
 let citiesLocations = {};
+
+let charactersData = {};
 
 let mapFile = "maps/map_small3.txt";
 
@@ -93,14 +95,50 @@ function showTrainSummary() {
   pop();
 }
 
-
 function preload() {
   
 
-  // Cities into CityData
+  charactersData.Yuri = loadImage('resources/misc/comrad.png');
+  charactersData.Trader = loadImage('resources/misc/trader2.png');
+
+
+  // Cities into CitiesData
   loadJSON("Src/Cities.json", jsonData => {
     citiesData = jsonData;
   });
+  
+  // Induestries into IndustriesData
+  loadJSON("Src/Industries.json", jsonData => {
+    industriesData = jsonData;
+  });
+
+  // Industries into industriesInfo
+  loadJSON("Src/IndustriesInfo.json", jsonData => {
+    industriesInfo = jsonData;
+    for (const [key, val] of Object.entries(jsonData)) {
+      industriesInfo[key].imgNav = loadImage(`resources/industries/${val.file}`);
+      industriesInfo[key].imgTrade = loadImage(`resources/industries_big/${val.file}`);
+      industriesInfo[key].imgs = [];
+      for (let filename of val.files) {
+        industriesInfo[key].imgs.push(loadImage(`resources/industries/${filename}`));
+      }
+    }
+  });
+
+  // Industry Locations
+  loadJSON("Src/IndustriesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      industriesLocations[key] = val;
+    }
+  });
+
+  // Cities Locations
+  loadJSON("Src/CitiesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      citiesLocations[key] = val;
+    }
+  });
+
 
   // NavigationMap into mapBoard
   loadStrings(mapFile, mapData => {
@@ -122,6 +160,18 @@ function preload() {
     for (const [row, txtLine] of mapData.entries()) {
       for (const [col, elem] of split(txtLine, ',').entries()) {
         cityBoard[row][col] = Number("0x" + elem);
+      }
+    }
+  });
+
+  // Industry template map into industryBoard
+  loadStrings("maps/industryTemplate.txt", mapData => {
+    let NCOLS = split(mapData[0], ',').length;
+    let NROWS = mapData.length;
+    industryBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+    for (const [row, txtLine] of mapData.entries()) {
+      for (const [col, elem] of split(txtLine, ',').entries()) {
+        industryBoard[row][col] = Number("0x" + elem);
       }
     }
   });
@@ -202,13 +252,6 @@ function preload() {
     }
   });
   
-  // // Roads into roadsData
-  // loadJSON("Src/Roads.json", jsonData => {
-  //   for (const [key, fileName] of Object.entries(jsonData)) {
-  //     roadsData[key] = {"img": loadImage(fileName)};
-  //   }
-  // });
-  
   // Wagons into wagonsData
   loadJSON("Src/Wagons.json", jsonData => {
     wagonsData = jsonData;
@@ -221,19 +264,7 @@ function preload() {
     }
   });
   
-  // Industries into industryData
-  loadJSON("Src/Industries.json", jsonData => {
-    industryData = jsonData;
-    for (const [key, val] of Object.entries(jsonData)) {
-      //industryData[key] = val;
-      industryData[key].img = loadImage(`resources/industries/${val.file}`);
-      industryData[key].img2 = loadImage(`resources/industries_big/${val.file}`);
-      industryData[key].imgs = [];
-      for (let filename of val.files) {
-        industryData[key].imgs.push(loadImage(`resources/industries/${filename}`));
-      }
-    }
-  });
+  
 
   // Tiles into tileData and tileImgs
   // TileImgs contains images identified by a name. eg: { "Ground": image }
@@ -248,19 +279,7 @@ function preload() {
     }
   });
   
-  // Industry Locations
-  loadJSON("Src/IndustriesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      industriesLocations[key] = val;
-    }
-  });
 
-  // Cities Locations
-  loadJSON("Src/CitiesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      citiesLocations[key] = val;
-    }
-  });
   
   trafficLightData["green"] = loadImage("resources/TrafficLight/green.png");
   trafficLightData["red"] = loadImage("resources/TrafficLight/red.png");

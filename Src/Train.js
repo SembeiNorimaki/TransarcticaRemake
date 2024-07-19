@@ -69,8 +69,6 @@ class Train {
 
   removeWagon(idx) {
     this.weight -= this.wagons[idx].weight;
-    console.log(this.wagons);
     this.wagons.splice(idx, 1);
-    console.log(this.wagons);
   }
 }
