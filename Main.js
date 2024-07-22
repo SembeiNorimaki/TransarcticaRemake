@@ -52,8 +52,9 @@ let industriesLocations = {};
 let citiesLocations = {};
 
 let charactersData = {};
+let backgroundImg;
 
-let mapFile = "maps/map_small3.txt";
+let mapFile = "maps/spain.txt";
 
 let i=0;
 
@@ -97,7 +98,7 @@ function showTrainSummary() {
 
 function preload() {
   
-
+  backgroundImg = loadImage('resources/misc/Transarctica.jpg');
   charactersData.Yuri = loadImage('resources/misc/comrad.png');
   charactersData.Trader = loadImage('resources/misc/trader2.png');
 
@@ -142,12 +143,16 @@ function preload() {
 
   // NavigationMap into mapBoard
   loadStrings(mapFile, mapData => {
-    let NCOLS = split(mapData[0], ',').length;
-    let NROWS = mapData.length;
+    let NCOLS = split(mapData[0], ',').length - 1;
+    let NROWS = mapData.length - 1;
     mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
     for (const [row, txtLine] of mapData.entries()) {
+      if (row == 0)  // skip first row
+        continue;
       for (const [col, elem] of split(txtLine, ',').entries()) {
-        mapBoard[row][col] = Number("0x" + elem);
+        if (col == 0)  // skip first col
+          continue;
+        mapBoard[row-1][col-1] = Number("0x" + elem);
       }
     }
   });

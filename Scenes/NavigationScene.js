@@ -150,6 +150,19 @@ class NavigationScene {
     }
   }
 
+  showHud() {
+    let x = hudCanvas.width-80;
+    let y = hudCanvas.height-30;
+    hudCanvas.image(hudData.fuel, x, y);
+    hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
+    x-=140;
+    hudCanvas.image(hudData.gold, x, y);
+    hudCanvas.text(`${game.playerTrain.gold}`, x, y);
+    x-=140;
+    hudCanvas.image(hudData.frame, x, y);
+    hudCanvas.text(`${this.locomotive.gear}`, x, y);
+  }
+
   show() {
     this.tileBoard.showTiles(mainCanvas, this.camera.position); 
     this.locomotive.show();
@@ -167,7 +180,7 @@ class NavigationScene {
       mainCanvas.pop();
     }
 
-
+    this.showHud();
     // show cities
     // for (let [loc, name] of Object.entries(citiesLocations)) {
     //   let pos = loc.split(',');

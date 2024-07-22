@@ -115,7 +115,7 @@ class MapEditor {
     }
 
     else if ((angle >= 270 && angle < 270 + aperture)) {   // direction north
-      tileId = [0x34,0x35];
+      tileId = [0x35,0x34];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
@@ -129,7 +129,7 @@ class MapEditor {
       }
     }
     else if ((angle >= 270 - aperture && angle < 270)) {   // direction north
-      tileId = [0x35,0x34];
+      tileId = [0x34,0x35];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
@@ -158,7 +158,7 @@ class MapEditor {
       }
     }
     else if ((angle >= 180 && angle < 180+aperture)) {   // direction west
-      tileId = [0x33,0x32];
+      tileId = [0x32,0x33];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
@@ -173,7 +173,7 @@ class MapEditor {
     }
 
     else if ((angle >= 360-aperture && angle <= 360)) {   // direction east
-      tileId = [0x33,0x32];
+      tileId = [0x32,0x33];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
@@ -200,7 +200,7 @@ class MapEditor {
         }        
       }
     }
-
+    
     return [path, tileId];
       
   }
@@ -212,9 +212,9 @@ class MapEditor {
     } else {
       this.posEnd = tilePos.copy();
 
-      let [path, tileId] = this.calculatePath(this.posOri, this.posEnd);
-      console.log(path)
-      console.log(tileId)
+      let oriScreen = boardToScreen(this.posOri, this.camera.position);
+      let [path, tileId] = this.calculatePath(this.posOri, tilePos, oriScreen)
+      
       for (let [i,pos] of path.entries()) {
         if (tileId.length == 1)
           this.tileBoard.board[pos.y][pos.x].setTileId(tileId[0]);
@@ -275,16 +275,16 @@ class MapEditor {
     if (this.posOri !== null) {
       //console.log(this.posOri)
       let oriScreen = boardToScreen(this.posOri, this.camera.position);
+      this.calculatePath(this.posOri, tilePos, oriScreen)
       //Tile.drawOutline(mainCanvas, boardToScreen(this.posOri, this.camera.position));
-
-      if (tilePos.x == this.posOri.x || tilePos.y == this.posOri.y) {
-        this.calculatePath(this.posOri, tilePos, oriScreen)
-      }
+      // if (tilePos.x == this.posOri.x || tilePos.y == this.posOri.y) {
+      //   this.calculatePath(this.posOri, tilePos, oriScreen)
+      // }
 
       
-      if (abs(abs(tilePos.x - this.posOri.x) - abs(tilePos.y - this.posOri.y)) <= 1) {
-        this.calculatePath(this.posOri, tilePos, oriScreen)
-      }
+      // if (abs(abs(tilePos.x - this.posOri.x) - abs(tilePos.y - this.posOri.y)) <= 1) {
+      //   this.calculatePath(this.posOri, tilePos, oriScreen)
+      // }
       
       // for (let angle of [0,90,180,270,26.565,153.435,206.565,333.435]) {
       //   let aux = createVector(100,0).rotate(radians(angle)).add(oriScreen)

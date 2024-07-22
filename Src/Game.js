@@ -61,8 +61,9 @@ class Game {
     //this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
     // this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona"]);
-    this.currentScene = new MapEditor();
-    // this.currentScene = this.navigationScene;
+    // this.currentScene = new MapEditor();
+    // this.currentScene = new MainMenu();
+    this.currentScene = this.navigationScene;
     this.currentScene.initialize();
   }
 
