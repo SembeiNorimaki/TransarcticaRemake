@@ -20,6 +20,7 @@ class TradeScene {
     this.locationName = locationName;
     this.tileBoard = new TileBoard(board);
     this.infoPanel = new InfoPanel();
+    this.conversationPanel = new ConversationPanel();
 
     this.enterSequence = true;
     this.exitSequence = false;
@@ -141,33 +142,39 @@ class CityTradeScene extends TradeScene {
   }
 
   showConversation() {
-    mainCanvas.push();
-    mainCanvas.fill(255,255,255,200);
-    mainCanvas.noStroke();
-    mainCanvas.rect(0,mainCanvasDim[1]-200,mainCanvasDim[0],200);
-    mainCanvas.image(charactersData.Trader,0,mainCanvasDim[1]-200);
-    mainCanvas.fill(0);
-    mainCanvas.textSize(24);
-    let y = mainCanvasDim[1] - 150;
-    for (let line of this.city.objective.summary) {
-      mainCanvas.text(line, 250, y);
-      y += 40;
-    }
-    
-    
-
-    mainCanvas.fill(0x93, 0xDC, 0x5C);
-    mainCanvas.rect(mainCanvasDim[0]-220, mainCanvasDim[1]-190, 200, 80);
-    mainCanvas.fill(0xAE, 0x4D, 0x4D);
-    mainCanvas.rect(mainCanvasDim[0]-220, mainCanvasDim[1]-90, 200, 80);
-    mainCanvas.fill(0);
-    mainCanvas.textAlign(CENTER, CENTER);
-    mainCanvas.textSize(28);
-    mainCanvas.text("Accept", mainCanvasDim[0]-220+100, mainCanvasDim[1]-190+40);
-    mainCanvas.text("Decline", mainCanvasDim[0]-220+100, mainCanvasDim[1]-90+40);
-    
-    mainCanvas.pop();
+    this.conversationPanel.fillData({
+      "characterName": "Yuri",
+      "textLines": ["a", "bb", "ccc"]
+    });
+    this.conversationPanel.show();
   }
+
+  // showConversation() {
+  //   mainCanvas.push();
+  //   mainCanvas.fill(255,255,255,200);
+  //   mainCanvas.noStroke();
+  //   mainCanvas.rect(0,mainCanvasDim[1]-200,mainCanvasDim[0],200);
+  //   mainCanvas.image(charactersData.Trader,0,mainCanvasDim[1]-200);
+  //   mainCanvas.fill(0);
+  //   mainCanvas.textSize(24);
+  //   let y = mainCanvasDim[1] - 150;
+  //   for (let line of this.city.objective.summary) {
+  //     mainCanvas.text(line, 250, y);
+  //     y += 40;
+  //   }
+    
+  //   mainCanvas.fill(0x93, 0xDC, 0x5C);
+  //   mainCanvas.rect(mainCanvasDim[0]-220, mainCanvasDim[1]-190, 200, 80);
+  //   mainCanvas.fill(0xAE, 0x4D, 0x4D);
+  //   mainCanvas.rect(mainCanvasDim[0]-220, mainCanvasDim[1]-90, 200, 80);
+  //   mainCanvas.fill(0);
+  //   mainCanvas.textAlign(CENTER, CENTER);
+  //   mainCanvas.textSize(28);
+  //   mainCanvas.text("Accept", mainCanvasDim[0]-220+100, mainCanvasDim[1]-190+40);
+  //   mainCanvas.text("Decline", mainCanvasDim[0]-220+100, mainCanvasDim[1]-90+40);
+    
+  //   mainCanvas.pop();
+  // }
 
 
 
@@ -189,6 +196,8 @@ class CityTradeScene extends TradeScene {
 
 
   onClick(mousePos) {    
+
+    
     // Horizontal train
     if (mousePos.y > 750) {
       let wagonIdx = this.horizontalTrain.onClick(mousePos);

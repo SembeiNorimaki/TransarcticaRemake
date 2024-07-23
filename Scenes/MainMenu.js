@@ -1,22 +1,44 @@
 class MainMenu {
   constructor() {
-
+    this.buttons = [
+      new Button(1,createVector(200, 100), createVector(150, 40), "New Game"),
+      new Button(2,createVector(200, 250), createVector(150, 40), "Continue"),
+      new Button(3,createVector(200, 400), createVector(150, 40), "Settings")
+    ];
   }
+
   initialize() {
 
   }
   update() {
 
   }
+  onClick(mousePos) {
+    let result = null;
+    for (let button of this.buttons) {
+      result = button.onClick(mousePos);
+      if (result !== null)
+        break;
+    }
+    switch(result) {
+      case(null):
+      break;
+      case(1):
+      console.log("New Game")
+      break;
+      case(2):
+      console.log("Continue")
+      break;
+      case(3):
+      console.log("Settings")
+      break;
+    }
+  }
+
   show() {
-    mainCanvas.textAlign(CENTER, CENTER);
-    mainCanvas.textSize(40)
     mainCanvas.image(backgroundImg, 0, 0);
-    mainCanvas.rect(100,100,300,80);
-    mainCanvas.text("New Game", 250,140);
-    mainCanvas.rect(100,250,300,80);
-    mainCanvas.text("Continue", 250,290);
-    mainCanvas.rect(100,400,300,80);
-    mainCanvas.text("Settings", 250,440);
+    for (let button of this.buttons) {
+      button.show(mainCanvas);
+    }
   }
 }

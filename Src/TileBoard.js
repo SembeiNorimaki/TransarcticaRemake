@@ -25,8 +25,12 @@ class TileBoard {
     this.board = Array.from(Array(this.boardDim.y), () => new Array(this.boardDim.x));
     // populate board
     for (let row=0; row<this.boardDim.y; row++) {
-      for (let col=0; col<this.boardDim.x; col++) {      
+      for (let col=0; col<this.boardDim.x; col++) {  
+        try {  
         this.board[row][col] = new Tile(createVector(col, row), mapData[row][col]);        
+        } catch {
+          console.log(row,col);
+        }
       }
     }
   }
@@ -79,6 +83,52 @@ class TileBoard {
       if (startRow < this.boardDim.y-1) 
         startRow++;
       col0+=1;
+    }
+  }
+
+  show2D(canvas, cameraPos) {
+    let off = mainCanvasDim[0] / (2*TILE_MINI_WIDTH);
+    let n = off
+    let m = n;
+    let topLeft = cameraToBoardSmall(cameraPos).sub(createVector(off,0));
+    let row0 = topLeft.y;
+    let col0 = topLeft.x;
+    let col, row, screenPos;
+    let startRow = row0;
+    
+    let orderIdx = 0;
+
+    for (let j=0; j<n;j++) {
+      col = col0;
+      row = startRow;
+      for (let i=0; i<m; i++) {
+        if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
+          screenPos = boardToScreenSmall(createVector(col, row), cameraPos)  
+          Tile.draw2D(mainCanvas, 0x00, screenPos);
+          //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
+        } else {
+          this.board[row][col].show2D(canvas, cameraPos, orderIdx);
+          orderIdx++;
+        }
+        col++;
+        row--;
+      }
+      col = col0 + 1;
+      row = startRow;
+      for (let i=0; i<m; i++) {
+        if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
+          screenPos = boardToScreenSmall(createVector(col, row), cameraPos);
+          Tile.draw2D(mainCanvas, 0x00, screenPos);
+          //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
+        } else {
+          this.board[row][col].show2D(canvas, cameraPos, orderIdx);
+          orderIdx++;
+        }
+        col++;
+        row--;
+      }
+      col0++;
+      startRow++;
     }
   }
 

@@ -19,8 +19,8 @@ const TILE_WIDTH_HALF = 64;
 const TILE_HEIGHT_HALF = 32;
 
 // Minimap tile size
-const TILE_MINI_WIDTH = 20;
-const TILE_MINI_HEIGHT = 10;
+const TILE_MINI_WIDTH = 6;
+const TILE_MINI_HEIGHT = 3;
 
 let screenDim = [TILE_WIDTH_HALF*27 , TILE_HEIGHT_HALF*27+60];
 let mainCanvas, hudCanvas;

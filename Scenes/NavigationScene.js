@@ -17,9 +17,10 @@
 class NavigationScene {
   constructor() {
     this.selectedIntersection = null;
-    this.camera = new Camera(boardToCamera(createVector(1,0)));
+    //this.camera = new Camera(boardToCamera(createVector(10,10)));
+    this.camera = new Camera(boardToCamera(createVector(8,15)));
     this.tileBoard = new TileBoard(mapBoard);
-    this.locomotive = new Locomotive(createVector(11, 4), 180.0);
+    this.locomotive = new Locomotive(createVector(32, 15), 180.0);
   }
 
   initialize() {
@@ -42,7 +43,16 @@ class NavigationScene {
       this.locomotive.turn180();
     } else if (key == "Enter" && this.selectedIntersection !== null) {
       this.selectedIntersection.changeTile();
-    } 
+    } else if (key == "ArrowLeft") {
+      this.camera.move(createVector(-500,0))
+    } else if (key == "ArrowRight") {
+      this.camera.move(createVector(500,0))
+    } else if (key == "ArrowUp") {
+      this.camera.move(createVector(0,-300))
+    } else if (key == "ArrowDown") {
+      this.camera.move(createVector(0,300))
+    }
+     
   }
 
   onClick(mousePos) {
@@ -165,6 +175,9 @@ class NavigationScene {
 
   show() {
     this.tileBoard.showTiles(mainCanvas, this.camera.position); 
+    // this.tileBoard.show2D(mainCanvas, this.camera.position); 
+    
+    // this.tileBoard.show2D(mainCanvas, this.camera.position); 
     this.locomotive.show();
 
     // show selected intersection
@@ -181,22 +194,12 @@ class NavigationScene {
     }
 
     this.showHud();
-    // show cities
-    // for (let [loc, name] of Object.entries(citiesLocations)) {
-    //   let pos = loc.split(',');
-    //   pos = createVector(int(pos[0]), int(pos[1]));
-    //   let pos2 = boardToScreen(pos, this.camera.position);
-    //   //pos2.sub(tileCodes[0xA0].offset)
-    //   //Tile.draw(mainCanvas, 0xA0, pos2);
-    // }
 
     // show the center of the screen in red lines
-
-    // show center of screen
-    // mainCanvas.push();
-    // mainCanvas.stroke("red")
-    // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
-    // mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
-    // mainCanvas.pop();
+    mainCanvas.push();
+    mainCanvas.stroke("red")
+    mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
+    mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
+    mainCanvas.pop();
   }
 }

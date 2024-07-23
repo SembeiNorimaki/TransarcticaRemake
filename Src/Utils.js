@@ -25,6 +25,38 @@ resourceToWagon = {
 
 // USEFUL FUNCTIONS
 
+function imageToBoardStr(img) {
+  let board = [];
+  for (let row=0; row<img.height; row++) {
+    let currentRow = "";
+    for (let col=0; col<img.width; col++) {
+      let b = brightness(img.get(col,row));
+      if (b > 80) {
+        img.set(col,row,2);
+        currentRow += "0,";
+      } else if (b > 40) {
+        img.set(col,row,1);
+        currentRow += "1,";
+      } else {
+        img.set(col,row,0);
+        currentRow += "1,";
+      }
+    }
+    currentRow = currentRow.slice(0, -1);
+    board.push(currentRow);
+  }
+  return(board);
+}
+
+
+function downloadText(content) {
+  let filename = "output.txt";
+  var blob = new Blob([content], {
+    type: "text/plain"
+   });
+  saveAs(blob, filename);
+}
+
 function angleToOri(angle) {
   // angle must be positive, in degrees [0..360)
   let idx = floor((angle + 22.5) / 45);
@@ -40,10 +72,24 @@ function screenToBoard(pos, cameraPos) {
   );
 }
 
+function screenToBoardSmall(pos, cameraPos) {
+  return createVector(
+    round((((pos.x + cameraPos.x - mainCanvasDim[0]/2) / TILE_MINI_WIDTH)  + ((pos.y + cameraPos.y - mainCanvasDim[1]/2) / TILE_MINI_HEIGHT) ) / 2) , 
+    round((((pos.y + cameraPos.y - mainCanvasDim[1]/2) / TILE_MINI_HEIGHT)  - ((pos.x + cameraPos.x - mainCanvasDim[0]/2) / TILE_MINI_WIDTH) ) / 2) 
+  );
+}
+
 function cameraToBoard(pos) {
   return createVector(
     round((((pos.x) / TILE_WIDTH_HALF)  + ((pos.y ) / TILE_HEIGHT_HALF) ) / 2) , 
     round((((pos.y) / TILE_HEIGHT_HALF)  - ((pos.x ) / TILE_WIDTH_HALF) ) / 2) 
+  );
+}
+
+function cameraToBoardSmall(pos) {
+  return createVector(
+    round((((pos.x) / TILE_MINI_WIDTH)  + ((pos.y ) / TILE_MINI_HEIGHT) ) / 2) , 
+    round((((pos.y) / TILE_MINI_HEIGHT)  - ((pos.x ) / TILE_MINI_WIDTH) ) / 2) 
   );
 }
 
@@ -53,10 +99,16 @@ function boardToScreen(pos, cameraPos) {
     (pos.x + pos.y) * TILE_HEIGHT_HALF  + mainCanvasDim[1] / 2 - cameraPos.y
   );
 }
+function boardToScreenSmall(pos, cameraPos) {
+  return createVector(
+    (pos.x - pos.y) * TILE_MINI_WIDTH + mainCanvasDim[0] / 2 - cameraPos.x,
+    (pos.x + pos.y) * TILE_MINI_HEIGHT  + mainCanvasDim[1] / 2 - cameraPos.y
+  );
+}
 
 function boardToMinimapScreen(pos) {
   return createVector(
-    (pos.x - pos.y) * TILE_MINI_WIDTH + width/2,
+    (pos.x - pos.y) * TILE_MINI_WIDTH + mainCanvasDim[0]/2,
     (pos.x + pos.y) * TILE_MINI_HEIGHT + 10
   );
 }
@@ -68,6 +120,12 @@ function boardToCamera(pos) {
   );
 }
 
+function boardToCameraSmall(pos) {
+  return createVector(
+    int((pos.x - pos.y) * TILE_MINI_WIDTH),
+    int((pos.x + pos.y) * TILE_MINI_HEIGHT)
+  );
+}
 
 function cameraToScreen(pos) {
   return createVector(

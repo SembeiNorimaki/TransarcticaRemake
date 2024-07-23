@@ -59,11 +59,11 @@ class Game {
     this.playerTrain.initialize(this.saveData.PlayerTrain);
     this.enemyTrain.initialize(this.saveData.EnemyTrain);
     //this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
-    // this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
+    this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
-    this.currentScene = this.navigationScene;
+    // this.currentScene = this.navigationScene;
     this.currentScene.initialize();
   }
 

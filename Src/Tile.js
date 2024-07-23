@@ -122,7 +122,193 @@ class Tile {
   }
 
   static draw2D(canvas, tileId, screenPos) {
-    canvas.rect(screenPos.x-10, screenPos.y-10, 20, 20);
+    //canvas.rect(screenPos.x-5, screenPos.y-5, 10, 10);
+
+    switch(Tile.idxToName[tileId]) {
+      case("Ground"):
+      mainCanvas.push();
+      mainCanvas.noStroke();
+      mainCanvas.fill("gray");
+      mainCanvas.beginShape();
+      mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+      mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+      mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+      mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+      mainCanvas.endShape(CLOSE);
+      mainCanvas.pop();
+      break;
+      case("Rail_AD"):
+        mainCanvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_BC"):
+        mainCanvas.line(
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_AB"):
+        mainCanvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_AC"):
+        mainCanvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_BD"):
+        mainCanvas.line(
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_CD"):
+        mainCanvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+
+      case("Rail_ABc"):
+      case("Rail_ACb"):
+      case("Rail_BCa"):
+        mainCanvas.line(  //AB
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //AC
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //BC
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_ABd"):
+      case("Rail_ADb"):
+      case("Rail_BDa"):
+        mainCanvas.line(  //AB
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //AD
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //BD
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_ACd"):
+      case("Rail_ADc"):
+      case("Rail_CDa"):
+        mainCanvas.line( //AC
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //AD
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //CD
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+      break;
+      case("Rail_BCd"):
+      case("Rail_BDc"):
+      case("Rail_CDb"):
+        mainCanvas.line( //BC
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //BD
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y-TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2);
+        mainCanvas.line( //CD
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y+TILE_MINI_HEIGHT/2); 
+      break;
+      case("Water"): // Water
+        mainCanvas.push();
+        mainCanvas.noStroke();
+        mainCanvas.fill("blue");
+        mainCanvas.beginShape();
+        mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        mainCanvas.endShape(CLOSE);
+        mainCanvas.pop();
+        //mainCanvas.circle(screenPos.x, screenPos.y, TILE_MINI_WIDTH);
+        //mainCanvas.noFill();
+      break;
+      case("Building_1"):
+        mainCanvas.push();
+        mainCanvas.noStroke();
+        mainCanvas.fill("red");
+        mainCanvas.beginShape();
+        mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        mainCanvas.endShape(CLOSE);
+        mainCanvas.pop();
+      break;
+      default:
+        mainCanvas.push();
+        mainCanvas.noStroke();
+        mainCanvas.fill("black");
+        mainCanvas.beginShape();
+        mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        mainCanvas.endShape(CLOSE);
+        mainCanvas.pop();
+      break;
+    }
+
+  }
+
+  static draw2DColor(canvas, color, screenPos) {
+    mainCanvas.push();
+      canvas.noStroke();
+      canvas.fill(color);
+      canvas.beginShape();
+      canvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+      canvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+      canvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+      canvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+      canvas.endShape(CLOSE);
+      canvas.pop();
   }
 
   static drawOutline(canvas, screenPos) {
@@ -142,43 +328,30 @@ class Tile {
     canvas.stroke("blue");
     switch(tileId) {
       case(0x30):  // AD
-        canvas.line(screenPos.x-TILE_WIDTH_HALF*0.6,screenPos.y-TILE_HEIGHT_HALF*0.40,
-                    screenPos.x+TILE_WIDTH_HALF*0.40,screenPos.y+TILE_HEIGHT_HALF*0.60);
-        canvas.line(screenPos.x-TILE_WIDTH_HALF*0.40,screenPos.y-TILE_HEIGHT_HALF*0.60,
-                    screenPos.x+TILE_WIDTH_HALF*0.60,screenPos.y+TILE_HEIGHT_HALF*0.40);
-        
+        canvas.line(screenPos.x-TILE_MINI_WIDTH*0.5,screenPos.y -TILE_MINI_HEIGHT*0.50,
+                    screenPos.x+TILE_MINI_WIDTH*0.50,screenPos.y+TILE_MINI_HEIGHT*0.50);
       break;
 
       case(0x31):  // BC
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.6,screenPos.y-TILE_HEIGHT_HALF*0.40,
-                    screenPos.x-TILE_WIDTH_HALF*0.40,screenPos.y+TILE_HEIGHT_HALF*0.60);
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.40,screenPos.y-TILE_HEIGHT_HALF*0.60,
-                    screenPos.x-TILE_WIDTH_HALF*0.60,screenPos.y+TILE_HEIGHT_HALF*0.40);
+        canvas.line(screenPos.x+TILE_MINI_WIDTH*0.5,screenPos.y -TILE_MINI_HEIGHT*0.50,
+                    screenPos.x-TILE_MINI_WIDTH*0.50,screenPos.y+TILE_MINI_HEIGHT*0.50);
       break;
 
       case(0x32):   // AB
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.6,screenPos.y-TILE_HEIGHT_HALF*0.40,
-                    screenPos.x-TILE_WIDTH_HALF*0.60,screenPos.y-TILE_HEIGHT_HALF*0.40);
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.40,screenPos.y-TILE_HEIGHT_HALF*0.60,
-                    screenPos.x-TILE_WIDTH_HALF*0.40,screenPos.y-TILE_HEIGHT_HALF*0.60);
+        canvas.line(screenPos.x+TILE_MINI_WIDTH*0.5,screenPos.y -TILE_MINI_HEIGHT*0.50,
+                    screenPos.x-TILE_MINI_WIDTH*0.50,screenPos.y-TILE_MINI_HEIGHT*0.50);
       break;
       case(0x33):   // CD
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.6,screenPos.y+TILE_HEIGHT_HALF*0.40,
-                    screenPos.x-TILE_WIDTH_HALF*0.60,screenPos.y+TILE_HEIGHT_HALF*0.40);
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.40,screenPos.y+TILE_HEIGHT_HALF*0.60,
-                    screenPos.x-TILE_WIDTH_HALF*0.40,screenPos.y+TILE_HEIGHT_HALF*0.60);
+        canvas.line(screenPos.x+TILE_MINI_WIDTH*0.5,screenPos.y +TILE_MINI_HEIGHT*0.50,
+                    screenPos.x-TILE_MINI_WIDTH*0.50,screenPos.y+TILE_MINI_HEIGHT*0.50);
       break;
       case(0x34):   // AC
-        canvas.line(screenPos.x-TILE_WIDTH_HALF*0.6,screenPos.y-TILE_HEIGHT_HALF*0.40,
-                    screenPos.x-TILE_WIDTH_HALF*0.60,screenPos.y+TILE_HEIGHT_HALF*0.40);
-        canvas.line(screenPos.x-TILE_WIDTH_HALF*0.40,screenPos.y-TILE_HEIGHT_HALF*0.60,
-                    screenPos.x-TILE_WIDTH_HALF*0.40,screenPos.y+TILE_HEIGHT_HALF*0.60);
+        canvas.line(screenPos.x-TILE_MINI_WIDTH*0.5,screenPos.y -TILE_MINI_HEIGHT*0.50,
+                    screenPos.x-TILE_MINI_WIDTH*0.50,screenPos.y+TILE_MINI_HEIGHT*0.50);        
       break;
       case(0x35):   // BD
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.6,screenPos.y-TILE_HEIGHT_HALF*0.40,
-                    screenPos.x+TILE_WIDTH_HALF*0.60,screenPos.y+TILE_HEIGHT_HALF*0.40);
-        canvas.line(screenPos.x+TILE_WIDTH_HALF*0.40,screenPos.y-TILE_HEIGHT_HALF*0.60,
-                    screenPos.x+TILE_WIDTH_HALF*0.40,screenPos.y+TILE_HEIGHT_HALF*0.60);
+        canvas.line(screenPos.x+TILE_MINI_WIDTH*0.5,screenPos.y -TILE_MINI_HEIGHT*0.50,
+                    screenPos.x+TILE_MINI_WIDTH*0.50,screenPos.y+TILE_MINI_HEIGHT*0.50);
       break;
 
     }
@@ -252,8 +425,61 @@ class Tile {
     }
 
     Tile.draw(canvas, this.tileId, screenPos);
+    canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
+    // canvas.text(auxText, screenPos.x, screenPos.y); 
+
+    if (this.isSelected) {
+      Tile.drawOutline(canvas, screenPos);
+    }
+
+  }
+
+  show2D(canvas, cameraPos, auxText) {
+    let screenPos = boardToScreenSmall(this.boardPosition, cameraPos);    
+
+    // Bridges need 
+    if (this.tileId == 0x50) {
+      Tile.draw2D(mainCanvas, 0x00, screenPos.copy());
+    } else if (this.tileId == 0x51) {
+      Tile.draw2D(mainCanvas, 0x02, screenPos.copy());
+    } else if (this.tileId == 0x52) {
+      Tile.draw2D(mainCanvas, 0x05, screenPos.copy());
+    }
+    else if (this.tileId == 0x53) {
+      Tile.draw2D(mainCanvas, 0x00, screenPos.copy());
+    } else if (this.tileId == 0x54) {
+      Tile.draw2D(mainCanvas, 0x03, screenPos.copy());
+    } else if (this.tileId == 0x55) {
+      Tile.draw2D(mainCanvas, 0x04, screenPos.copy());
+    }
+    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF) {
+      Tile.draw2D(canvas, 0x01, screenPos);
+    }
+    
+    // if (this.tileId == 0xFE) {
+    //   Tile.draw2D(canvas, 0x00, screenPos);
+    //   let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
+    //   if (posStr in industriesLocations) {
+        
+    //     canvas.image(industriesInfo[game.industries[industriesLocations[posStr]].name].imgNav,
+    //       screenPos.x - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[0], 
+    //       screenPos.y - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[1]);
+        
+    //     // Tile.draw(canvas, 0x02, screenPos);
+    //   }
+    //   return;
+    // }
+    if (this.tileId >= 0x30 && this.tileId <= 0x47) {
+      Tile.draw2D(canvas, 0x01, screenPos);
+    } else {
+      // Tile.draw2D(canvas, 0x01, screenPos);
+      // Tile.drawGhostRail(canvas, this.tileId, screenPos);
+    }
+    Tile.draw2D(canvas, this.tileId, screenPos);
+    
+    // canvas.textSize(4)
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
-    canvas.text(auxText, screenPos.x, screenPos.y); 
+    // canvas.text(auxText, screenPos.x, screenPos.y); 
 
     if (this.isSelected) {
       Tile.drawOutline(canvas, screenPos);

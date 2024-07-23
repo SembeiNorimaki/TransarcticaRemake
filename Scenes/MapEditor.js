@@ -16,9 +16,11 @@
 
 class MapEditor {
   constructor() {
-    this.camera = new Camera(boardToCamera(createVector(4,4)));
+    this.camera = new Camera(boardToCameraSmall(createVector(30,150)));
     this.tileBoard = new TileBoard(mapBoard);
     this.posOri = null;
+
+    this.buildSelection = "City";
 
     
   }
@@ -29,6 +31,22 @@ class MapEditor {
 
   }
 
+  downloadMap() {
+    let boardDim = this.tileBoard.boardDim
+    let board = [];
+    let currentRow = "";
+
+    for (let row=0; row<boardDim.y; row++) {
+      currentRow = "";
+      for (let col=0; col<boardDim.x; col++) {  
+        currentRow += str(this.tileBoard.board[row][col].tileId.toString(16).toUpperCase().padStart(2, '0')) + ","
+      }
+      currentRow = currentRow.slice(0, -1);
+      board.push(currentRow + "\n");
+    }
+    downloadText(board)
+  }
+
   calculatePath(ori, end, oriScreen) {
     
     // let angle = degrees(p5.Vector.sub(end, ori).heading());
@@ -36,7 +54,7 @@ class MapEditor {
     if (angle < 0) 
       angle += 360;
 
-    mainCanvas.text(angle, mouseX, mouseY-40)
+    //mainCanvas.text(angle, mouseX, mouseY-40)
 
     let n, deltaX, deltaY, x, y, currentTile;
     let aperture = 10;
@@ -74,7 +92,7 @@ class MapEditor {
       
       for (let i=0; i<n; i++) {
         path.push(createVector(x,y));
-        Tile.drawGhostRail(mainCanvas, tileId[0], boardToScreen(createVector(x, y), this.camera.position));
+        Tile.drawGhostRail(mainCanvas, tileId[0], boardToScreenSmall(createVector(x, y), this.camera.position));
         x+=deltaX;
         y+=deltaY;
       } 
@@ -90,11 +108,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }        
       }
@@ -104,11 +122,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }        
       }
@@ -119,11 +137,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }        
       }
@@ -133,11 +151,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }        
       }
@@ -148,11 +166,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }        
       }
@@ -162,11 +180,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }        
       }
@@ -177,11 +195,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }        
       }
@@ -191,11 +209,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreen(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }        
       }
@@ -206,28 +224,34 @@ class MapEditor {
   }
 
   onClick(mousePos) {
-    let tilePos = screenToBoard(createVector(mouseX, mouseY), this.camera.position);
-    if (this.posOri === null) {
-      this.posOri = tilePos.copy();
-    } else {
-      this.posEnd = tilePos.copy();
-
-      let oriScreen = boardToScreen(this.posOri, this.camera.position);
-      let [path, tileId] = this.calculatePath(this.posOri, tilePos, oriScreen)
-      
-      for (let [i,pos] of path.entries()) {
-        if (tileId.length == 1)
-          this.tileBoard.board[pos.y][pos.x].setTileId(tileId[0]);
-        else
-          this.tileBoard.board[pos.y][pos.x].setTileId(tileId[i%tileId.length]);
-      }
-      this.posOri = this.posEnd.copy();
-      this.posEnd = null;
-
+    let tilePos = screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
+    if (this.buildSelection == "City") {
+      console.log(`Setting tile ${tilePos.x}${tilePos.y} to city`)
+      this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0xA0);
+      let a=0;
     }
-    // try {
-    // this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0x30);
-    // }catch{}
+    else {
+      if (this.posOri === null) {
+        this.posOri = tilePos.copy();
+      } else {
+        this.posEnd = tilePos.copy();
+
+        let oriScreen = boardToScreenSmall(this.posOri, this.camera.position);
+        let [path, tileId] = this.calculatePath(this.posOri, tilePos, oriScreen)
+        
+        for (let [i,pos] of path.entries()) {
+          if (this.tileBoard.board[pos.y][pos.x].tileId == 0x01) {
+            if (tileId.length == 1)
+              this.tileBoard.board[pos.y][pos.x].setTileId(tileId[0]);
+            else
+              this.tileBoard.board[pos.y][pos.x].setTileId(tileId[i%tileId.length]);
+          }
+        }
+        this.posOri = path.at(-1);
+        this.posEnd = null;
+
+      }
+    }
     console.log(`Clicked on Tile ${tilePos}`)
   }
 
@@ -244,6 +268,16 @@ class MapEditor {
       break;
       case("ArrowDown"):
       this.camera.move(createVector(0, 300));
+      break;
+      case("d"):
+        this.downloadMap()
+      break;
+      case("c"):
+        this.buildSelection = "City";
+      break;
+      case("r"):
+        this.buildSelection = "Rail";
+        this.posOri = null;
       break;
     }
 
@@ -264,46 +298,27 @@ class MapEditor {
   }
 
   show() {
-    this.showHud();
-    this.tileBoard.showTiles(mainCanvas, this.camera.position); 
-    let tilePos = screenToBoard(createVector(mouseX, mouseY), this.camera.position);
-    let screenPos = boardToScreen(tilePos, this.camera.position)
-    //Tile.drawOutline(mainCanvas, screenPos, this.camera.position);
+    this.tileBoard.show2D(mainCanvas, this.camera.position); 
     
-    // determine which tile the mouse is hovering
+    let tilePos = screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
 
-    if (this.posOri !== null) {
-      //console.log(this.posOri)
-      let oriScreen = boardToScreen(this.posOri, this.camera.position);
-      this.calculatePath(this.posOri, tilePos, oriScreen)
-      //Tile.drawOutline(mainCanvas, boardToScreen(this.posOri, this.camera.position));
-      // if (tilePos.x == this.posOri.x || tilePos.y == this.posOri.y) {
-      //   this.calculatePath(this.posOri, tilePos, oriScreen)
-      // }
-
-      
-      // if (abs(abs(tilePos.x - this.posOri.x) - abs(tilePos.y - this.posOri.y)) <= 1) {
-      //   this.calculatePath(this.posOri, tilePos, oriScreen)
-      // }
-      
-      // for (let angle of [0,90,180,270,26.565,153.435,206.565,333.435]) {
-      //   let aux = createVector(100,0).rotate(radians(angle)).add(oriScreen)
-      //   mainCanvas.line(oriScreen.x, oriScreen.y, aux.x, aux.y)
-      // }
-      
-      mainCanvas.line(oriScreen.x, oriScreen.y, mouseX, mouseY)
-      
-      
-      
-      
+    if (this.buildSelection == "Rail") {
+      if (this.posOri !== null) {
+        let oriScreen = boardToScreenSmall(this.posOri, this.camera.position);
+        this.calculatePath(this.posOri, tilePos, oriScreen)
+      }
     }
-
-    
+    else if (this.buildSelection == "City") {
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(tilePos, this.camera.position))
+    }
 
     // mainCanvas.push();
     // mainCanvas.stroke("red")
     // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
     // mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
     // mainCanvas.pop();
+
+
+
   }
 }
