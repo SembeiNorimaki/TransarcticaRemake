@@ -54,6 +54,8 @@ let citiesLocations = {};
 let charactersData = {};
 let backgroundImg;
 
+let wolfImg;
+
 let mapFile = "maps/spain.txt";
 
 let i=0;
@@ -67,7 +69,7 @@ let saveData = {
       {"name": "Tender"},
       {"name": "Machinegun"},
       {"name": "Cannon"},
-      {"name": "Cannon"},
+      {"name": "OilTanker"},
     ]
   },
   "EnemyTrain": {
@@ -96,7 +98,91 @@ function showTrainSummary() {
   pop();
 }
 
+let ori = 7;
+
 function preload() {
+
+  loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
+    let spriteSize = [70, 70];
+    let x = 101
+    unitsData.wolf = [{"walk":{0:[],45:[],90:[],135:[],180:[],225:[],270:[],315:[]}, "attack":{0:[]}}];
+    //wolfImg = wolfAtlas.get(0,0,124,105);
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69-spriteSize[0]/2, 0,     30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+x-spriteSize[0]/2, 0,   30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+2*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+3*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+4*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+5*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+6*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+7*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61-spriteSize[0]/2,     80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+x-spriteSize[0]/2,   80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+2*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+3*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+4*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+5*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+6*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+7*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48    -30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+x  -30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+2*x-30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+3*x-30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+4*x-30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+5*x-30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+6*x-30, 175, 74, 50));
+    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+7*x-30, 175, 74, 50));
+
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51    -30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+x  -30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+2*x-30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+3*x-30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+4*x-30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+5*x-30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+6*x-30, 262, spriteSize[0], 52));
+    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+7*x-30, 262, spriteSize[0], 52));
+
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61    -30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+x  -30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+2*x-30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+3*x-30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+4*x-30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+5*x-30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+6*x-30, 340, 35, 62));
+    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+7*x-30, 340, 35, 62));
+
+
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41    -30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+x  -30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+2*x-30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+3*x-30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+4*x-30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+5*x-30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+6*x-30, 424, spriteSize[0], 55));
+    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+7*x-30, 424, spriteSize[0], 55));
+
+    
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31    -30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+x  -30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+2*x-30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+3*x-30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+4*x-30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+5*x-30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+6*x-30, 500, 80, 52));
+    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+7*x-30, 500, 80, 52));
+
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41    -30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+x  -30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+2*x-30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+3*x-30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+4*x-30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+5*x-30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+6*x-30, 576, 70, 62));
+    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+7*x-30, 576, 70, 62));
+
+
+  });
   
   backgroundImg = loadImage('resources/misc/Transarctica.jpg');
   charactersData.Yuri = loadImage('resources/misc/comrad.png');
@@ -119,6 +205,7 @@ function preload() {
     for (const [key, val] of Object.entries(jsonData)) {
       industriesInfo[key].imgNav = loadImage(`resources/industries/${val.file}`);
       industriesInfo[key].imgTrade = loadImage(`resources/industries_big/${val.file}`);
+      industriesInfo[key].imgInfo = loadImage(`resources/industries_small/${val.file}`);
       industriesInfo[key].imgs = [];
       for (let filename of val.files) {
         industriesInfo[key].imgs.push(loadImage(`resources/industries/${filename}`));
@@ -193,7 +280,7 @@ function preload() {
 
   // Mamooth data into unitsData.mamooth
   // Structure: unitsData.mamooth[action][orientation][spriteId]
-  loadJSON("Src/Mamooth.json", jsonData => {    
+  loadJSON("Src/Units/Mamooth.json", jsonData => {    
     unitsData.mamooth = {"move": {}, "idle": {}};
     for (let ori of [0,45,90,135,180,225,270,315]) {
       unitsData.mamooth.move[ori] = [loadImage(jsonData.move[`${ori}`])];
@@ -218,7 +305,7 @@ function preload() {
   // Soldiers data into unitsData.soldier
   // Structure: unitsData.soldier[soldierId (type)][action][orientation][spriteId]
   loadImage("resources/units/soldier0.png", soldierAtlas => {
-    loadJSON("Src/Soldier.json", jsonData => {
+    loadJSON("Src/Units/Soldier.json", jsonData => {
       const spriteSize = jsonData.spriteSize;
       const offset = jsonData.offset;
       unitsData.soldier = [];
@@ -291,7 +378,7 @@ function preload() {
 
 
   // Events
-  events = loadJSON("Src/Events.json");
+  //events = loadJSON("Src/Events.json");
 }
 
 function setupCanvas() {
@@ -327,6 +414,14 @@ function draw() {
 
   image(mainCanvas, 0, 0);
   image(hudCanvas, 0, mainCanvasDim[1]);
+
+  // let img = unitsData.wolf[0]["walk"][ori][int(i)]; 
+  // rect(400, 400, img.width, img.height)
+  // image(img, 400,400)
+  // i+=0.5;
+  // if (int(i)>7) {
+  //   i=0;
+  // }
 
   //showTrainSummary();
 

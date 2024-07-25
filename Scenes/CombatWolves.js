@@ -14,53 +14,34 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-class CombatScene {
-  constructor(playerTrain, enemyTrain) {
+class CombatWolves {
+  constructor(playerTrain) {
 
-    this.board = [
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0]      
-    ]
-    this.boardDim = createVector(200, 200);
-
-    
     this.camera = new Camera(createVector(0,0));
 
     this.backgroundImg = this.generateCombatBackground();
     this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
-    this.enemyHTrain = new HorizontalTrain("Cpu", enemyTrain.wagons);
 
     this.playerHTrain.setPosition(createVector(1400, 845));
-    this.enemyHTrain.setPosition(createVector(1400, 80));
 
     this.playerHTrain.update();
-    this.enemyHTrain.update();
 
     // TODO: currently soldierAI is inside soldier. Is this then necessary?
-    this.combatAI = new CombatAI();
+    //this.combatAI = new CombatAI();
 
     // TODO: more than one cannonball is possible (enemy and player shooting simultanously). Make this an array
     this.cannonball = null;
     this.machinegunbullets = null;
 
     this.playerSoldiers = [];
-    this.enemySoldiers = [];
     this.playerMamooths = [];
-    this.enemyMamooths = [];
-
+    
     this.playerWolves = [];
 
 
     this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, "player"));
     
-    this.playerSoldiers.push(new Wolf(0, createVector(700,650), "player"));
     
-    // this.playerMamooths.push(new Mamooth(0, createVector(700,650), "player"));
-
 
     this.enemySoldiers.push(new Rifleman(1, createVector(300,120), 0, "cpu"));
     this.enemySoldiers.push(new Rifleman(2, createVector(650,120), 0, "cpu"));

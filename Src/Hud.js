@@ -19,19 +19,37 @@ class Hud {
     this.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     this.currentTime = new Date(3102441200 * 1000);
 
+    // this.buttons = [
+    //   new ClickableRegion(createVector(80, 30), [50, 20], [hudData.frame, hudData.button_find], "",null),
+    //   new ClickableRegion(createVector(80+140, 30), [50, 20], [hudData.frame, hudData.button_book], "",null),
+    //   new ClickableRegion(createVector(80+2*140, 30), [50, 20], [hudData.frame, hudData.button_map], "",this.showMinimap)
+    // ];
+
     this.buttons = [
-      new ClickableRegion(createVector(80, 30), [50, 20], [hudData.frame, hudData.button_find], "",null),
-      new ClickableRegion(createVector(80+140, 30), [50, 20], [hudData.frame, hudData.button_book], "",null),
-      new ClickableRegion(createVector(80+2*140, 30), [50, 20], [hudData.frame, hudData.button_map], "",this.showMinimap)
+      new Button(1, true, createVector(80,30), createVector(64,26),null,null,hudData.frame),
+      new Button(2, true, createVector(80+140,30), createVector(64,26),null,null,hudData.quest)      
     ];
+
   }
 
   onClick(mousePos) {
     console.log("Hud clicked");
+    let response = null;
     for (let button of this.buttons) {
-      if (button.checkClick(p5.Vector.sub(mousePos, createVector(0, mainCanvasDim[1])))) {
-        button.callback();
+      response = button.onClick(p5.Vector.sub(mousePos, createVector(0, mainCanvasDim[1])));
+      if (response !== null) {
+        break;
       }
+    }
+    console.log(response)
+    switch(response) {
+      case(null):
+      break;
+      case(1):
+      break;
+      case(2):
+        game.objectivesVisible ^= 1;
+      break;
     }
   }
 
@@ -43,21 +61,21 @@ class Hud {
   show() {
 
     for (let button of this.buttons) {
-      button.show(canvas);
+      button.show(hudCanvas);
     }
 
     let x = hudCanvas.width-80;
     let y = hudCanvas.height-30;
     hudCanvas.image(hudData.frame, x, y);
-    //hudCanvas.text(`${int(game.navigationScene.locomotive.velocity.mag()*300/9*300)} Km/h`, x, y);
+    hudCanvas.text(`${int(game.navigationScene.locomotive.velocity.mag()*300/9*300)} Km/h`, x, y);
     x-=140;
     hudCanvas.image(hudData.fuel, x, y);
-    //hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
+    hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
     x-=140;
     hudCanvas.image(hudData.gold, x, y);
-    //hudCanvas.text(`${game.playerTrain.gold}`, x, y);
+    hudCanvas.text(`${game.playerTrain.gold}`, x, y);
     x-=140;
     hudCanvas.image(hudData.frame, x, y);
-    //hudCanvas.text(`${game.navigationScene.locomotive.gear}`, x, y);
+    hudCanvas.text(`${game.navigationScene.locomotive.gear}`, x, y);
   }
 }

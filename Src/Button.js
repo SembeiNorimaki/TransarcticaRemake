@@ -1,11 +1,12 @@
 class Button {
-  constructor(id, position, halfSize, text=null, color=null, image=null) {
+  constructor(id, active, position, halfSize, text=null, color=null, image=null) {
     this.id = id;
     this.position = position;
     this.halfSize = halfSize;
     this.text = text;
     this.color = color;
     this.image = image;
+    this.active = active;
   }
 
   onClick(mousePos) {
@@ -24,15 +25,26 @@ class Button {
   show(canvas) {
     canvas.push();
     
-    if (this.color !== null) {
-      canvas.fill(this.color);
+    
+    
+    if (this.image !== null) {
+      canvas.image(this.image, this.position.x, this.position.y)
+    } else {
+      if (this.color !== null) {
+        canvas.fill(this.color);
+      }
+      canvas.rect(this.position.x - this.halfSize.x, this.position.y - this.halfSize.y, 2*this.halfSize.x, 2*this.halfSize.y);
+    
     }
-    canvas.rect(this.position.x - this.halfSize.x, this.position.y - this.halfSize.y, 2*this.halfSize.x, 2*this.halfSize.y);
+
     if (this.text !== null) {
+      canvas.fill(0);
       canvas.textAlign(CENTER, CENTER);
       canvas.textSize(32);
       canvas.text(this.text, this.position.x, this.position.y);
     }
+
+    
     
     canvas.pop();
   }

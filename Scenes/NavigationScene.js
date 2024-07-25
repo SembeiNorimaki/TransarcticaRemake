@@ -18,9 +18,9 @@ class NavigationScene {
   constructor() {
     this.selectedIntersection = null;
     //this.camera = new Camera(boardToCamera(createVector(10,10)));
-    this.camera = new Camera(boardToCamera(createVector(8,15)));
+    this.camera = new Camera(boardToCamera(createVector(12,13)));
     this.tileBoard = new TileBoard(mapBoard);
-    this.locomotive = new Locomotive(createVector(32, 15), 180.0);
+    this.locomotive = new Locomotive(createVector(15, 13), 0.0);
   }
 
   initialize() {
@@ -137,52 +137,53 @@ class NavigationScene {
 
       // We cannot ener the tile, we must stop the train
       if (!canEnter) {
+        console.log("Cannot enter tile. Inmediate stop!")
         this.locomotive.inmediateStop();
       }
 
-      // check if we arrived to a city
+      // check if we arrived to a city or industry
       let tileString = String(this.locomotive.currentTileFrontSensor.x) + "," + String(this.locomotive.currentTileFrontSensor.y);
-      if (tileString in citiesLocations) {
-        let cityName = citiesLocations[tileString];
-        console.log("Arrived to city at ", tileString);
+      if (tileString in game.events) {
+        let locationName = game.events[tileString];
         this.locomotive.inmediateStop();
         this.locomotive.turn180();
         this.locomotive.position = this.locomotive.prevTile.copy();
-        game.currentScene = new CityTradeScene(cityName);
+        
+        if (locationName in game.cities) {
+          console.log(`Arrived to city ${locationName} at ${tileString}`);
+          game.currentScene = new CityTradeScene(game.cities[locationName]);
+        } else {
+          console.log(`Arrived to industry ${locationName} at ${tileString}`);
+          game.currentScene = new IndustryTradeScene(game.industries[locationName]);  
+        }
         game.currentScene.initialize();
-      } else if (tileString in industriesLocations) {
-        console.log("Arrived to industry at ", tileString);
-        this.locomotive.inmediateStop();
-        this.locomotive.turn180();
-        this.locomotive.position = this.locomotive.prevTile.copy();
-        game.currentScene = new CityTradeScene("Barcelona");
       }  
     }
   }
 
-  showHud() {
-    let x = hudCanvas.width-80;
-    let y = hudCanvas.height-30;
-    hudCanvas.image(hudData.fuel, x, y);
-    hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
-    x-=140;
-    hudCanvas.image(hudData.gold, x, y);
-    hudCanvas.text(`${game.playerTrain.gold}`, x, y);
-    x-=140;
-    hudCanvas.image(hudData.frame, x, y);
-    hudCanvas.text(`${this.locomotive.gear}`, x, y);
-  }
+  // showHud() {
+  //   let x = hudCanvas.width-80;
+  //   let y = hudCanvas.height-30;
+  //   hudCanvas.image(hudData.fuel, x, y);
+  //   hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
+  //   x-=140;
+  //   hudCanvas.image(hudData.gold, x, y);
+  //   hudCanvas.text(`${game.playerTrain.gold}`, x, y);
+  //   x-=140;
+  //   hudCanvas.image(hudData.frame, x, y);
+  //   hudCanvas.text(`${this.locomotive.gear}`, x, y);
+  // }
 
   show() {
-    this.tileBoard.showTiles(mainCanvas, this.camera.position); 
-    // this.tileBoard.show2D(mainCanvas, this.camera.position); 
-    
-    // this.tileBoard.show2D(mainCanvas, this.camera.position); 
-    this.locomotive.show();
 
+    this.tileBoard.showTiles(mainCanvas, this.camera.position); 
+    this.locomotive.show();
+    
+    
     // show selected intersection
     if (this.selectedIntersection) {
-      let screenPos = boardToScreen(this.selectedIntersection.position, this.camera.position);
+      // console.log(this.selectedIntersection)
+      let screenPos = boardToScreen(this.selectedIntersection.boardPosition, this.camera.position);
       mainCanvas.push();
       mainCanvas.strokeWeight(2);
       mainCanvas.stroke("blue")
@@ -193,13 +194,13 @@ class NavigationScene {
       mainCanvas.pop();
     }
 
-    this.showHud();
+    game.hud.show();
 
     // show the center of the screen in red lines
-    mainCanvas.push();
-    mainCanvas.stroke("red")
-    mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
-    mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
-    mainCanvas.pop();
+    // mainCanvas.push();
+    // mainCanvas.stroke("red")
+    // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
+    // mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
+    // mainCanvas.pop();
   }
 }

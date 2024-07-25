@@ -14,14 +14,21 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-class City {
-  constructor(cityData) {
-    // this.cityData = cityData;
-    this.name = cityData.name;
-    this.resources = cityData.resources;
-    this.objectiveData = cityData.objectives;
-
-    this.objective = new Objective(this.objectiveData);
+class Unit {
+  constructor(id, position, owner) {
+    this.id = id;
+    this.owner = owner;
+    this.position = position.copy();
+    if (this.owner == "player") {
+      this.defaultOrientation = 90;
+    } else {
+      this.defaultOrientation = 270;
+    }
+    this.orientation = this.defaultOrientation;
+    this.direction = createVector(0, 0);
     
-  }  
+    this.path = [];
+    this.selected = false;
+    this.dead = false;
+  }
 }

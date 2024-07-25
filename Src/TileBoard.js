@@ -37,7 +37,7 @@ class TileBoard {
 
 
   buildCity(boardPos) {
-    this.board[boardPos.y][boardPos.x].setTileId(0xA0);
+    this.board[boardPos.y][boardPos.x].setTileId(0xA3);
   }
   buildIndustry(boardPos) {
     this.board[boardPos.y][boardPos.x].setTileId(0xFE);

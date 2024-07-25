@@ -406,7 +406,7 @@ class Tile {
     } else if (this.tileId == 0x55) {
       Tile.draw(mainCanvas, 0x04, screenPos.copy());
     }
-    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF) {
+    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF || this.tileId == 0x5A || this.tileId == 0x5B) {
       Tile.draw(canvas, 0x01, screenPos);
     }
     
@@ -415,9 +415,9 @@ class Tile {
       let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
       if (posStr in industriesLocations) {
         
-        canvas.image(industriesInfo[game.industries[industriesLocations[posStr]].name].imgNav,
-          screenPos.x - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[0], 
-          screenPos.y - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[1]);
+        canvas.image(industriesInfo[game.industries[industriesLocations[posStr]].resourceName].imgNav,
+          screenPos.x - industriesInfo[game.industries[industriesLocations[posStr]].resourceName].offsetNav[0], 
+          screenPos.y - industriesInfo[game.industries[industriesLocations[posStr]].resourceName].offsetNav[1]);
         
         // Tile.draw(canvas, 0x02, screenPos);
       }
@@ -425,7 +425,7 @@ class Tile {
     }
 
     Tile.draw(canvas, this.tileId, screenPos);
-    canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
+    // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
     // canvas.text(auxText, screenPos.x, screenPos.y); 
 
     if (this.isSelected) {

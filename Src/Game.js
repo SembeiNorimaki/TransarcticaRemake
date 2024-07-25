@@ -24,13 +24,14 @@ class Game {
     Tile.initialize();
 
     this.navigationScene = new NavigationScene();
+    this.navigationScene.initialize();
 
     this.playerTrain = new Train("Player");
     
     // TODO: The game has a list of enemy trains
     this.enemyTrain = new Train("CPU");
 
-    //this.hud = new Hud();
+    this.hud = new Hud();
 
     // In navigationScene or keep it here?
     this.industries = {};
@@ -44,23 +45,46 @@ class Game {
     }
 
     this.events = {};
+    // Cities are 2x2
     for (let [cityLocation, cityName] of Object.entries(citiesLocations)) {
-      this.events[cityLocation] = cityName;
+      let aux = cityLocation.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = cityName;
+      this.events[`${x-1},${y-1}`] = cityName;
+      this.events[`${x},${y-1}`] = cityName;
+      this.events[`${x-1},${y}`] = cityName;
     }
+    // Industries are 3x3
     for (let [industryLocation, industryName] of Object.entries(industriesLocations)) {
-      this.events[industryLocation] = industryName;
+      let aux = industryLocation.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = industryName;
+      this.events[`${x-1},${y}`] = industryName;
+      this.events[`${x-2},${y}`] = industryName;
+      this.events[`${x},${y-1}`] = industryName;
+      this.events[`${x-2},${y-1}`] = industryName;
+      this.events[`${x},${y-2}`] = industryName;
+      this.events[`${x-1},${y-2}`] = industryName;
+      this.events[`${x-2},${y-2}`] = industryName;
+      
     }
+    console.log(this.events)
 
     this.objectives = [];
+    this.objectivesVisible = false;
   }
 
   initialize() {
     // Apply saveData
     this.playerTrain.initialize(this.saveData.PlayerTrain);
     this.enemyTrain.initialize(this.saveData.EnemyTrain);
-    //this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
+
+    // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
+    // this.currentScene = new CombatWolves(this.playerTrain);
     this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
-    // this.currentScene = new IndustryTradeScene(this.industries["Barcelona"]);
+    // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
     // this.currentScene = this.navigationScene;
@@ -69,16 +93,26 @@ class Game {
 
   showObjectives() {
     mainCanvas.fill(255,255,255,200);
-    mainCanvas.rect(0,50,500,400,20)
+    mainCanvas.rect(0,50,700,500,20)
     mainCanvas.fill(0);
     mainCanvas.text("Objectives:", 20, 100);
     let x = 30;
     let y = 140;
     for (let objective of this.objectives) {
-      mainCanvas.text(objective.title, x, y);
+      if (objective.completed) {
+        mainCanvas.fill("green");
+      } else {
+        mainCanvas.fill(0);
+      }
+      mainCanvas.text(`- ${objective.title}`, x, y);
       y += 30;
-      mainCanvas.text(objective.summary, x, y);
-      y += 50;
+      let line = "";
+      for (let [resource, val] of Object.entries(objective.resources)) {
+        line += `    ${resource}: ${val.delivered} / ${val.needed}  `;
+      }
+      mainCanvas.text(line, x, y);
+      y += 30;
+      
     }    
   }
 
@@ -94,8 +128,9 @@ class Game {
 
   update(){
     this.currentScene.update();    
-    this.currentScene.show();  
-    //this.showObjectives();  
+    this.currentScene.show(); 
+    if (this.objectivesVisible) 
+      this.showObjectives();  
     //this.showCharacter();
   }
 

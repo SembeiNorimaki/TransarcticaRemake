@@ -1,85 +1,18 @@
-// Copyright (C) 2024  Sembei Norimaki
-
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-class Unit {
+class Wolf extends Unit {
   constructor(id, position, owner) {
-    this.id = id;
-    this.owner = owner;
-    this.position = position.copy();
-    if (this.owner == "player") {
-      this.defaultOrientation = 90;
-    } else {
-      this.defaultOrientation = 270;
-    }
-    this.orientation = this.defaultOrientation;
-    this.direction = createVector(0, 0);
-    
-    this.path = [];
-    this.selected = false;
-    this.dead = false;
-  }
-}
-
-class Soldier extends Unit{
-  static Action = Object.freeze({
-    Idle:  "idle",
-    Walk:  "walk",
-    Shoot: "shoot"
-  });
-
-  constructor(id, position, soldierType, owner) {
     super(id, position, owner);
-    this.role = "";
-    
-    if (this.owner == "cpu") {
-      this.soldierAI = new SoldierAI(this.role, this);
-    }
-    this.halfSize = createVector(20, 20);
-    
+    this.halfSize = createVector(50,50);
     let spriteData = {
-      "imgs": unitsData.soldier[1],
-      "actions": ["idle", "walk", "shoot"],
-      "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
-      "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
+      "imgs": unitsData.wolf[0],
+      "actions": ["walk"],
+      "nSprites": {"walk": 8},
+      "spriteDuration": {"walk": 5}
     }
-
-    this.sprite = new Sprite("idle", this.orientation, spriteData);
-    
-    // TODO: Make child class for each soldier type
-    this.soldierType = soldierType;
-
-    this.targetUnit = null;
-
-    if (this.owner == "player") {
-      this.setAction(Soldier.Action.Idle);
-    } else {
-      this.setAction(Soldier.Action.Idle);
-      //let orders = this.soldierAI.requestOrders();
-      //console.log(orders)
-    }
+    this.sprite = new Sprite("walk", this.orientation, spriteData);
   }
-
   setOrientation(ori) {
     this.orientation = ori;
     this.sprite.setOrientation(ori);
-  }
-
-  setRole(roleData) {
-    this.role = roleData.role;
-    this.soldierAI.setRole(roleData);
   }
 
   // TODO: This shouldn't be here, should be in CombatScene or in the Map of combatScene
@@ -154,22 +87,6 @@ class Soldier extends Unit{
       mousePos.y <= this.position.y + this.halfSize.y);
   }
 
-  fireWeapon() {
-    console.log("Fire!");
-    this.shootAtUnit(this.targetUnit);
-  }
-
-  processOrder(order) {
-    if (order.order == "move") {
-      this.setTargetPosition(order.destination);
-      this.setAction(Soldier.Action.Walk);
-    }
-    else if (order.order == "shoot") {
-      this.setAction(Soldier.Action.Shoot);
-      this.setTargetUnit(order.destination);
-    }
-  }
-
   update() {
     // update sprite
     this.sprite.update();
@@ -232,27 +149,6 @@ class Soldier extends Unit{
     }
   }
 
-  setTargetUnit(unit) {
-    this.targetUnit = unit;
-  }
-
-  receiveDamage(amount) {
-    this.hp -= amount;
-    if (this.hp <= 0) {
-      this.dead = true;
-    }
-  }
-
-  shootAtUnit(targetUnit) {
-    targetUnit.receiveDamage(1);
-  }
-
-  showHud() {
-    hudCanvas.background(100);
-    hudCanvas.image(unitsData.soldier[this.soldierType].idle[270][0], 60, 25, 32, 54);
-    hudCanvas.text("Rifleman", 150, 30);
-  }
-
   show(cameraPos) {
     //console.log(unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
     //mainCanvas.image(unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
@@ -272,7 +168,7 @@ class Soldier extends Unit{
       mainCanvas.push();
       mainCanvas.noFill();
       mainCanvas.circle(position.x, position.y, 60);
-      this.showHud();
+      //this.showHud();
       mainCanvas.pop();
       //mainCanvas.fill(255)
     }
@@ -318,52 +214,8 @@ class Soldier extends Unit{
       mainCanvas.pop();
     //}
   }
-}
 
-class Sniper extends Soldier {
-  constructor(id, position, soldierType, owner) {
-    super(id, position, soldierType, owner);
 
-    let spriteData = {
-      "imgs": unitsData.soldier[1],
-      "actions": ["idle", "walk", "shoot"],
-      "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
-      "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
-    }
 
-    this.sprite = new Sprite("idle", this.orientation, spriteData);
-    this.range = 200;
-    this.viewRange = 250;
-    this.hp = 100;
 
-    this.fireSpeed = 20;
-    this.fireCount = this.fireSpeed;
-    this.walkSpeed = 1;
-
-    
-  }
-}
-
-class Rifleman extends Soldier {
-  constructor(id, position, soldierType, owner) {
-    super(id, position, soldierType, owner);
-    
-    let spriteData = {
-      "imgs": unitsData.soldier[0],
-      "actions": ["idle", "walk", "shoot"],
-      "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
-      "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
-    }
-
-    this.sprite = new Sprite("idle", this.orientation, spriteData);
-    this.range = 150;
-    this.viewRange = 200;
-    this.hp = 100;
-
-    this.fireSpeed = 10;
-    this.fireCount = this.fireSpeed;
-    this.walkSpeed = 1;
-    
-
-  }
 }

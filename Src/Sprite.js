@@ -100,8 +100,8 @@ class Sprite {
     mainCanvas.image(this.#currentImg, 
       screenPos.x - this.#currentImg.width, 
       screenPos.y - this.#currentImg.height,
-      this.#currentImg.width*2,
-      this.#currentImg.height*2
+      this.#currentImg.width*1,
+      this.#currentImg.height*1
     );
     //mainCanvas.circle(screenPos.x, screenPos.y, 5);
   }

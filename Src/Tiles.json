@@ -99,12 +99,10 @@
     "Mine6": {"filename": "resources/industries/mine/2289_zi4.png"},
     "Mine7": {"filename": "resources/industries/mine/2290_zi4.png"},
     "Mine8": {"filename": "resources/industries/mine/2291_zi4.png"},
-    "Mine9": {"filename": "resources/industries/mine/2292_zi4.png"}
+    "Mine9": {"filename": "resources/industries/mine/2292_zi4.png"},
 
-
-
-
-
+    "Forest": {"filename": "resources/terrain/forest_zi2.png"},
+    "Forest2": {"filename": "resources/terrain/forest_zi4.png"}
   },
 
   "TileCodes": {
@@ -118,14 +116,12 @@
     "0x07": {"imgName": "Water_W"    ,  "offset": [0,  16]},
     "0x08": {"imgName": "Water_E"    ,  "offset": [0,  16]},
     "0x09": {"imgName": "Water_S"    ,  "offset": [0,   0]},
-
     "0x0A": {"imgName": "Valley_N"   ,  "offset": [0,  16]},
     "0x0B": {"imgName": "Valley_W"   ,  "offset": [0,   0]},
     "0x0C": {"imgName": "Valley_E"   ,  "offset": [0,   0]},
     "0x0D": {"imgName": "Valley_S"   ,  "offset": [0,  0]},
     "0x0E": {"imgName": "Saddle_WE"  ,  "offset": [0,   0]},
     "0x0F": {"imgName": "Saddle_NS"  ,  "offset": [0,   0]},
-
     "0x10": {"imgName": "Water"      ,  "offset": [0,   0]},
     "0x11": {"imgName": "Ground"     ,  "offset": [0, -16]},
     "0x12": {"imgName": "Ramp_SE"    ,  "offset": [0, -16]},
@@ -166,7 +162,6 @@
     "0x45": {"imgName": "Rail_B"   , "offset": [0, 0]},
     "0x46": {"imgName": "Rail_C"   , "offset": [0, 0]},
     "0x47": {"imgName": "Rail_D"   , "offset": [0, 0]},
-    
     "0x48": {"imgName": "Tunnel_A"   , "offset": [0, 0]},
     "0x49": {"imgName": "Tunnel_B"   , "offset": [0, 0]},
     "0x4A": {"imgName": "Tunnel_C"   , "offset": [0, -16]},
@@ -178,6 +173,10 @@
     "0x53": {"imgName": "Bridge_BC"   , "offset": [1, 2]},
     "0x54": {"imgName": "Bridge_BC"   , "offset": [1, 2]},
     "0x55": {"imgName": "Bridge_BC"   , "offset": [1, 2]},
+
+    "0x5A": {"imgName": "Forest"   , "offset": [0, -42]},
+    "0x5B": {"imgName": "Forest2"   , "offset": [-64, -142]},
+    
 
     "0x70": {"imgName": "Road_AD" , "offset": [0, 0]},
     "0x71": {"imgName": "Road_BC" , "offset": [0, 0]},

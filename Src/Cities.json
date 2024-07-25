@@ -24,19 +24,22 @@
       }
     },
     "objectives": {
-      "title": "Deliver 500 tonnes of grain and 400 tonnes of coal to Barcelona.",
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
         "Please help us, the city is starving!",
-        "We need 500 tonnes of grain and 400 tonnes of coal to survive the winter."  
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
       ],
+      "completed": false,
       "resources": {
-        "Grain": {
+        "Oil": {
           "needed": 500,
-          "delivered": 0
+          "delivered": 0,
+          "completed": false
         },
-        "Coal": {
+        "Iron": {
           "needed": 400,
-          "delivered": 0
+          "delivered": 0,
+          "completed": false
         }
       }
     }
@@ -44,28 +47,27 @@
   "Madrid": {
     "name": "Madrid",
     "resources": {
-      "Resource1": {
-        "Qty": 10,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Resource2": {
-        "Qty": 10,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Resource3": {
-        "Qty": 10,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Resource4": {
-        "Qty": 10,
+      "Oil": {
+        "Qty": 1,
         "Sell": 2,
         "Buy": 1
       }
     },
-    "objectives": {}
+    "objectives": {
+      "title": "Kill 5 wolves and bring the fur to Madrid",
+      "summary": [
+        "Wolves are getting more aggressive and attack our citizens!",
+        "Kill 5 wolves and bring their fur to us."  
+      ],
+      "completed": false,
+      "resources": {
+        "Wolf Fur": {
+          "needed": 5,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
   },
   "Valencia": {
     "name": "Valencia",

@@ -39,7 +39,7 @@ class InfoPanel {
     this.lines = data.lines;
     this.activeButton = data.buttons;
 
-    this.active = true;
+    // this.active = true;
   }
 
   onClick(mousePos) {

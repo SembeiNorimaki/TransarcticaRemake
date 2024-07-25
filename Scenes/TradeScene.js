@@ -16,7 +16,13 @@
 
 class TradeScene {
   constructor(locationName, board) {
-    this.city = citiesData[locationName]
+    //TODO: this is a hack, fix this mess
+    console.log(locationName)
+    if (locationName in citiesData) 
+      this.city = citiesData[locationName]
+    else
+      this.city = industriesData[locationName]
+     
     this.locationName = locationName;
     this.tileBoard = new TileBoard(board);
     this.infoPanel = new InfoPanel();
@@ -41,12 +47,13 @@ class TradeScene {
 
   initialize() {
     this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
-    this.horizontalTrain.setPosition(createVector(1400, 800+20));
-    this.horizontalTrain.setVelocity(0);
+    this.horizontalTrain.setPosition(createVector(0, 800));
+    this.horizontalTrain.setVelocity(20);
   }
   
   populateBuyableWagons() {
     let row = 0;
+    console.log(this.city)
     for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
       for (let i=0; i<resourceInfo.Qty; i++) {
         let wagonName = resourceToWagon[resourceName];
@@ -78,14 +85,22 @@ class TradeScene {
   }
 
   sellWagon() {
+    let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
+    let resourceQty = game.playerTrain.wagons[this.selectedTrainWagonIdx].usedSpace;
+
     // Add selling price to player's gold
-    game.playerTrain.gold += this.city.resources[game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo].Sell;
+    game.playerTrain.gold += this.city.resources[resourceName].Sell;
     // Remove wagon from the train (it also updates the weight)
     game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
     // deselect wagon
     this.selectedTrainWagonIdx = null;
     // hide panel
     this.infoPanel.active = false;
+    // update objectives
+    this.city.objective.updateResource(resourceName, resourceQty);
+    // if (resourceName in this.city.objective.resources) {
+    //   this.city.objective.resources[resourceName].delivered += resourceQty;
+    // }
   }
 
   // Move train left and right
@@ -118,18 +133,24 @@ class TradeScene {
   }
 
 
-  showHud() {
-    let x = hudCanvasDim[0] - 80;
-    let y = hudCanvasDim[1] / 2;
+  // showHud() {
+  //   let x = hudCanvasDim[0] - 80;
+  //   let y = hudCanvasDim[1] / 2;
 
-    hudCanvas.image(hudData.fuel, x, y);
-    hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
-    x-=140;
-    hudCanvas.image(hudData.gold, x, y);
-    hudCanvas.text(`${game.playerTrain.gold}`, x, y);
-    x-=140;
-    hudCanvas.image(hudData.frame, x, y);
-  }
+
+  //   //hudCanvas.image(hudData.frame, 100, y);
+  //   hudCanvas.image(hudData.quest, 100, y);
+    
+
+  //   hudCanvas.image(hudData.fuel, x, y);
+  //   hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
+  //   x-=140;
+  //   hudCanvas.image(hudData.gold, x, y);
+  //   hudCanvas.text(`${game.playerTrain.gold}`, x, y);
+  //   x-=140;
+  //   hudCanvas.image(hudData.frame, x, y);
+
+  // }
 }
 
 class CityTradeScene extends TradeScene {
@@ -139,44 +160,16 @@ class CityTradeScene extends TradeScene {
     
     this.backgroundImg = this.generateBackgroundImage();
     this.populateBuyableWagons();
+
+    this.conversationPanel.fillData({
+      "characterName": "Trader",
+      "textLines": this.city.objective.summary
+    });
   }
 
   showConversation() {
-    this.conversationPanel.fillData({
-      "characterName": "Yuri",
-      "textLines": ["a", "bb", "ccc"]
-    });
     this.conversationPanel.show();
   }
-
-  // showConversation() {
-  //   mainCanvas.push();
-  //   mainCanvas.fill(255,255,255,200);
-  //   mainCanvas.noStroke();
-  //   mainCanvas.rect(0,mainCanvasDim[1]-200,mainCanvasDim[0],200);
-  //   mainCanvas.image(charactersData.Trader,0,mainCanvasDim[1]-200);
-  //   mainCanvas.fill(0);
-  //   mainCanvas.textSize(24);
-  //   let y = mainCanvasDim[1] - 150;
-  //   for (let line of this.city.objective.summary) {
-  //     mainCanvas.text(line, 250, y);
-  //     y += 40;
-  //   }
-    
-  //   mainCanvas.fill(0x93, 0xDC, 0x5C);
-  //   mainCanvas.rect(mainCanvasDim[0]-220, mainCanvasDim[1]-190, 200, 80);
-  //   mainCanvas.fill(0xAE, 0x4D, 0x4D);
-  //   mainCanvas.rect(mainCanvasDim[0]-220, mainCanvasDim[1]-90, 200, 80);
-  //   mainCanvas.fill(0);
-  //   mainCanvas.textAlign(CENTER, CENTER);
-  //   mainCanvas.textSize(28);
-  //   mainCanvas.text("Accept", mainCanvasDim[0]-220+100, mainCanvasDim[1]-190+40);
-  //   mainCanvas.text("Decline", mainCanvasDim[0]-220+100, mainCanvasDim[1]-90+40);
-    
-  //   mainCanvas.pop();
-  // }
-
-
 
   generateBackgroundImage() {
     let backgroundImage = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
@@ -193,13 +186,31 @@ class CityTradeScene extends TradeScene {
     return backgroundImage;
   }
 
-
+  acceptMission() {
+    game.objectives.push(this.city.objective);
+    this.conversationPanel.active = false;
+  }
 
   onClick(mousePos) {    
-
+    // check conversation panel
+    if (this.conversationPanel.active) {
+      let buttonIdx = this.conversationPanel.onClick(mousePos);
+      console.log(buttonIdx)
+      switch(buttonIdx) {
+        case(1): // Accept button
+          console.log("Mission accepted");
+          this.acceptMission();
+          
+        break;
+        case(2): // Reject Button
+          console.log("Mission declined");
+          this.conversationPanel.active = false;
+        break;
+      }
+    }
     
     // Horizontal train
-    if (mousePos.y > 750) {
+    else if (mousePos.y > 750) {
       let wagonIdx = this.horizontalTrain.onClick(mousePos);
       console.log(`Clicked wagon ${wagonIdx}`)
       if (wagonIdx !== null) {
@@ -219,6 +230,7 @@ class CityTradeScene extends TradeScene {
         infoPanelData.lines.push(`Price: ${price}`);
         infoPanelData.buttons = button;
         this.infoPanel.fillData(infoPanelData);
+        this.infoPanel.active = true;
       }
     } 
 
@@ -231,10 +243,17 @@ class CityTradeScene extends TradeScene {
           this.buyWagon();
         } else if (this.selectedTrainWagonIdx !==null) {
           console.log("selling a wagon");
-          this.sellWagon();
-          
+          this.sellWagon();          
         }
       }
+    }
+    
+    // TrafficLight
+    else if (this.trafficLight.checkClick(mousePos)) {
+      this.exitSequence = true;
+      this.horizontalTrain.gearUp();
+      this.horizontalTrain.maxSpeed = 25;
+      this.horizontalTrain.acceleration = 0.2;
     }
 
     else {
@@ -251,26 +270,19 @@ class CityTradeScene extends TradeScene {
           infoPanelData.lines.push(`Price: ${this.city.resources[wagon.cargo].Buy}`);
           infoPanelData.buttons = "Buy";
           this.infoPanel.fillData(infoPanelData);
+          this.infoPanel.active = true;
           return;
         }
       }
 
-      // Then check if we clicked the TrafficLight
-      if (this.trafficLight.checkClick(mousePos)) {
-        this.exitSequence = true;
-        this.horizontalTrain.gearUp();
-        this.horizontalTrain.maxSpeed = 25;
-        this.horizontalTrain.acceleration = 0.2;
-        return;
-      }
-
+    
       // check if we clicked a house
       let boardPos = screenToBoard(mousePos, this.cameraPos);
       let tileId = this.tileBoard.board[boardPos.y][boardPos.x].tileId;
       console.log(`Tile clicked: ${boardPos.array()} with tileId ${tileId}`);
 
       if (tileId == 0xFF) {
-
+        this.conversationPanel.active = true;
       }
 
 
@@ -330,18 +342,35 @@ class CityTradeScene extends TradeScene {
     // mainCanvas.line(0,750,mainCanvasDim[0],750)
     // mainCanvas.pop();
 
-    this.showHud();
-
+    //this.showHud();
+    game.hud.show();
     this.showConversation();
+
+    mainCanvas.push();
+    mainCanvas.textSize(40);
+    mainCanvas.fill(0)
+    mainCanvas.textAlign(CENTER, CENTER)
+    mainCanvas.text(this.city.name, mainCanvasDim[0]/2, 50);
+    mainCanvas.pop();
   }
 }
 
 class IndustryTradeScene extends TradeScene {
-  constructor(locationName) {
-    super(locationName, industryBoard);
+  constructor(industry) {
+    super(industry.name, industryBoard);
     
+    this.industry = industry;
     this.backgroundImg = this.generateBackgroundImage();
     this.populateBuyableWagons();
+
+    // this.conversationPanel.fillData({
+    //   "characterName": "Trader",
+    //   "textLines": this.city.objective.summary
+    // });
+    console.log(industriesInfo)
+    console.log(this.industry.name)
+    
+    
   }
 
   generateBackgroundImage() {
@@ -350,15 +379,18 @@ class IndustryTradeScene extends TradeScene {
 
     // show industry
     let aux = boardToScreen(createVector(14,21),this.cameraPos)
-    let industryName = "Oil"
-    // backgroundImage.image(
-    //   industryData[industryName].imgTrade,
-    //   aux.x - industryData[industryName].offsetTrade[0],
-    //   aux.y - industryData[industryName].offsetTrade[1]);
+    // let industryName = "Oil"
+    backgroundImage.image(
+      industriesInfo[this.industry.resourceName].imgTrade,
+      aux.x - industriesInfo[this.industry.resourceName].offsetTrade[0],
+      aux.y - industriesInfo[this.industry.resourceName].offsetTrade[1]
+    );
     // Tile.draw(backgroundImage, 0xC5, boardToScreen(createVector(14,21),this.cameraPos))
     //Tile.draw(backgroundImage, 0xC1, boardToScreen(createVector(14,23),this.cameraPos))
     // Tile.draw(backgroundImage, 0xC3, boardToScreen(createVector(14,21),this.cameraPos))
 
+    //mainCanvas.image(this.industriesInfo[this.industry.resourceName].imgTrade,0,0)
+    
     // Bottom rails for player train
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
@@ -372,8 +404,25 @@ class IndustryTradeScene extends TradeScene {
   }
   
   onClick(mousePos) {    
+    // check conversation panel
+    if (this.conversationPanel.active) {
+      let buttonIdx = this.conversationPanel.onClick(mousePos);
+      console.log(buttonIdx)
+      switch(buttonIdx) {
+        case(1): // Accept button
+          console.log("Mission accepted");
+          this.acceptMission();
+          
+        break;
+        case(2): // Reject Button
+          console.log("Mission declined");
+          this.conversationPanel.active = false;
+        break;
+      }
+    }
+    
     // Horizontal train
-    if (mousePos.y > 750) {
+    else if (mousePos.y > 750) {
       let wagonIdx = this.horizontalTrain.onClick(mousePos);
       console.log(`Clicked wagon ${wagonIdx}`)
       if (wagonIdx !== null) {
@@ -393,6 +442,7 @@ class IndustryTradeScene extends TradeScene {
         infoPanelData.lines.push(`Price: ${price}`);
         infoPanelData.buttons = button;
         this.infoPanel.fillData(infoPanelData);
+        this.infoPanel.active = true;
       }
     } 
 
@@ -405,10 +455,17 @@ class IndustryTradeScene extends TradeScene {
           this.buyWagon();
         } else if (this.selectedTrainWagonIdx !==null) {
           console.log("selling a wagon");
-          this.sellWagon();
-          
+          this.sellWagon();          
         }
       }
+    }
+    
+    // TrafficLight
+    else if (this.trafficLight.checkClick(mousePos)) {
+      this.exitSequence = true;
+      this.horizontalTrain.gearUp();
+      this.horizontalTrain.maxSpeed = 25;
+      this.horizontalTrain.acceleration = 0.2;
     }
 
     else {
@@ -425,36 +482,31 @@ class IndustryTradeScene extends TradeScene {
           infoPanelData.lines.push(`Price: ${this.city.resources[wagon.cargo].Buy}`);
           infoPanelData.buttons = "Buy";
           this.infoPanel.fillData(infoPanelData);
+          this.infoPanel.active = true;
           return;
         }
       }
 
-      // Then check if we clicked the TrafficLight
-      if (this.trafficLight.checkClick(mousePos)) {
-        this.exitSequence = true;
-        this.horizontalTrain.gearUp();
-        this.horizontalTrain.maxSpeed = 25;
-        this.horizontalTrain.acceleration = 0.2;
-        return;
+    
+      // check if we clicked the industry
+      let boardPos = screenToBoard(mousePos, this.cameraPos);
+      let tileId = this.tileBoard.board[boardPos.y][boardPos.x].tileId;
+      console.log(`Tile clicked: ${boardPos.array()} with tileId ${tileId}`);
+
+      if (tileId == 0xFF) {
+        console.log("clicked industry")
+        // this.conversationPanel.active = true;
+        this.infoPanel.fillData(this.industry.panelInfo);
+        this.infoPanel.active = true;
       }
-
-      // If we click anywhere else
-      this.selectedBuyableWagonIdx = null;
-      this.selectedTrainWagonIdx = null;
-      this.infoPanel.active = false;
-
+      else {
+        // If we click anywhere else
+        this.selectedBuyableWagonIdx = null;
+        this.selectedTrainWagonIdx = null;
+        this.infoPanel.active = false;
+      }
       // let boardPos = screenToBoard(mousePos, this.cameraPos);
       // console.log(`Tile clicked: ${boardPos.array()} with tileId ${this.tileBoard.board[boardPos.y][boardPos.x].tileId}`);
-
-      // this.infoPanel.fillData(
-      //   {
-      //     "title": this.industry.name,
-      //     "image": industryData[this.industry.name].img2,
-      //     "lines": [`LINE1`, `LINE2`, `LINE3`],
-      //     "buttons": "Buy",
-      //   }
-      // )
-      // this.infoPanel.active = true;
     }
 
 
@@ -494,6 +546,13 @@ class IndustryTradeScene extends TradeScene {
     // mainCanvas.line(0,750,mainCanvasDim[0],750)
     // mainCanvas.pop();
 
-    this.showHud();
+    // this.showHud();
+    game.hud.show();
+    mainCanvas.push();
+    mainCanvas.textSize(40);
+    mainCanvas.fill(0)
+    mainCanvas.textAlign(CENTER, CENTER)
+    mainCanvas.text(this.industry.name, mainCanvasDim[0]/2, 50);
+    mainCanvas.pop();
   }
 }

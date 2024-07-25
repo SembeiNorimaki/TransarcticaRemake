@@ -1,6 +1,7 @@
 {
     "fuel": "fuel.png",
     "gold": "gold.png",
+    "quest": "quest.png",
     "frame": "frame.png",
     "button_map": "button_minimap.png",
     "button_find": "button_findengine.png",

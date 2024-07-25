@@ -1,9 +1,31 @@
 {
-  "Barcelona_Farm": {
-    "name": "Farm"
+  "Barcelona_Mine": {
+    "name": "Barcelona_Mine",
+    "resources": {
+      "Oil": {
+        "Production": 2,
+        "Qty": 3,
+        "Sell": 0,
+        "Buy": 20
+      },
+      "Iron": {
+        "Production": 0,
+        "Qty": 0,
+        "Sell": 20,
+        "Buy": 0
+      }
+    }
 
   },
   "Madrid_Chemical": {
-    "name": "Chemical"
+    "name": "Madrid_Chemical",
+    "resources": {
+      "Oil": {
+        "Production": 2,
+        "Qty": 3,
+        "Sell": 20,
+        "Buy": 10
+      }
+    }
   }
 }
