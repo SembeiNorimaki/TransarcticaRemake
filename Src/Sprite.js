@@ -33,7 +33,7 @@ class Sprite {
 
   constructor(action, orientation, spriteData) {
     // this.#spriteData = {
-    //   "imgs": unitsData.soldier[0],
+    //   "imgs": gameData.unitsData.soldier[0],
     //   "actions": ["idle", "walk", "shoot"],
     //   "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
     //   "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
@@ -93,16 +93,22 @@ class Sprite {
         this.#spriteIdx = 0;
       }
     }
-    this.#currentImg = this.#imgs[this.#currentAction][this.#orientation][this.#spriteIdx];
+    try {
+      this.#currentImg = this.#imgs[this.#currentAction][this.#orientation][this.#spriteIdx];
+    }catch{
+      let a=0;
+    }
   }
 
   show(screenPos) {
     mainCanvas.image(this.#currentImg, 
-      screenPos.x - this.#currentImg.width, 
-      screenPos.y - this.#currentImg.height,
-      this.#currentImg.width*1,
-      this.#currentImg.height*1
+      screenPos.x - this.#currentImg.width/2, 
+      screenPos.y - this.#currentImg.height/2
     );
+    // mainCanvas.image(this.#currentImg, 
+    //   screenPos.x, 
+    //   screenPos.y
+    // );
     //mainCanvas.circle(screenPos.x, screenPos.y, 5);
   }
 }

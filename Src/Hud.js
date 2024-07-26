@@ -20,14 +20,15 @@ class Hud {
     this.currentTime = new Date(3102441200 * 1000);
 
     // this.buttons = [
-    //   new ClickableRegion(createVector(80, 30), [50, 20], [hudData.frame, hudData.button_find], "",null),
-    //   new ClickableRegion(createVector(80+140, 30), [50, 20], [hudData.frame, hudData.button_book], "",null),
-    //   new ClickableRegion(createVector(80+2*140, 30), [50, 20], [hudData.frame, hudData.button_map], "",this.showMinimap)
+    //   new ClickableRegion(createVector(80, 30), [50, 20], [gameData.hudData.frame, gameData.hudData.button_find], "",null),
+    //   new ClickableRegion(createVector(80+140, 30), [50, 20], [gameData.hudData.frame, gameData.hudData.button_book], "",null),
+    //   new ClickableRegion(createVector(80+2*140, 30), [50, 20], [gameData.hudData.frame, gameData.hudData.button_map], "",this.showMinimap)
     // ];
 
     this.buttons = [
-      new Button(1, true, createVector(80,30), createVector(64,26),null,null,hudData.frame),
-      new Button(2, true, createVector(80+140,30), createVector(64,26),null,null,hudData.quest)      
+      new Button(1, true, createVector(80,30), createVector(64,26),null,null,gameData.hudData.frame),
+      new Button(2, true, createVector(80+140,30), createVector(64,26),null,null,gameData.hudData.quest),
+      new Button(3, true, createVector(80+140*2,30), createVector(64,26),null,null,CharacterData.Yuri)     
     ];
 
   }
@@ -41,14 +42,16 @@ class Hud {
         break;
       }
     }
-    console.log(response)
     switch(response) {
       case(null):
       break;
       case(1):
       break;
-      case(2):
+      case(2):  // Objectives button
         game.objectivesVisible ^= 1;
+      break;
+      case(3):  // Help button
+        game.conversationPanel.active ^= 1;
       break;
     }
   }
@@ -66,16 +69,16 @@ class Hud {
 
     let x = hudCanvas.width-80;
     let y = hudCanvas.height-30;
-    hudCanvas.image(hudData.frame, x, y);
+    hudCanvas.image(gameData.hudData.frame, x, y);
     hudCanvas.text(`${int(game.navigationScene.locomotive.velocity.mag()*300/9*300)} Km/h`, x, y);
     x-=140;
-    hudCanvas.image(hudData.fuel, x, y);
+    hudCanvas.image(gameData.hudData.fuel, x, y);
     hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
     x-=140;
-    hudCanvas.image(hudData.gold, x, y);
+    hudCanvas.image(gameData.hudData.gold, x, y);
     hudCanvas.text(`${game.playerTrain.gold}`, x, y);
     x-=140;
-    hudCanvas.image(hudData.frame, x, y);
+    hudCanvas.image(gameData.hudData.frame, x, y);
     hudCanvas.text(`${game.navigationScene.locomotive.gear}`, x, y);
   }
 }

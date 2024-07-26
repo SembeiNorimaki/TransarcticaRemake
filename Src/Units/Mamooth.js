@@ -210,7 +210,7 @@ class Mamooth {
 
   showHud() {
     hudCanvas.background(100);
-    //hudCanvas.image(unitsData.soldier[this.soldierType].walk[this.orientation][this.spriteIdx], 60, 30, 32, 54);
+    //hudCanvas.image(gameData.unitsData.soldier[this.soldierType].walk[this.orientation][this.spriteIdx], 60, 30, 32, 54);
     hudCanvas.text("Mamooth", 150, 30);
   }
 

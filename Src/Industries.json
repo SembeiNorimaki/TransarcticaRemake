@@ -1,30 +1,47 @@
 {
   "Barcelona_Mine": {
     "name": "Barcelona_Mine",
+    "industryType": "Wood",
+    "produces": "Wood",
+    "requires": {
+    },
+
     "resources": {
-      "Oil": {
+      "Wood": {
+        "Production": 2,
+        "Qty": 4,
+        "Sell": 0,
+        "Buy": 20
+      }
+    }
+
+  },
+  "Madrid Forest": {
+    "name": "Madrid Forest",
+    "industryType": "Lumber",
+    "produces": "Wood",
+    "requires": {
+      "Oil": 2,
+      "Copper": 3
+    },
+    "resources": {
+      "Iron": {
         "Production": 2,
         "Qty": 3,
         "Sell": 0,
         "Buy": 20
       },
-      "Iron": {
+      "Oil": {
+        "Production": 2,
+        "Qty": 0,
+        "Sell": 0,
+        "Buy": 20
+      },
+      "Copper": {
         "Production": 0,
         "Qty": 0,
         "Sell": 20,
         "Buy": 0
-      }
-    }
-
-  },
-  "Madrid_Chemical": {
-    "name": "Madrid_Chemical",
-    "resources": {
-      "Oil": {
-        "Production": 2,
-        "Qty": 3,
-        "Sell": 20,
-        "Buy": 10
       }
     }
   }

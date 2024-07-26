@@ -1,6 +1,6 @@
 {
-    "orientations": [270, 315, 0, 45, 90, 135, 180, 225],
-    "spriteSize": [16, 26],
+    "orientations": [90, 45, 0, 315, 270, 225, 180, 135],
+    "spriteSize": [70, 70],
     "offset": [8, 4],
     "actions": {
       "idle" : [6],
@@ -8,3 +8,4 @@
       "shoot" : [6, 7]
     }
   }
+  

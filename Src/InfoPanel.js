@@ -71,7 +71,7 @@ class InfoPanel {
     mainCanvas.textAlign(LEFT, CENTER);
     for (let line of this.lines) {
       mainCanvas.text(line, mainCanvasDim[0]-250, texty);  
-      texty += 50;
+      texty += 34;
     }
     
     // mainCanvas.text(`Unit Price: ${resourceData[this.selectedObject.resourceName].price}`, width-380, texty);

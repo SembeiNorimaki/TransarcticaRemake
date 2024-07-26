@@ -101,6 +101,24 @@
     "Mine8": {"filename": "resources/industries/mine/2291_zi4.png"},
     "Mine9": {"filename": "resources/industries/mine/2292_zi4.png"},
 
+    "Mine11": {"filename": "resources/industries/mine/2215_zi4.png"},
+    "Mine12": {"filename": "resources/industries/mine/2216_zi4.png"},
+    "Mine13": {"filename": "resources/industries/mine/2217_zi4.png"},
+    "Mine14": {"filename": "resources/industries/mine/2218_zi4.png"},
+    "Mine15": {"filename": "resources/industries/mine/2219_zi4.png"},
+    "Mine16": {"filename": "resources/industries/mine/2220_zi4.png"},
+    "Mine17": {"filename": "resources/industries/mine/2221_zi4.png"},
+    "Mine18": {"filename": "resources/industries/mine/2222_zi4.png"},
+    "Mine19": {"filename": "resources/industries/mine/2223_zi4.png"},
+
+    "OilRig1": {"filename": "resources/industries/oil_rig/2174_zi4.png"},
+    "OilRig2": {"filename": "resources/industries/oil_rig/2175_zi4.png"},
+    "OilRig3": {"filename": "resources/industries/oil_rig/2176_zi4.png"},
+    "OilRig4": {"filename": "resources/industries/oil_rig/2177_zi4.png"},
+    "OilRig5": {"filename": "resources/industries/oil_rig/2178_zi4.png"},
+    "OilRig6": {"filename": "resources/industries/oil_rig/2179_zi4.png"},
+    
+
     "Forest": {"filename": "resources/terrain/forest_zi2.png"},
     "Forest2": {"filename": "resources/terrain/forest_zi4.png"}
   },
@@ -223,6 +241,14 @@
     "0xC6": {"imgName": "Mine7"    , "offset": [-64, -85]},
     "0xC7": {"imgName": "Mine8"    , "offset": [-64, -256]},
     "0xC8": {"imgName": "Mine9"    , "offset": [-64, -274]},
+
+    "0xCA": {"imgName": "OilRig1"    , "offset": [-64, -64]},
+    "0xCB": {"imgName": "OilRig2"    , "offset": [-64, -128]},
+    "0xCC": {"imgName": "OilRig3"    , "offset": [-64, -146]},
+    "0xCD": {"imgName": "OilRig4"    , "offset": [-64, -128]},
+    "0xCE": {"imgName": "OilRig5"    , "offset": [-64, -146]},
+    "0xCF": {"imgName": "OilRig6"    , "offset": [-64, -256]},
+    
 
     "0xFE": {"imgName": "Ground"      , "offset": [0,   0]},
     "0xFF": {"imgName": "Ground"      , "offset": [0,   0]}

@@ -21,9 +21,7 @@ class CombatWolves {
 
     this.backgroundImg = this.generateCombatBackground();
     this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
-
     this.playerHTrain.setPosition(createVector(1400, 845));
-
     this.playerHTrain.update();
 
     // TODO: currently soldierAI is inside soldier. Is this then necessary?
@@ -35,46 +33,25 @@ class CombatWolves {
 
     this.playerSoldiers = [];
     this.playerMamooths = [];
-    
-    this.playerWolves = [];
-
+    this.enemyWolves = [];
 
     this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, "player"));
     
+    this.enemyWolves.push(new Wolf(1, createVector(300,120), "cpu"));
     
-
-    this.enemySoldiers.push(new Rifleman(1, createVector(300,120), 0, "cpu"));
-    this.enemySoldiers.push(new Rifleman(2, createVector(650,120), 0, "cpu"));
-    this.enemySoldiers.push(new Sniper(3, createVector(500,400), 0, "cpu"));
-
-    this.enemySoldiers[0].setRole({
+    this.enemyWolves[0].setRole({
       "role": "patrol",
       "waypoints": [
         createVector(300,120),
         createVector(500,120),
       ]
     });
-    this.enemySoldiers[1].setRole({
-      "role": "patrol",
-      "waypoints": [
-        createVector(650,120),
-        createVector(1000,120),
-      ]
-    });
-    this.enemySoldiers[2].setRole({
-      "role": "idle",
-      "waypoints": []
-    });
-
-    //this.playerMamooths.push(new Mamooth(createVector(700,500)));
-    //this.enemyMamooths.push(new Mamooth(createVector(700,300)));
 
     this.selectedWagon = null;
-
   }
 
   initialize() {
-    this.combatAI.initialize();
+    //this.combatAI.initialize();
   }
 
   generateCombatBackground() {
@@ -91,12 +68,9 @@ class CombatWolves {
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
         Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-1*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 2*TILE_HEIGHT_HALF));
-        
       }
       else {
         Tile.draw(backgroundImg, 0x32, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-0*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 3*TILE_HEIGHT_HALF));
       }
     }
     
@@ -142,12 +116,6 @@ class CombatWolves {
         this.deployMamooth(i);
       }
     }
-    // Click on enemy train
-    else if (mousePos.y < 120) {
-      let i = this.enemyHTrain.getClickedWagon(mousePos);
-      let wagonName = this.enemyHTrain.wagons[i].name;
-      console.log(`Clicked enemy wagon ${i}: ${wagonName}`);
-    }
     // click on the battlefield
     else {
       if (mouseButton == "left") {
@@ -180,13 +148,6 @@ class CombatWolves {
             break;
           }
         } 
-        
-        // for (let mamooth of this.playerMamooths) {
-        //   if (mamooth.selected) {
-        //     mamooth.setTargetPosition(mousePos);
-        //     break;
-        //   }
-        // }
       }   
     }
   }
@@ -196,60 +157,16 @@ class CombatWolves {
     this.playerSoldiers.push(new Rifleman(9,spawnPosition,0,"player"));
   }
   
-  findEnemyBarracks() {
-    for (let [i, wagon] of this.enemyHTrain.wagons.entries()) {
-      if (wagon.name == "Barracks_vu") {
-        return i;
-      }
-    }
-    return null;
-  }
-
-  deployEnemySoldier(spot) {
-    // find a barracks wagon
-    let i = this.findEnemyBarracks();
-    let spawnPosition = createVector(this.enemyHTrain.wagons[i].position.x + this.enemyHTrain.wagons[i].halfSize.x + spot*20, 100);
-    this.enemySoldiers.push(new Rifleman(12,spawnPosition, 0, "cpu"));
-  }
 
   deployMamooth(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 700);
     this.playerMamooths.push(new Mamooth(15,spawnPosition,"player"));
   }
 
-  // fireCannon(i) {   
-  //   let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, this.playerHTrain.wagons[i].position.y-40); 
-  //   this.cannonball = new Cannonball(spawnPosition);
-  // }
-
-  // fireMachinegun(i) {   
-  //   let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, this.playerHTrain.wagons[i].position.y-40); 
-  //   this.cannonball = new Cannonball(spawnPosition);
-  // }
-
-  cannonHitEnemy(pos) {
-    console.log(pos)
-    console.log(this.enemyHTrain)
-    let i = this.enemyHTrain.getClickedWagon(pos);
-    if (i === null) 
-      return;
-    let wagonName = this.enemyHTrain.wagons[i].name;
-    console.log(`Cannon hits enemy wagon ${i}: ${wagonName}`);
-    this.enemyHTrain.wagons[i].receiveDamage(40);
-  }
 
   update() {
     this.playerHTrain.update();
-    this.enemyHTrain.update();
     //this.combatAI.update();
-
-    if (this.cannonball !== null) {
-      this.cannonball.update();
-      if (this.cannonball.finished) {
-        this.cannonHitEnemy(this.cannonball.position)
-        this.cannonball = null;
-      }
-    }
 
     if (this.machinegunbullets !== null) {
       this.machinegunbullets.update();
@@ -259,7 +176,6 @@ class CombatWolves {
       }
     }
 
-
     // remove dead soldiers
     for (let i=0; i<this.playerSoldiers.length; i++) {
       if (this.playerSoldiers[i].dead) {
@@ -267,38 +183,36 @@ class CombatWolves {
         i--;
       }
     }
-    for (let i=0; i<this.enemySoldiers.length; i++) {
-      if (this.enemySoldiers[i].dead) {
-        this.enemySoldiers.splice(i, 1);
+    for (let i=0; i<this.enemyWolves.length; i++) {
+      if (this.enemyWolves[i].dead) {
+        this.enemyWolves.splice(i, 1);
         i--;
       }
     }
 
 
-    //if (frameCount % 4 === 0) {
       
-      // check if enemy in range and engage
-      for (let soldier of this.playerSoldiers) {
-        for(let enemy of this.enemySoldiers) {
-          if (soldier.inRange(enemy.position)) {
-            soldier.setAction(Soldier.Action.Shoot);
-            soldier.setTargetUnit(enemy);
-          }
+    // check if enemy in range and engage
+    for (let soldier of this.playerSoldiers) {
+      for(let enemy of this.enemyWolves) {
+        if (soldier.inRange(enemy.position)) {
+          soldier.setAction(Soldier.Action.Shoot);
+          soldier.setTargetUnit(enemy);
         }
-        soldier.update();
       }
+      soldier.update();
+    }
 
 
 
-      for (let mamooth of this.playerMamooths) {
-        mamooth.update();
-      }
+    for (let mamooth of this.playerMamooths) {
+      mamooth.update();
+    }
 
-      for (let enemy of this.enemySoldiers) {
-        enemy.update();
-      }
-      //console.log("update soldier");
-    //}
+    for (let enemy of this.enemyWolves) {
+      enemy.update();
+    }
+
   }
 
   // TODO: show in hud. Maybe make it a class
@@ -310,12 +224,8 @@ class CombatWolves {
     this.factor = 200;
     
     // enemy
-    hudCanvas.fill("red");
-    let xmax = mainCanvasDim[0] - 600 + this.factor * (this.enemyHTrain.wagons[0].position.x + 2*this.enemyHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
-    let xmin = mainCanvasDim[0] - 600 + this.factor * this.enemyHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
-    hudCanvas.rect(xmin, 1, xmax - xmin, 4);
     
-    for (let enemy of this.enemySoldiers) {
+    for (let enemy of this.enemyWolves) {
       hudCanvas.rect(
         mainCanvasDim[0] - 600 + this.factor * enemy.position.x / mainCanvasDim[0],
         60 * enemy.position.y / mainCanvasDim[1], 
@@ -324,8 +234,8 @@ class CombatWolves {
     
     // player
     hudCanvas.fill("blue");
-    xmax = mainCanvasDim[0] - 600 + this.factor * (this.playerHTrain.wagons[0].position.x + 2*this.playerHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
-    xmin = mainCanvasDim[0] - 600 + this.factor * this.playerHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
+    let xmax = mainCanvasDim[0] - 600 + this.factor * (this.playerHTrain.wagons[0].position.x + 2*this.playerHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
+    let xmin = mainCanvasDim[0] - 600 + this.factor * this.playerHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
     hudCanvas.rect(xmin, 55, xmax - xmin, 4);
     
     for (let soldier of this.playerSoldiers) {
@@ -362,7 +272,6 @@ class CombatWolves {
     mainCanvas.image(this.backgroundImg, 0, 0);
     
     this.playerHTrain.show(this.camera.position);
-    this.enemyHTrain.show(this.camera.position);
     
     if (this.cannonball !== null) {
       this.cannonball.show(this.camera.position);
@@ -376,7 +285,7 @@ class CombatWolves {
       soldier.show(this.camera.position);
     }
 
-    for (let soldier of this.enemySoldiers) {
+    for (let soldier of this.enemyWolves) {
       soldier.show(this.camera.position);
     }
 
@@ -384,9 +293,7 @@ class CombatWolves {
       mamooth.show(this.camera.position);
     }
 
-    for (let mamooth of this.enemyMamooths) {
-      mamooth.show(this.camera.position);
-    }
+    
 
     if (this.selectedWagon !== null) {
       this.selectedWagon.showHud();

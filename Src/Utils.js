@@ -15,38 +15,11 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-resourceToWagon = {
-  "Oil": "OilTanker",
-  "Iron": "Iron",
-  "Meat": "Merchandise",
-  "Container": "Container"
-}
-
-
 // USEFUL FUNCTIONS
 
-function imageToBoardStr(img) {
-  let board = [];
-  for (let row=0; row<img.height; row++) {
-    let currentRow = "";
-    for (let col=0; col<img.width; col++) {
-      let b = brightness(img.get(col,row));
-      if (b > 80) {
-        img.set(col,row,2);
-        currentRow += "0,";
-      } else if (b > 40) {
-        img.set(col,row,1);
-        currentRow += "1,";
-      } else {
-        img.set(col,row,0);
-        currentRow += "1,";
-      }
-    }
-    currentRow = currentRow.slice(0, -1);
-    board.push(currentRow);
-  }
-  return(board);
-}
+
+
+
 
 
 function downloadText(content) {
@@ -150,7 +123,7 @@ function showSoldiersShoot() {
   let ori = -45;
   for (let i=0;i<2;i++) {
     rect(x,y,16,27);
-    image(unitsData.soldier[0].shoot[ori][i], x,y);
+    image(gameData.unitsData.soldier[0].shoot[ori][i], x,y);
     x+=16;
   }
 }
@@ -160,17 +133,43 @@ function showSoldiersWalk() {
   noFill();
   let x = 100;
   let y = 10;
-  let ori = [90, 45, 0, -45, -90, -135, 180, 135];
+  let ori = [90, 45, 0, 135, 180, 225, 270, 315];
+  let img;
   for (let j=0; j<8; j++) {
     fill(0)
     text(ori[j],50,y)
     noFill();
     for (let i=0;i<6;i++) {
-      rect(x,y,16,26);
-      image(unitsData.soldier[0].walk[ori[j]][i], x,y);
-      x+=16;
+      img = gameData.unitsData.soldier[0].walk[ori[j]][i];
+
+      rect(x,y,img.width,img.height);
+      image(img, x,y);
+      x+=img.width;
     }
-    y+=27;
+    y+=55;
+    x=100;
+  }
+}
+
+function showWolfWalk() {
+  background(255);
+  noFill();
+  let x = 100;
+  let y = 10;
+  let ori = [90, 45, 0, 135, 180, 225, 270, 315];
+  let img;
+  for (let j=0; j<8; j++) {
+    fill(0)
+    text(ori[j],50,y)
+    noFill();
+    for (let i=0;i<6;i++) {
+      img = gameData.unitsData.wolf[0].walk[ori[j]][i];
+
+      rect(x,y,img.width,img.height);
+      image(img, x,y);
+      x+=img.width;
+    }
+    y+=80;
     x=100;
   }
 }

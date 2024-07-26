@@ -22,7 +22,7 @@ class CityTradeScene {
   constructor(cityName) {
     this.cityName = cityName;
 
-    this.tileBoard = new TileBoard(cityBoard);
+    this.tileBoard = new TileBoard(gameData.cityBoard);
     
     this.infoPanel = new InfoPanel();
 
@@ -35,7 +35,7 @@ class CityTradeScene {
     
     this.trafficLight = new TrafficLight(
       createVector(mainCanvasDim[0]-60, mainCanvasDim[1]-180), 
-      [trafficLightData.green, trafficLightData.red], 
+      [gameData.trafficLightData.green, gameData.trafficLightData.red], 
       createVector(50, 50));
 
     this.backgroundImg = this.generateBackgroundImage();
@@ -53,7 +53,7 @@ class CityTradeScene {
 
   populateBuyableWagons() {
     let row = 0;
-    for (let [resourceName, val] of Object.entries(citiesData[this.cityName].resources)) {
+    for (let [resourceName, val] of Object.entries(gameData.citiesData[this.cityName].resources)) {
       // this.wagonRowsResources.push(resourceName);
       for (let i=0; i<val.Qty; i++) {
         let wagonName = resourceToWagon[resourceName];
@@ -105,7 +105,7 @@ class CityTradeScene {
     // Fill the wagon
     game.playerTrain.wagons.at(-1).fillWagon();
     // Substract wagon cost from player gold
-    game.playerTrain.gold -= citiesData[this.cityName].resources[this.buyableWagons[this.selectedBuyableWagonIdx].cargo].Buy;
+    game.playerTrain.gold -= gameData.citiesData[this.cityName].resources[this.buyableWagons[this.selectedBuyableWagonIdx].cargo].Buy;
     // remove the wagon from the city
     this.buyableWagons[this.selectedBuyableWagonIdx] = null;
     // deselect the removed wagon
@@ -116,7 +116,7 @@ class CityTradeScene {
 
   sellWagon() {
     // Add selling price to player's gold
-    game.playerTrain.gold += citiesData[this.cityName].resources[game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo].Sell;
+    game.playerTrain.gold += gameData.citiesData[this.cityName].resources[game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo].Sell;
     // Remove wagon from the train (it also updates the weight)
     game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
     // deselect wagon
@@ -137,8 +137,8 @@ class CityTradeScene {
         // check if the city buys this type of resource
         let price = "N/A";
         let button = null;
-        if(wagon.cargo in citiesData["Barcelona"].resources) {
-          price = citiesData["Barcelona"].resources[wagon.cargo].Sell
+        if(wagon.cargo in gameData.citiesData["Barcelona"].resources) {
+          price = gameData.citiesData["Barcelona"].resources[wagon.cargo].Sell
           button = "Sell";
         }
 
@@ -176,7 +176,7 @@ class CityTradeScene {
           this.selectedBuyableWagonIdx = i;
 
           let infoPanelData = wagon.infoPanelData;
-          infoPanelData.lines.push(`Price: ${citiesData[this.cityName].resources[wagon.cargo].Buy}`);
+          infoPanelData.lines.push(`Price: ${gameData.citiesData[this.cityName].resources[wagon.cargo].Buy}`);
           infoPanelData.buttons = "Buy";
           this.infoPanel.fillData(infoPanelData);
           return;
@@ -239,13 +239,13 @@ class CityTradeScene {
     let x = hudCanvasDim[0] - 80;
     let y = hudCanvasDim[1] / 2;
 
-    hudCanvas.image(hudData.fuel, x, y);
+    hudCanvas.image(gameData.hudData.fuel, x, y);
     hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
     x-=140;
-    hudCanvas.image(hudData.gold, x, y);
+    hudCanvas.image(gameData.hudData.gold, x, y);
     hudCanvas.text(`${game.playerTrain.gold}`, x, y);
     x-=140;
-    hudCanvas.image(hudData.frame, x, y);
+    hudCanvas.image(gameData.hudData.frame, x, y);
   }
 
   show() {
@@ -261,7 +261,7 @@ class CityTradeScene {
       }
     }
     i=0;
-    for (let [resourceName, val] of Object.entries(citiesData[this.cityName].resources)) {
+    for (let [resourceName, val] of Object.entries(gameData.citiesData[this.cityName].resources)) {
       mainCanvas.textSize(20)
       mainCanvas.text(resourceName, 
         1100 - i*2*TILE_WIDTH_HALF, 

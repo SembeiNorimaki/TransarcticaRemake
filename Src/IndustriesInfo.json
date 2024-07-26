@@ -2,23 +2,13 @@
   "OilRig": {      
     "industryName": "OilRig",
     "resourceName": "Oil",
-    "file": "oil_rig/2174_zi4.png",
-    "files": [
-      "oil_rig/2174_zi4.png",
-      "oil_rig/2175_zi4.png",
-      "oil_rig/2176_zi4.png",
-      "oil_rig/2177_zi4.png",
-      "oil_rig/2178_zi4.png",
-      "oil_rig/2179_zi4.png",
-      "oil_rig/2179_zi4.png",
-      "oil_rig/2178_zi4.png",
-      "oil_rig/2177_zi4.png",
-      "oil_rig/2176_zi4.png",
-      "oil_rig/2175_zi4.png",
-      "oil_rig/2174_zi4.png"
-    ],
-    "offsets": [[0,0],[0,-1.5],[-0.5,-2.5],[-1.5,4],[-1.5,8.5],[-1.5,9.5],[-1.5,9.5],[-1.5,8.5],[-1.5,4],[-0.5,-2.5],[0,-1.5],[0,0]],
-    "offsety": -22
+    "file": "oil.png",
+    "files": [],
+    "minQty": 150,
+    "units": "tons",
+    "price": 100,
+    "offsetNav": [173,162],
+    "offsetTrade": [345,325]
   },
   "Forest": {
     "industryName": "Forest",

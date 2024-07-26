@@ -15,9 +15,31 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Wagon {
+  static wagonToResource = {
+    "Oil Tanker":     "Oil",
+    "Iron Gondola":   "Iron",
+    "Copper Gondola": "Copper",
+    "Iron bars":      "Iron bars",
+    "Wood Wagon":           "Wood",
+    "Container":      "Container",
+    "Merchandise":    "ALL"
+  };
+
+  static resourceToWagon = {
+    "Oil":       "Oil Tanker",   
+    "Iron":      "Iron Gondola", 
+    "Copper":    "Copper Gondola",
+    "Iron bars": "Iron bars",
+    "Wood":      "Wood Wagon",      
+    "Container": "Container",     
+    "ALL":       "Merchandise"
+  };
+  
+
   constructor(id, name, wagonData) {
     this.id = id;
     this.name = name;
+    console.log(name)
     this.img = wagonData.img;
     this.halfSize = createVector(wagonData.img[0].width/2, wagonData.img[0].height/2);
     this.offset = wagonData.offset;
@@ -133,12 +155,12 @@ class Wagon {
     hudCanvas.image(this.img[this.spriteId],100, 30);
     hudCanvas.text(this.name,300, 30);
 
-    // hudCanvas.image(unitsData.soldier[90][0], 700, 30, 32, 54);
-    // hudCanvas.image(unitsData.soldier[90][0], 720, 30, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 700, 30, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 720, 30, 32, 54);
 
-    // hudCanvas.image(unitsData.soldier[90][0], 800, 22, 32, 54);
-    // hudCanvas.image(unitsData.soldier[90][0], 820, 22, 32, 54);
-    // hudCanvas.image(unitsData.soldier[90][0], 810, 38, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 800, 22, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 820, 22, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 810, 38, 32, 54);
   }
 
   update() {

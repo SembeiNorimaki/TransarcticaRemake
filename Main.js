@@ -31,20 +31,22 @@ let mainCanvasDim = [screenDim[0], screenDim[1]-hudCanvasDim[1]];
 
 let game;
 
-let tileCodes = {};
-let tileImgs = {};
+let tileCodes = {};  // contains tile Codes eg: 00: -> water
+let tileImgs = {};   // contains imges referenced by name: eg: Water -> img
 
-let mapBoard;  // contains the navigation map
-let cityBoard; // conatins the city board template
 
-let hudData = {};
-// let roadsData = {};
-let locomotiveData = {};
-let citiesData = {}
-let industriesData = {};
-let trafficLightData = {};
-let cannonballData = {};
-let unitsData = {};
+
+let gameData = {
+  "mapBoard": null,       // contains the navigation map
+  "cityBoard": null,      // conatins the city board template
+  "locomotiveData": null,
+  "citiesData": {},       // contains info abou the cities in the map: eg: Barcelona -> info
+  "hudData": {},
+  "industriesData": {},   // same for industries
+  "trafficLightData": {},
+  "cannonballData": {},
+  "unitsData": {}
+}
 
 // TODO: Either events or industries and cities separated
 let events;
@@ -69,7 +71,9 @@ let saveData = {
       {"name": "Tender"},
       {"name": "Machinegun"},
       {"name": "Cannon"},
-      {"name": "OilTanker"},
+      {"name": "Oil Tanker"},
+      {"name": "Oil Tanker"},
+      {"name": "Oil Tanker"},
     ]
   },
   "EnemyTrain": {
@@ -100,86 +104,143 @@ function showTrainSummary() {
 
 let ori = 7;
 
+
+
+function assembleMine() {
+  mainCanvas.background(0,0,0,255)
+  
+  // Tile.draw(mainCanvas, 0xC0, boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC1, boardToScreen(createVector(1,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC2, boardToScreen(createVector(3,0), createVector(0,0)))
+
+  // Tile.draw(mainCanvas, 0xC3, boardToScreen(createVector(0,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC4, boardToScreen(createVector(1,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC5, boardToScreen(createVector(3,1), createVector(0,0)))
+  
+  // Tile.draw(mainCanvas, 0xC6, boardToScreen(createVector(0,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC7, boardToScreen(createVector(1,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC8, boardToScreen(createVector(3,3), createVector(0,0)))
+
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,0), createVector(0,0)))
+  
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,1), createVector(0,0)))
+  
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,2), createVector(0,0)))
+
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,3), createVector(0,0)))
+  
+  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,0), createVector(0,0)))
+  
+  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,2), createVector(0,0)))
+  mainCanvas.save("OilRig")
+  image(mainCanvas,0,0)
+
+}
+
+
 function preload() {
 
   loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
     let spriteSize = [70, 70];
     let x = 101
-    unitsData.wolf = [{"walk":{0:[],45:[],90:[],135:[],180:[],225:[],270:[],315:[]}, "attack":{0:[]}}];
+    gameData.unitsData.wolf = [{
+      "idle":{0:[],45:[],90:[],135:[],180:[],225:[],270:[],315:[]}, 
+      "walk":{0:[],45:[],90:[],135:[],180:[],225:[],270:[],315:[]},
+      "attack":{0:[],45:[],90:[],135:[],180:[],225:[],270:[],315:[]}
+    }];
+
     //wolfImg = wolfAtlas.get(0,0,124,105);
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69-spriteSize[0]/2, 0,     30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+x-spriteSize[0]/2, 0,   30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+2*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+3*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+4*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+5*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+6*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
-    unitsData.wolf[0]["walk"][90].push(wolfAtlas.get(69+7*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["idle"]["90"].push(wolfAtlas.get(69-spriteSize[0]/2, 0,     30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69-spriteSize[0]/2, 0,     30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+x-spriteSize[0]/2, 0,   30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+2*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+3*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+4*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+5*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+6*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["90"].push(wolfAtlas.get(69+7*x-spriteSize[0]/2, 0, 30, spriteSize[1]));
 
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61-spriteSize[0]/2,     80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+x-spriteSize[0]/2,   80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+2*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+3*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+4*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+5*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+6*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
-    unitsData.wolf[0]["walk"][45].push(wolfAtlas.get(61+7*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["idle"]["45"].push(wolfAtlas.get(61-spriteSize[0]/2,     80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61-spriteSize[0]/2,     80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+x-spriteSize[0]/2,   80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+2*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+3*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+4*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+5*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+6*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
+    gameData.unitsData.wolf[0]["walk"]["45"].push(wolfAtlas.get(61+7*x-spriteSize[0]/2, 80, 60, spriteSize[1]));
 
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48    -30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+x  -30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+2*x-30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+3*x-30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+4*x-30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+5*x-30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+6*x-30, 175, 74, 50));
-    unitsData.wolf[0]["walk"][0].push(wolfAtlas.get(48+7*x-30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["idle"]["0"].push(wolfAtlas.get(48    -30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48    -30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+x  -30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+2*x-30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+3*x-30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+4*x-30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+5*x-30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+6*x-30, 175, 74, 50));
+    gameData.unitsData.wolf[0]["walk"]["0"].push(wolfAtlas.get(48+7*x-30, 175, 74, 50));
 
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51    -30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+x  -30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+2*x-30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+3*x-30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+4*x-30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+5*x-30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+6*x-30, 262, spriteSize[0], 52));
-    unitsData.wolf[0]["walk"][315].push(wolfAtlas.get(51+7*x-30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["idle"]["315"].push(wolfAtlas.get(51    -30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51    -30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+x  -30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+2*x-30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+3*x-30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+4*x-30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+5*x-30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+6*x-30, 262, spriteSize[0], 52));
+    gameData.unitsData.wolf[0]["walk"]["315"].push(wolfAtlas.get(51+7*x-30, 262, spriteSize[0], 52));
 
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61    -30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+x  -30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+2*x-30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+3*x-30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+4*x-30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+5*x-30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+6*x-30, 340, 35, 62));
-    unitsData.wolf[0]["walk"][270].push(wolfAtlas.get(61+7*x-30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["idle"]["270"].push(wolfAtlas.get(61    -30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61    -30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+x  -30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+2*x-30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+3*x-30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+4*x-30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+5*x-30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+6*x-30, 340, 35, 62));
+    gameData.unitsData.wolf[0]["walk"]["270"].push(wolfAtlas.get(61+7*x-30, 340, 35, 62));
 
+    gameData.unitsData.wolf[0]["idle"]["225"].push(wolfAtlas.get(41    -30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41    -30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+x  -30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+2*x-30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+3*x-30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+4*x-30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+5*x-30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+6*x-30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["walk"]["225"].push(wolfAtlas.get(41+7*x-30, 424, spriteSize[0], 55));
 
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41    -30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+x  -30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+2*x-30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+3*x-30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+4*x-30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+5*x-30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+6*x-30, 424, spriteSize[0], 55));
-    unitsData.wolf[0]["walk"][225].push(wolfAtlas.get(41+7*x-30, 424, spriteSize[0], 55));
+    gameData.unitsData.wolf[0]["idle"]["180"].push(wolfAtlas.get(31    -30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31    -30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+x  -30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+2*x-30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+3*x-30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+4*x-30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+5*x-30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+6*x-30, 500, 80, 52));
+    gameData.unitsData.wolf[0]["walk"]["180"].push(wolfAtlas.get(31+7*x-30, 500, 80, 52));
 
-    
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31    -30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+x  -30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+2*x-30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+3*x-30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+4*x-30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+5*x-30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+6*x-30, 500, 80, 52));
-    unitsData.wolf[0]["walk"][180].push(wolfAtlas.get(31+7*x-30, 500, 80, 52));
-
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41    -30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+x  -30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+2*x-30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+3*x-30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+4*x-30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+5*x-30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+6*x-30, 576, 70, 62));
-    unitsData.wolf[0]["walk"][135].push(wolfAtlas.get(41+7*x-30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["idle"]["135"].push(wolfAtlas.get(41    -30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41    -30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+x  -30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+2*x-30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+3*x-30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+4*x-30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+5*x-30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+6*x-30, 576, 70, 62));
+    gameData.unitsData.wolf[0]["walk"]["135"].push(wolfAtlas.get(41+7*x-30, 576, 70, 62));
 
 
   });
@@ -189,14 +250,14 @@ function preload() {
   charactersData.Trader = loadImage('resources/misc/trader2.png');
 
 
-  // Cities into CitiesData
+  // Cities into gameData.citiesData
   loadJSON("Src/Cities.json", jsonData => {
-    citiesData = jsonData;
+    gameData.citiesData = jsonData;
   });
   
-  // Induestries into IndustriesData
+  // Industries into gameData.industriesData
   loadJSON("Src/Industries.json", jsonData => {
-    industriesData = jsonData;
+    gameData.industriesData = jsonData;
   });
 
   // Industries into industriesInfo
@@ -228,30 +289,36 @@ function preload() {
   });
 
 
-  // NavigationMap into mapBoard
-  loadStrings(mapFile, mapData => {
-    let NCOLS = split(mapData[0], ',').length - 1;
-    let NROWS = mapData.length - 1;
-    mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-    for (const [row, txtLine] of mapData.entries()) {
-      if (row == 0)  // skip first row
-        continue;
-      for (const [col, elem] of split(txtLine, ',').entries()) {
-        if (col == 0)  // skip first col
+  // NavigationMap into gameData.mapBoard
+  gameData.mapBoard = getItem("SavedMap");
+  if (gameData.mapBoard === null) {
+    console.log("No saved map found, loading it from file")
+    loadStrings(mapFile, mapData => {
+      let NCOLS = split(mapData[0], ',').length - 1;
+      let NROWS = mapData.length - 1;
+      gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+      for (const [row, txtLine] of mapData.entries()) {
+        if (row == 0)  // skip first row
           continue;
-        mapBoard[row-1][col-1] = Number("0x" + elem);
+        for (const [col, elem] of split(txtLine, ',').entries()) {
+          if (col == 0)  // skip first col
+            continue;
+          gameData.mapBoard[row-1][col-1] = Number("0x" + elem);
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log("Using saved map")
+  }
 
-  // City template map into cityBoard
+  // City template map into gameData.cityBoard
   loadStrings("maps/cityTemplate.txt", mapData => {
     let NCOLS = split(mapData[0], ',').length;
     let NROWS = mapData.length;
-    cityBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+    gameData.cityBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
     for (const [row, txtLine] of mapData.entries()) {
       for (const [col, elem] of split(txtLine, ',').entries()) {
-        cityBoard[row][col] = Number("0x" + elem);
+        gameData.cityBoard[row][col] = Number("0x" + elem);
       }
     }
   });
@@ -270,55 +337,55 @@ function preload() {
 
   // CannonBall data into canonballData
   loadJSON("Src/Cannonball.json", jsonData => {
-    cannonballData = {"move": {0: []}, "explode": {0: []}};
-    cannonballData.move[0].push(loadImage(jsonData.move[0]));
+    gameData.cannonballData = {"move": {0: []}, "explode": {0: []}};
+    gameData.cannonballData.move[0].push(loadImage(jsonData.move[0]));
     for (let spriteIdx=0; spriteIdx<7; spriteIdx++) {
-      cannonballData.explode[0].push(loadImage(jsonData.explode[spriteIdx]));
+      gameData.cannonballData.explode[0].push(loadImage(jsonData.explode[spriteIdx]));
     }
   });
 
 
-  // Mamooth data into unitsData.mamooth
-  // Structure: unitsData.mamooth[action][orientation][spriteId]
+  // Mamooth data into gameData.unitsData.mamooth
+  // Structure: gameData.unitsData.mamooth[action][orientation][spriteId]
   loadJSON("Src/Units/Mamooth.json", jsonData => {    
-    unitsData.mamooth = {"move": {}, "idle": {}};
+    gameData.unitsData.mamooth = {"move": {}, "idle": {}};
     for (let ori of [0,45,90,135,180,225,270,315]) {
-      unitsData.mamooth.move[ori] = [loadImage(jsonData.move[`${ori}`])];
-      unitsData.mamooth.idle[ori] = unitsData.mamooth.move[ori];  
+      gameData.unitsData.mamooth.move[ori] = [loadImage(jsonData.move[`${ori}`])];
+      gameData.unitsData.mamooth.idle[ori] = gameData.unitsData.mamooth.move[ori];  
     }    
   });
 
   // Load ultralisk
   loadImage("resources/units/ultralisk.png", atlasImg => {
     let spriteSize = [101, 108];
-    unitsData.ultralisk = {"move": {}, "attack": {}};
+    gameData.unitsData.ultralisk = {"move": {}, "attack": {}};
     for (let [col, ori] of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].entries()) {
-      unitsData.ultralisk.move[ori] = [];
+      gameData.unitsData.ultralisk.move[ori] = [];
       for (let spriteIdx=0; spriteIdx<9;spriteIdx++) {
         let x = spriteSize[0] * col+2;
         let y = spriteSize[1] * spriteIdx +2;
-        unitsData.ultralisk.move[ori].push(atlasImg.get(x,y,spriteSize[0]-4,spriteSize[1]-4))
+        gameData.unitsData.ultralisk.move[ori].push(atlasImg.get(x,y,spriteSize[0]-4,spriteSize[1]-4))
       }
     }
   });
 
-  // Soldiers data into unitsData.soldier
-  // Structure: unitsData.soldier[soldierId (type)][action][orientation][spriteId]
-  loadImage("resources/units/soldier0.png", soldierAtlas => {
+  // Soldiers data into gameData.unitsData.soldier
+  // Structure: gameData.unitsData.soldier[soldierId (type)][action][orientation][spriteId]
+  loadImage("resources/units/soldier0_big.png", soldierAtlas => {
     loadJSON("Src/Units/Soldier.json", jsonData => {
       const spriteSize = jsonData.spriteSize;
       const offset = jsonData.offset;
-      unitsData.soldier = [];
+      gameData.unitsData.soldier = [];
       for (let soldierId=0; soldierId<5; soldierId++) {
-        unitsData.soldier.push({});
+        gameData.unitsData.soldier.push({});
         for (const [action, value] of Object.entries(jsonData.actions)) {
-          unitsData.soldier[soldierId][action] = {};
+          gameData.unitsData.soldier[soldierId][action] = {};
           for (const [j, ori] of Object.entries(jsonData.orientations)) {
-            unitsData.soldier[soldierId][action][ori] = [];
+            gameData.unitsData.soldier[soldierId][action][ori] = [];
             for (let i of value) {
               let x = spriteSize[0] * i + offset[0];
               let y = spriteSize[1] * j + offset[1];
-              unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+              gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
             }
           }
         }  
@@ -326,20 +393,23 @@ function preload() {
     });
   });
 
-  // Hud data into hudData
+  // Hud data into gameData.hudData
   loadJSON("Src/Hud.json", jsonData => {
+    gameData.hudData = {};
     for (const [key, val] of Object.entries(jsonData)) {
-      hudData[key] = loadImage(`resources/hud/${val}`);
+      gameData.hudData[key] = loadImage(`resources/hud/${val}`);
     }
   });
   
-  // Locomotive data into locomotiveData
+  // Locomotive data into gameData.locomotiveData
   loadJSON("Src/Locomotive.json", jsonData => {  
+    gameData.locomotiveData = {};
     for (const [ori, val] of Object.entries(jsonData)) {
-      locomotiveData[ori] = val;
-      locomotiveData[ori].imgList = [];
+      gameData.locomotiveData[ori] = {};
+      gameData.locomotiveData[ori].offset = val.offset;
+      gameData.locomotiveData[ori].imgList = [];
       for (let filename of val.fileList) {
-        locomotiveData[ori].imgList.push(loadImage("resources/locomotive/" + filename));
+        gameData.locomotiveData[ori].imgList.push(loadImage("resources/locomotive/" + filename));
       }
     }
   });
@@ -373,8 +443,8 @@ function preload() {
   
 
   
-  trafficLightData["green"] = loadImage("resources/TrafficLight/green.png");
-  trafficLightData["red"] = loadImage("resources/TrafficLight/red.png");
+  gameData.trafficLightData["green"] = loadImage("resources/TrafficLight/green.png");
+  gameData.trafficLightData["red"] = loadImage("resources/TrafficLight/red.png");
 
 
   // Events
@@ -405,17 +475,21 @@ function setup() {
   // TODO: Check if theres a game saved, if so, load it instead of starting a new one
   game = new Game(saveData);  
   game.initialize();
+
+
   
 }
 
 function draw() {  
+  // showWolfWalk();
+
   mainCanvas.background(0)
   game.update();
 
   image(mainCanvas, 0, 0);
   image(hudCanvas, 0, mainCanvasDim[1]);
 
-  // let img = unitsData.wolf[0]["walk"][ori][int(i)]; 
+  // let img = gameData.unitsData.wolf[0]["walk"][ori][int(i)]; 
   // rect(400, 400, img.width, img.height)
   // image(img, 400,400)
   // i+=0.5;
@@ -425,7 +499,7 @@ function draw() {
 
   //showTrainSummary();
 
-  // image(unitsData.ultralisk.move[9][int(i/10)%8],500,100+i/2);
+  // image(gameData.unitsData.ultralisk.move[9][int(i/10)%8],500,100+i/2);
   // i++;
   // if (i>8*5) {
   //   i=0;

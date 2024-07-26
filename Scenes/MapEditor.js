@@ -17,7 +17,7 @@
 class MapEditor {
   constructor() {
     this.camera = new Camera(boardToCameraSmall(createVector(30,150)));
-    this.tileBoard = new TileBoard(mapBoard);
+    this.tileBoard = new TileBoard(gameData.mapBoard);
     this.posOri = null;
 
     this.buildSelection = "City";

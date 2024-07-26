@@ -32,15 +32,16 @@ class Game {
     this.enemyTrain = new Train("CPU");
 
     this.hud = new Hud();
+    this.conversationPanel = new ConversationPanel();
 
     // In navigationScene or keep it here?
     this.industries = {};
-    for (let [industryName, industryVal] of Object.entries(industriesData)) {
+    for (let [industryName, industryVal] of Object.entries(gameData.industriesData)) {
       this.industries[industryName] = new Industry(industryVal);
     }
 
     this.cities = {};
-    for (let [cityName, cityVal] of Object.entries(citiesData)) {
+    for (let [cityName, cityVal] of Object.entries(gameData.citiesData)) {
       this.cities[cityName] = new City(cityVal);
     }
 
@@ -81,14 +82,25 @@ class Game {
     this.playerTrain.initialize(this.saveData.PlayerTrain);
     this.enemyTrain.initialize(this.saveData.EnemyTrain);
 
-    // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
+    // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
-    this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
+    // this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
-    // this.currentScene = this.navigationScene;
+    this.currentScene = this.navigationScene;
     this.currentScene.initialize();
+
+    this.conversationPanel.fillData({
+      "characterName": "Yuri",
+      "textLines": [
+        "Welcome to Transarctica commander, I'm Yuri your second-in-command.",
+        "Press Ctrl to start/stop Transarctica's engine. When stopped, press Shift to reverse direction",
+        "Transarctica automatically selects the next rail intersection, press Space to change it",
+        "There's a trade city to the North, let's go there. Click anywhere to close this dialog."
+      ]
+    });
+    this.conversationPanel.active = true;
   }
 
   showObjectives() {
@@ -131,6 +143,7 @@ class Game {
     this.currentScene.show(); 
     if (this.objectivesVisible) 
       this.showObjectives();  
+    this.conversationPanel.show();
     //this.showCharacter();
   }
 

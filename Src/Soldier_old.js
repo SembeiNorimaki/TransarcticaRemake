@@ -49,7 +49,7 @@ class Soldier {
     this.hp = 100;
     
     let spriteData = {
-      "imgs": unitsData.soldier[0],
+      "imgs": gameData.unitsData.soldier[0],
       "actions": ["idle", "walk", "shoot"],
       "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
       "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
@@ -268,13 +268,13 @@ class Soldier {
 
   showHud() {
     hudCanvas.background(100);
-    //hudCanvas.image(unitsData.soldier[this.soldierType].walk[this.orientation][this.spriteIdx], 60, 30, 32, 54);
+    //hudCanvas.image(gameData.unitsData.soldier[this.soldierType].walk[this.orientation][this.spriteIdx], 60, 30, 32, 54);
     hudCanvas.text("Rifleman", 150, 30);
   }
 
   show(cameraPos) {
-    //console.log(unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
-    //mainCanvas.image(unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
+    //console.log(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
+    //mainCanvas.image(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
     
     let position = this.position.copy();
     if (cameraPos) {
@@ -334,7 +334,7 @@ class Sniper extends Soldier {
     super(position, soldierType, owner);
 
     let spriteData = {
-      "imgs": unitsData.soldier[1],
+      "imgs": gameData.unitsData.soldier[1],
       "actions": ["idle", "walk", "shoot"],
       "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
       "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
@@ -351,7 +351,7 @@ class Rifleman extends Soldier {
     super(position, soldierType, owner);
     
     let spriteData = {
-      "imgs": unitsData.soldier[0],
+      "imgs": gameData.unitsData.soldier[0],
       "actions": ["idle", "walk", "shoot"],
       "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
       "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}

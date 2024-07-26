@@ -180,12 +180,13 @@
     "weight": 1000
   },
 
-  "OilTanker": {
+  "Oil Tanker": {
     "files": [
       "resources/tr_wagons/18502_zi4.png",
       "resources/tr_wagons/18502_zi4.png",
       "resources/tr_wagons/18502_zi4.png"
     ],
+    "name": "Oil Tanker",
     "dimensions": [194, 61],
     "offset": [[97,52], [97,52], [97,52]],
     
@@ -194,27 +195,28 @@
     "capacity": 1000,
     "weight": 100
   },
-  "Wood": {
+  "Wood Wagon": {
     "files": [
       "resources/tr_wagons/15_zi4.png",
       "resources/tr_wagons/23_zi4.png",
       "resources/tr_wagons/27_zi4.png"
     ],
+    "name": "Wood Wagon",
     "dimensions": [136, 68],
     "offset": [[0,42], [0,42], [0,42]],
     
-    "cargo": "Wood",
+    "cargo": "Wood Wagon",
     "units": "tons",
     "capacity": 1000,
     "weight": 100
   },
-  "Iron": {
+  "Iron Gondola": {
     "files": [
       "resources/tr_wagons/iron1.png",
       "resources/tr_wagons/iron2.png",
       "resources/tr_wagons/iron3.png"
     ],
-    "name": "Iron Wagon",
+    "name": "Iron Gondola",
     "dimensions": [116, 68],
     "offset": [[58,54], [58,60], [58,60]],
     
@@ -223,7 +225,22 @@
     "capacity": 1500,
     "weight": 100
   },
-  "Copper": {
+  "Iron Bars": {
+    "files": [
+      "resources/tr_wagons/35_zi4.png",
+      "resources/tr_wagons/47_zi4.png",
+      "resources/tr_wagons/51_zi4.png"
+    ],
+    "name": "Iron Bars",
+    "dimensions": [116, 68],
+    "offset": [[58,54], [58,60], [58,60]],
+    
+    "cargo": "Iron",
+    "units": "tons",
+    "capacity": 1500,
+    "weight": 100
+  },
+  "Copper Gondola": {
     "files": [
       "resources/tr_wagons/copper1.png",
       "resources/tr_wagons/copper2.png",
@@ -233,12 +250,12 @@
     "dimensions": [116, 68],
     "offset": [[0,40], [0,40], [0,40]],
     
-    "cargo": "Copper",
+    "cargo": "Copper Gondola",
     "units": "tons",
     "capacity": 1500,    
     "weight": 1000
   },
-  "Container": {
+  "Container Wagon": {
     "files": [
       "resources/tr_wagons/13555_zi4.png",
       "resources/tr_wagons/13563_zi4.png",

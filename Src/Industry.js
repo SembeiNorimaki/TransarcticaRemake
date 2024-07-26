@@ -17,33 +17,35 @@
 class Industry {
   constructor(industryData) {
     this.name = industryData.name;
+    this.industryType = industryData.industryType;
     this.resources = industryData.resources;
     this.resourceName = Object.keys(this.resources)[0];
+    this.produces = industryData.produces;
+    this.requires = industryData.requires;
+    this.qty = industryData.qty;
+
+    this.imgTrade = industriesInfo[this.industryType].imgTrade;
+    this.imgNav = industriesInfo[this.industryType].imgNav;
+
+    this.offsetTrade = industriesInfo[this.industryType].offsetTrade;
+    this.offsetNav = industriesInfo[this.industryType].offsetNav;
+
     this.panelInfo = {
       "title": this.name,
       "image": industriesInfo[this.resourceName].imgInfo,
       "lines": [
         `Produces: ${this.resourceName}`, 
-        `Anual production: ${this.resources[this.resourceName].Production}`
+        "Requires: ", 
       ],
       "buttons": "Buy",
     }
-    
-    // this.position = null;
-    // this.size = [8*TILE_WIDTH_HALF, 14*TILE_HEIGHT_HALF];
-    // console.log(industryData);
-    // this.accepts = "Copper"
-    // this.wagonType = "Iron";
-    // this.industryAvailableQty = 2;
+    let i = 2;
+    for (let [resourceName, requiredQty] of Object.entries(this.requires)) {
+      this.panelInfo.lines[i] = `  - ${requiredQty} wagons of ${resourceName}`
+      i++;
+    }
 
-    // this.wagonPositions = [
-    //   createVector(16, 16),
-    //   createVector(17, 15),
-    //   createVector(18, 14),
-    //   createVector(19, 13)
-    // ];
-    // this.units = "Tons";
-    // this.minQty = 1;
+
   }
 
   onClick() {

@@ -39,13 +39,22 @@ class SoldierAI {
     }
   }
 
-  checkEnemyInRange() {
+  checkEnemyInViewRange() {
     let i = 0;
-    for (let mamooth of game.currentScene.playerMamooths) {
-    
+    for (let soldier of game.currentScene.playerUnits) {
+      let inRange = this.ownerInstance.inAttackRange(soldier.position);
+      if (inRange) {
+        return soldier;
+      }
+      i++;
     }
-    for (let soldier of game.currentScene.playerSoldiers) {
-      let inRange = this.ownerInstance.inRange(soldier.position);
+    return null;
+  }
+
+  checkEnemyInAttackRange() {
+    let i = 0;
+    for (let soldier of game.currentScene.playerUnits) {
+      let inRange = this.ownerInstance.inAttackRange(soldier.position);
       if (inRange) {
         return soldier;
       }
@@ -56,7 +65,7 @@ class SoldierAI {
 
   requestOrders() {
     // first check if we have an enemy in range to fire
-    let targetEnemy = this.checkEnemyInRange();
+    let targetEnemy = this.checkEnemyInAttackRange();
     if (targetEnemy !== null) {
       // we have an enemy in range, lock it as the target to shoot
       console.log("Player soldier in range, shooting")

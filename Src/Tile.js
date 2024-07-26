@@ -415,9 +415,9 @@ class Tile {
       let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
       if (posStr in industriesLocations) {
         
-        canvas.image(industriesInfo[game.industries[industriesLocations[posStr]].resourceName].imgNav,
-          screenPos.x - industriesInfo[game.industries[industriesLocations[posStr]].resourceName].offsetNav[0], 
-          screenPos.y - industriesInfo[game.industries[industriesLocations[posStr]].resourceName].offsetNav[1]);
+        canvas.image(game.industries[industriesLocations[posStr]].imgNav,
+          screenPos.x - game.industries[industriesLocations[posStr]].offsetNav[0], 
+          screenPos.y - game.industries[industriesLocations[posStr]].offsetNav[1]);
         
         // Tile.draw(canvas, 0x02, screenPos);
       }

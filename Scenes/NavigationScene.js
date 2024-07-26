@@ -19,7 +19,7 @@ class NavigationScene {
     this.selectedIntersection = null;
     //this.camera = new Camera(boardToCamera(createVector(10,10)));
     this.camera = new Camera(boardToCamera(createVector(12,13)));
-    this.tileBoard = new TileBoard(mapBoard);
+    this.tileBoard = new TileBoard(gameData.mapBoard);
     this.locomotive = new Locomotive(createVector(15, 13), 0.0);
   }
 
@@ -164,13 +164,13 @@ class NavigationScene {
   // showHud() {
   //   let x = hudCanvas.width-80;
   //   let y = hudCanvas.height-30;
-  //   hudCanvas.image(hudData.fuel, x, y);
+  //   hudCanvas.image(gameData.hudData.fuel, x, y);
   //   hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
   //   x-=140;
-  //   hudCanvas.image(hudData.gold, x, y);
+  //   hudCanvas.image(gameData.hudData.gold, x, y);
   //   hudCanvas.text(`${game.playerTrain.gold}`, x, y);
   //   x-=140;
-  //   hudCanvas.image(hudData.frame, x, y);
+  //   hudCanvas.image(gameData.hudData.frame, x, y);
   //   hudCanvas.text(`${this.locomotive.gear}`, x, y);
   // }
 

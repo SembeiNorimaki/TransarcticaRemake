@@ -14,7 +14,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-class CombatScene {
+class CombatTrain {
   constructor(playerTrain, enemyTrain) {
 
     this.board = [
@@ -26,23 +26,19 @@ class CombatScene {
       [0,0,0,0,0,0,0,0,0,0]      
     ]
     this.boardDim = createVector(200, 200);
+
     
     this.camera = new Camera(createVector(0,0));
 
-    
-    this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
-    this.playerHTrain.setPosition(createVector(1400, 845));
-    this.playerHTrain.update();
-
-    // Maybe there's no enemy train
-    this.enemyHTrain = null;
-    if (enemyTrain !== null) {
-      this.enemyHTrain = new HorizontalTrain("Cpu", enemyTrain.wagons);
-      this.enemyHTrain.setPosition(createVector(1400, 80));
-      this.enemyHTrain.update();
-    }
-
     this.backgroundImg = this.generateCombatBackground();
+    this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
+    this.enemyHTrain = new HorizontalTrain("Cpu", enemyTrain.wagons);
+
+    this.playerHTrain.setPosition(createVector(1400, 845));
+    this.enemyHTrain.setPosition(createVector(1400, 80));
+
+    this.playerHTrain.update();
+    this.enemyHTrain.update();
 
     // TODO: currently soldierAI is inside soldier. Is this then necessary?
     this.combatAI = new CombatAI();
@@ -51,22 +47,49 @@ class CombatScene {
     this.cannonball = null;
     this.machinegunbullets = null;
 
-    this.playerUnits = [];
-    this.enemyUnits = [];
+    this.playerSoldiers = [];
+    this.enemySoldiers = [];
+    this.playerMamooths = [];
+    this.enemyMamooths = [];
+
+    this.playerWolves = [];
+
+
+    this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, "player"));
     
-    this.playerUnits.push(new Rifleman(1, createVector(500,650), 0, "player"));
-    this.enemyUnits.push(new Wolf(0, createVector(500,-100), "cpu"));
+    this.playerSoldiers.push(new Wolf(0, createVector(700,650), "player"));
     
-    this.enemyUnits[0].setRole({
+    // this.playerMamooths.push(new Mamooth(0, createVector(700,650), "player"));
+
+
+    this.enemySoldiers.push(new Rifleman(1, createVector(300,120), 0, "cpu"));
+    this.enemySoldiers.push(new Rifleman(2, createVector(650,120), 0, "cpu"));
+    this.enemySoldiers.push(new Sniper(3, createVector(500,400), 0, "cpu"));
+
+    this.enemySoldiers[0].setRole({
       "role": "patrol",
       "waypoints": [
-        createVector(500,800),
-        createVector(1000,800),
+        createVector(300,120),
+        createVector(500,120),
       ]
     });
-    
+    this.enemySoldiers[1].setRole({
+      "role": "patrol",
+      "waypoints": [
+        createVector(650,120),
+        createVector(1000,120),
+      ]
+    });
+    this.enemySoldiers[2].setRole({
+      "role": "idle",
+      "waypoints": []
+    });
+
+    //this.playerMamooths.push(new Mamooth(createVector(700,500)));
+    //this.enemyMamooths.push(new Mamooth(createVector(700,300)));
 
     this.selectedWagon = null;
+
   }
 
   initialize() {
@@ -87,16 +110,12 @@ class CombatScene {
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
         Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-1*TILE_HEIGHT_HALF));
-        if (this.enemyHTrain !== null) {
-          Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 2*TILE_HEIGHT_HALF));
-        }
+        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 2*TILE_HEIGHT_HALF));
         
       }
       else {
         Tile.draw(backgroundImg, 0x32, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-0*TILE_HEIGHT_HALF));
-        if (this.enemyHTrain !== null) {
-          Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 3*TILE_HEIGHT_HALF));
-        }
+        Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 3*TILE_HEIGHT_HALF));
       }
     }
     
@@ -143,7 +162,7 @@ class CombatScene {
       }
     }
     // Click on enemy train
-    else if (mousePos.y < 120 && this.enemyHTrain !== null) {
+    else if (mousePos.y < 120) {
       let i = this.enemyHTrain.getClickedWagon(mousePos);
       let wagonName = this.enemyHTrain.wagons[i].name;
       console.log(`Clicked enemy wagon ${i}: ${wagonName}`);
@@ -152,19 +171,21 @@ class CombatScene {
     else {
       if (mouseButton == "left") {
         //check if soldier is clicked, then select/deselect it
-        for (let soldier of this.playerUnits) {
+        for (let soldier of this.playerSoldiers) {
           soldier.selected = soldier.checkClick(mousePos);
         }
         
         //check if mamooth is clicked
-        
+        for (let mamooth of this.playerMamooths) {
+          mamooth.selected = mamooth.checkClick(mousePos);  
+        }
 
       } 
       else if (mouseButton == "right") {
-        for (let soldier of this.playerUnits) {
+        for (let soldier of this.playerSoldiers) {
           if (soldier.selected) {
             // if we click in an empty zone, move there
-            for (let enemy of this.enemyUnits) {
+            for (let enemy of this.enemySoldiers) {
               if (enemy.checkClick(mousePos)) {
                 console.log(`Setting enemy target to enemyId ${enemy.id}`)
                 soldier.setTargetUnit(enemy);
@@ -191,7 +212,7 @@ class CombatScene {
 
   deploySoldier(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 760);
-    this.playerUnits.push(new Rifleman(9,spawnPosition,0,"player"));
+    this.playerSoldiers.push(new Rifleman(9,spawnPosition,0,"player"));
   }
   
   findEnemyBarracks() {
@@ -207,7 +228,7 @@ class CombatScene {
     // find a barracks wagon
     let i = this.findEnemyBarracks();
     let spawnPosition = createVector(this.enemyHTrain.wagons[i].position.x + this.enemyHTrain.wagons[i].halfSize.x + spot*20, 100);
-    this.enemyUnits.push(new Rifleman(12,spawnPosition, 0, "cpu"));
+    this.enemySoldiers.push(new Rifleman(12,spawnPosition, 0, "cpu"));
   }
 
   deployMamooth(i) {
@@ -237,12 +258,8 @@ class CombatScene {
   }
 
   update() {
-    // update trains
     this.playerHTrain.update();
-    if (this.enemyHTrain !== null) {
-      this.enemyHTrain.update();
-    }
-    
+    this.enemyHTrain.update();
     //this.combatAI.update();
 
     if (this.cannonball !== null) {
@@ -263,15 +280,15 @@ class CombatScene {
 
 
     // remove dead soldiers
-    for (let i=0; i<this.playerUnits.length; i++) {
-      if (this.playerUnits[i].dead) {
-        this.playerUnits.splice(i, 1);
+    for (let i=0; i<this.playerSoldiers.length; i++) {
+      if (this.playerSoldiers[i].dead) {
+        this.playerSoldiers.splice(i, 1);
         i--;
       }
     }
-    for (let i=0; i<this.enemyUnits.length; i++) {
-      if (this.enemyUnits[i].dead) {
-        this.enemyUnits.splice(i, 1);
+    for (let i=0; i<this.enemySoldiers.length; i++) {
+      if (this.enemySoldiers[i].dead) {
+        this.enemySoldiers.splice(i, 1);
         i--;
       }
     }
@@ -280,9 +297,9 @@ class CombatScene {
     //if (frameCount % 4 === 0) {
       
       // check if enemy in range and engage
-      for (let soldier of this.playerUnits) {
-        for(let enemy of this.enemyUnits) {
-          if (soldier.inAttackRange(enemy.position)) {
+      for (let soldier of this.playerSoldiers) {
+        for(let enemy of this.enemySoldiers) {
+          if (soldier.inRange(enemy.position)) {
             soldier.setAction(Soldier.Action.Shoot);
             soldier.setTargetUnit(enemy);
           }
@@ -290,9 +307,17 @@ class CombatScene {
         soldier.update();
       }
 
-      for (let enemy of this.enemyUnits) {
+
+
+      for (let mamooth of this.playerMamooths) {
+        mamooth.update();
+      }
+
+      for (let enemy of this.enemySoldiers) {
         enemy.update();
       }
+      //console.log("update soldier");
+    //}
   }
 
   // TODO: show in hud. Maybe make it a class
@@ -303,16 +328,13 @@ class CombatScene {
 
     this.factor = 200;
     
-    let xmax, xmin;
     // enemy
-    if (this.enemyHTrain !== null) {
-      hudCanvas.fill("red");
-      xmax = mainCanvasDim[0] - 600 + this.factor * (this.enemyHTrain.wagons[0].position.x + 2*this.enemyHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
-      xmin = mainCanvasDim[0] - 600 + this.factor * this.enemyHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
-      hudCanvas.rect(xmin, 1, xmax - xmin, 4);
-    }
-
-    for (let enemy of this.enemyUnits) {
+    hudCanvas.fill("red");
+    let xmax = mainCanvasDim[0] - 600 + this.factor * (this.enemyHTrain.wagons[0].position.x + 2*this.enemyHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
+    let xmin = mainCanvasDim[0] - 600 + this.factor * this.enemyHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
+    hudCanvas.rect(xmin, 1, xmax - xmin, 4);
+    
+    for (let enemy of this.enemySoldiers) {
       hudCanvas.rect(
         mainCanvasDim[0] - 600 + this.factor * enemy.position.x / mainCanvasDim[0],
         60 * enemy.position.y / mainCanvasDim[1], 
@@ -325,7 +347,7 @@ class CombatScene {
     xmin = mainCanvasDim[0] - 600 + this.factor * this.playerHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
     hudCanvas.rect(xmin, 55, xmax - xmin, 4);
     
-    for (let soldier of this.playerUnits) {
+    for (let soldier of this.playerSoldiers) {
       hudCanvas.rect(
         mainCanvasDim[0] - 600 + this.factor * soldier.position.x / mainCanvasDim[0],
         60 * soldier.position.y / mainCanvasDim[1], 
@@ -359,9 +381,7 @@ class CombatScene {
     mainCanvas.image(this.backgroundImg, 0, 0);
     
     this.playerHTrain.show(this.camera.position);
-    if (this.enemyHTrain !== null) {
-      this.enemyHTrain.show(this.camera.position);
-    }
+    this.enemyHTrain.show(this.camera.position);
     
     if (this.cannonball !== null) {
       this.cannonball.show(this.camera.position);
@@ -371,12 +391,20 @@ class CombatScene {
       this.machinegunbullets.show(this.camera.position);
     }
 
-    for (let soldier of this.playerUnits) {
+    for (let soldier of this.playerSoldiers) {
       soldier.show(this.camera.position);
     }
 
-    for (let soldier of this.enemyUnits) {
+    for (let soldier of this.enemySoldiers) {
       soldier.show(this.camera.position);
+    }
+
+    for (let mamooth of this.playerMamooths) {
+      mamooth.show(this.camera.position);
+    }
+
+    for (let mamooth of this.enemyMamooths) {
+      mamooth.show(this.camera.position);
     }
 
     if (this.selectedWagon !== null) {

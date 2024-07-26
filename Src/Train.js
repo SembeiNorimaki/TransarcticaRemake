@@ -37,6 +37,7 @@ class Train {
     this.fuel = saveData.fuel;
     for (let wagonSaveData of saveData.wagons) {
       this.addWagon(wagonSaveData.name);
+      this.wagons.at(-1).fillWagon();
     }
   }
 

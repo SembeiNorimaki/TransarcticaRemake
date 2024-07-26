@@ -68,12 +68,12 @@ class Wagon {
     hudCanvas.image(this.img[this.spriteId],100, 30);
     hudCanvas.text(this.name,300, 30);
 
-    // hudCanvas.image(unitsData.soldier[90][0], 700, 30, 32, 54);
-    // hudCanvas.image(unitsData.soldier[90][0], 720, 30, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 700, 30, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 720, 30, 32, 54);
 
-    // hudCanvas.image(unitsData.soldier[90][0], 800, 22, 32, 54);
-    // hudCanvas.image(unitsData.soldier[90][0], 820, 22, 32, 54);
-    // hudCanvas.image(unitsData.soldier[90][0], 810, 38, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 800, 22, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 820, 22, 32, 54);
+    // hudCanvas.image(gameData.unitsData.soldier[90][0], 810, 38, 32, 54);
   }
 
   show() {

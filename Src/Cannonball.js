@@ -18,7 +18,7 @@ class Cannonball {
   constructor(position) {
 
     let spriteData = {
-      "imgs": cannonballData,
+      "imgs": gameData.cannonballData,
       "actions": ["move", "explode"],
       "nSprites": {"move": 1, "explode": 7},
       "spriteDuration": {"move": 1, "explode": 4}

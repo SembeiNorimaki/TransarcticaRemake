@@ -222,12 +222,12 @@ class Locomotive {
     this.screenPos = boardToScreen(this.position, game.navigationScene.camera.position);
     // console.log(this.position.array(), this.screenPos.array())
     // this.screenPos.add([
-    //   locomotiveData[this.orientation].offset[0],
-    //   locomotiveData[this.orientation].offset[1] 
+    //   gameData.locomotiveData[this.orientation].offset[0],
+    //   gameData.locomotiveData[this.orientation].offset[1] 
     // ]);
-    mainCanvas.image(locomotiveData[this.orientation.toString()].imgList[this.spriteIdx], 
-    this.screenPos.x+locomotiveData[this.orientation.toString()].offset[0], 
-    this.screenPos.y+locomotiveData[this.orientation.toString()].offset[1]);
+    mainCanvas.image(gameData.locomotiveData[this.orientation.toString()].imgList[this.spriteIdx], 
+    this.screenPos.x+gameData.locomotiveData[this.orientation.toString()].offset[0], 
+    this.screenPos.y+gameData.locomotiveData[this.orientation.toString()].offset[1]);
     // mainCanvas.circle(this.screenPos.x, this.screenPos.y, 10)
     let screenPos2 = boardToScreen(this.frontSensor, game.navigationScene.camera.position);
     // mainCanvas.circle(screenPos2.x, screenPos2.y, 10)

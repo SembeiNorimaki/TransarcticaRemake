@@ -16,7 +16,7 @@ class Soldier extends Unit {
     this.halfSize = createVector(20, 20);
     
     let spriteData = {
-      "imgs": unitsData.soldier[1],
+      "imgs": gameData.unitsData.soldier[1],
       "actions": ["idle", "walk", "shoot"],
       "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
       "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
@@ -89,8 +89,12 @@ class Soldier extends Unit {
     this.setAction(Soldier.Action.Walk);
   }
 
-  inRange(targetPosition) {
-    return p5.Vector.dist(targetPosition, this.position) <= this.range;
+  inViewRange(targetPosition) {
+    return p5.Vector.dist(targetPosition, this.position) <= this.ViewRange;
+  }
+
+  inAttackRange(targetPosition) {
+    return p5.Vector.dist(targetPosition, this.position) <= this.attackRange;
   }
 
   setAction(action) {
@@ -215,13 +219,13 @@ class Soldier extends Unit {
 
   showHud() {
     hudCanvas.background(100);
-    hudCanvas.image(unitsData.soldier[this.soldierType].idle[270][0], 60, 25, 32, 54);
+    hudCanvas.image(gameData.unitsData.soldier[this.soldierType].idle[270][0], 60, 25, 32, 54);
     hudCanvas.text("Rifleman", 150, 30);
   }
 
   show(cameraPos) {
-    //console.log(unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
-    //mainCanvas.image(unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
+    //console.log(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
+    //mainCanvas.image(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
     
     let position = this.position.copy();
     if (cameraPos) {
@@ -242,6 +246,7 @@ class Soldier extends Unit {
       mainCanvas.pop();
       //mainCanvas.fill(255)
     }
+    mainCanvas.fill(0);
     mainCanvas.text(this.id, position.x-10, position.y+35);
     mainCanvas.text(this.hp, position.x-10, position.y+45);
     mainCanvas.text(this.action, position.x-10, position.y+55);

@@ -1,18 +1,33 @@
 class Wolf extends Unit {
   constructor(id, position, owner) {
     super(id, position, owner);
+    this.role = "";
+    if (this.owner == "cpu") {
+      this.soldierAI = new SoldierAI(this.role, this);
+    }
+
     this.halfSize = createVector(50,50);
     let spriteData = {
-      "imgs": unitsData.wolf[0],
+      "imgs": gameData.unitsData.wolf[0],
       "actions": ["walk"],
       "nSprites": {"walk": 8},
       "spriteDuration": {"walk": 5}
     }
     this.sprite = new Sprite("walk", this.orientation, spriteData);
+
+    this.range = 10;
+    this.viewRange = 200;
+    this.hp = 100;
+    this.walkSpeed = 1;
   }
   setOrientation(ori) {
     this.orientation = ori;
     this.sprite.setOrientation(ori);
+  }
+
+  setRole(roleData) {
+    this.role = roleData.role;
+    this.soldierAI.setRole(roleData);
   }
 
   // TODO: This shouldn't be here, should be in CombatScene or in the Map of combatScene
@@ -56,8 +71,12 @@ class Wolf extends Unit {
     this.setAction(Soldier.Action.Walk);
   }
 
-  inRange(targetPosition) {
-    return p5.Vector.dist(targetPosition, this.position) <= this.range;
+  inViewRange(targetPosition) {
+    return p5.Vector.dist(targetPosition, this.position) <= this.viewRange;
+  }
+
+  inAttackRange(targetPosition) {
+    return p5.Vector.dist(targetPosition, this.position) <= this.attackRange;
   }
 
   setAction(action) {
@@ -85,6 +104,17 @@ class Wolf extends Unit {
       mousePos.x <= this.position.x + this.halfSize.x && 
       mousePos.y >= this.position.y - this.halfSize.y && 
       mousePos.y <= this.position.y + this.halfSize.y);
+  }
+
+  processOrder(order) {
+    if (order.order == "move") {
+      this.setTargetPosition(order.destination);
+      this.setAction(Soldier.Action.Walk);
+    }
+    else if (order.order == "shoot") {
+      this.setAction(Soldier.Action.Shoot);
+      this.setTargetUnit(order.destination);
+    }
   }
 
   update() {
@@ -149,9 +179,20 @@ class Wolf extends Unit {
     }
   }
 
+  setTargetUnit(unit) {
+    this.targetUnit = unit;
+  }
+
+  receiveDamage(amount) {
+    this.hp -= amount;
+    if (this.hp <= 0) {
+      this.dead = true;
+    }
+  }
+
   show(cameraPos) {
-    //console.log(unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
-    //mainCanvas.image(unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
+    //console.log(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
+    //mainCanvas.image(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
     
     let position = this.position.copy();
     if (cameraPos) {
