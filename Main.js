@@ -453,5 +453,5 @@ function mousePressed() {
 }
 
 function mouseMoved() {
-  // game.currentScene.mouseMoved();
+  // game.currenrtScene.mouseMoved();
 }

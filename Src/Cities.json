@@ -182,11 +182,6 @@
   "Marrakesh": {
     "name": "Marrakesh",
     "resources": {
-      "Oil": {
-        "Qty": 0,
-        "Sell": 20,
-        "Buy": 10
-      },      
       "Wolf Meat": {
         "Qty": 5,
         "Sell": 20,
@@ -195,12 +190,12 @@
       "Salt": {
         "Qty": 5,
         "Sell": 20,
-        "Buy": 10
+        "Buy": 15
       },
       "Caviar": {
         "Qty": 3,
         "Sell": 20,
-        "Buy": 10
+        "Buy": 20
       }
     },
     "objectives": {
@@ -225,47 +220,27 @@
     }
   },
   "Tanger": {
-    "name": "Marrakesh",
+    "name": "Tanger",
     "resources": {
-      "Oil": {
+      "Wolf Meat": {
         "Qty": 2,
         "Sell": 20,
         "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
       }
     },
     "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "title": "Rebuild the bridge in the strait of Gibraltar.",
       "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+        "The bridge that crosses the strait of Gibraltar has collapsed. Help us rebuilding it",
+        "There's a workshop near Marrakesh that can manufacture the Bridge parts needed"  
       ],
       "completed": false,
       "resources": {
-        "Oil": {
-          "needed": 500,
+        "Bridge parts": {
+          "needed": 10,
           "delivered": 0,
           "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
+        }        
       }
     }
   },

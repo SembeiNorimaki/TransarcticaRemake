@@ -66,7 +66,7 @@ class TradeScene {
           1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
           386 + row*TILE_HEIGHT_HALF*2
         ));
-        wagon.fillWagon();
+        wagon.fillWagon(resourceName);
         this.buyableWagons.push(wagon);
       }
       row++;
@@ -74,12 +74,14 @@ class TradeScene {
   }
 
   buyWagon() {
+    let wagonName = this.buyableWagons[this.selectedBuyableWagonIdx].name;
+    let resourceName = this.buyableWagons[this.selectedBuyableWagonIdx].cargo;
     // Add wagon to the train (it also updates the weight)
-    game.playerTrain.addWagon(this.buyableWagons[this.selectedBuyableWagonIdx].name, 0);
+    game.playerTrain.addWagon(wagonName, 0);
     // Fill the wagon
-    game.playerTrain.wagons.at(-1).fillWagon();
+    game.playerTrain.wagons.at(-1).fillWagon(resourceName);
     // Substract wagon cost from player gold
-    game.playerTrain.gold -= this.city.resources[this.buyableWagons[this.selectedBuyableWagonIdx].cargo].Buy;
+    game.playerTrain.gold -= this.city.resources[resourceName].Buy;
     // remove the wagon from the city
     this.buyableWagons[this.selectedBuyableWagonIdx] = null;
     // deselect the removed wagon

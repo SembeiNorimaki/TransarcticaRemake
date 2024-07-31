@@ -110,7 +110,8 @@ class Wagon {
     //this.recalculateSpriteId();
   }
 
-  fillWagon() {
+  fillWagon(resourceName) {
+    this.cargo = resourceName;  // TODO: Dangerous. This is good for merchandise, but dangerous for other wagons
     this.usedSpace = this.capacity;
     this.availableSpace = 0;
     this.spriteId = this.img.length-1;

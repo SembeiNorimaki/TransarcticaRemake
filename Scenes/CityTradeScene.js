@@ -29,7 +29,7 @@ class CityTradeScene extends TradeScene {
           1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
           352 + row*TILE_HEIGHT_HALF*3
         ));
-        wagon.fillWagon();
+        wagon.fillWagon(resourceName);
         this.buyableWagons.push(wagon);
         col++;
         if (col >=3+row) {

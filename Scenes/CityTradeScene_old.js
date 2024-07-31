@@ -62,7 +62,7 @@ class CityTradeScene {
           1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
           386 + row*TILE_HEIGHT_HALF*2
         ));
-        wagon.fillWagon();
+        wagon.fillWagon(resourceName);
         this.buyableWagons.push(wagon);
       }
       row++;
