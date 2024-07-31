@@ -1,4 +1,14 @@
 {
-  "18,15": "Barcelona_Mine",
-  "8,20": "Madrid Forest"
+  "17,35": "Marrakesh_PowerPlant",
+  "28,48": "Tibesti_CoalMine",
+  "40,42": "Tibesti_ClayMine",
+  "49,45": "Luxor_Water",
+  "39,32": "Alexandria_Lighthouse",
+  "20,27": "Tunis_Forest",
+  
+  "1,1": "Cairo_Pyramids",
+  "1,2": "SawMill",
+  "1,3": "BrickFactory",
+  "1,4": "IronMine",
+  "1,5": "Foundry"
 }

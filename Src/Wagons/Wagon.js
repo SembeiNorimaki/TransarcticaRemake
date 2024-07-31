@@ -26,20 +26,32 @@ class Wagon {
   };
 
   static resourceToWagon = {
-    "Oil":       "Oil Tanker",   
-    "Iron":      "Iron Gondola", 
-    "Copper":    "Copper Gondola",
-    "Iron bars": "Iron bars",
-    "Wood":      "Wood Wagon",      
-    "Container": "Container",     
-    "ALL":       "Merchandise"
+    "Oil":                 "Oil Tanker",   
+    "Iron":                "Iron Gondola", 
+    "Copper":              "Copper Gondola",
+    "Iron bars":           "Iron bars",
+    "Wood":                "Wood Wagon",      
+    "Container":           "Container",    
+    "Gasoline":            "Oil Tanker",   
+    "Water":               "Water Tanker",   
+    
+    "Antiques":            "Merchandise",
+    "Fishing Rods":        "Merchandise",
+    "Caviar":              "Merchandise",
+    "Line Inspection car": "Merchandise",
+    "Furs":                "Merchandise",
+    "Mamooth Dung":        "Merchandise",
+    "Missiles":            "Merchandise",
+    "Fish":                "Merchandise",
+    "Rails":               "Merchandise",
+    "Salt":                "Merchandise",
+    "Wolf Meat":           "Merchandise"
   };
   
 
   constructor(id, name, wagonData) {
     this.id = id;
     this.name = name;
-    console.log(name)
     this.img = wagonData.img;
     this.halfSize = createVector(wagonData.img[0].width/2, wagonData.img[0].height/2);
     this.offset = wagonData.offset;
@@ -171,6 +183,8 @@ class Wagon {
 
   }
 }
+
+
 
 class CannonWagon extends Wagon {
   constructor(id, name, wagonData) {

@@ -53,11 +53,15 @@ class TradeScene {
   
   populateBuyableWagons() {
     let row = 0;
-    console.log(this.city)
     for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
       for (let i=0; i<resourceInfo.Qty; i++) {
-        let wagonName = resourceToWagon[resourceName];
-        let wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+        let wagonName = Wagon.resourceToWagon[resourceName];
+        let wagon;
+        if (wagonName == "Merchandise") {
+          wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
+        } else {
+          wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+        }
         wagon.setPos(createVector(
           1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
           386 + row*TILE_HEIGHT_HALF*2

@@ -16,11 +16,13 @@
 
 class MapEditor {
   constructor() {
-    this.camera = new Camera(boardToCameraSmall(createVector(30,150)));
+    this.camera = new Camera(boardToCameraSmall(createVector(60,180)));
     this.tileBoard = new TileBoard(gameData.mapBoard);
     this.posOri = null;
 
-    this.buildSelection = "City";
+    this.buildSelection = "Fix";
+
+    noLoop();
 
     
   }
@@ -31,30 +33,50 @@ class MapEditor {
 
   }
 
-  downloadMap() {
+  saveMap() {
     let boardDim = this.tileBoard.boardDim
     let board = [];
-    let currentRow = "";
+    let currentRow = [];
 
     for (let row=0; row<boardDim.y; row++) {
-      currentRow = "";
+      currentRow = [];
       for (let col=0; col<boardDim.x; col++) {  
-        currentRow += str(this.tileBoard.board[row][col].tileId.toString(16).toUpperCase().padStart(2, '0')) + ","
+        if (this.tileBoard.board[row][col].isEvent) {
+          currentRow.push((this.tileBoard.board[row][col].tileId + 0x100).toString(16).toUpperCase().padStart(3, '0'))
+        } else {
+          currentRow.push(this.tileBoard.board[row][col].tileId.toString(16).toUpperCase().padStart(3, '0'))
+        }
       }
-      currentRow = currentRow.slice(0, -1);
-      board.push(currentRow + "\n");
+      
+      board.push(currentRow);
     }
-    downloadText(board)
+    storeItem("SavedMap", board)
+
+    let str = []
+    for (let row of this.tileBoard.board) {
+      let str2 = [];
+      for (let tile of row) {
+        try {
+          if (this.tileBoard.board[row][col].isEvent) {
+            str2.push((tile.tileId + 0x100).toString(16).toUpperCase().padStart(3, '0'))
+          } else {
+            str2.push(tile.tileId.toString(16).toUpperCase().padStart(3, '0'))
+          }
+        } catch {} 
+      }
+      str.push(str2.join(","))
+    }
+    downloadText(str.join("\r\n"), "Tutorial.txt")
   }
 
   calculatePath(ori, end, oriScreen) {
     
-    // let angle = degrees(p5.Vector.sub(end, ori).heading());
+    
     let angle = degrees(p5.Vector.sub(createVector(mouseX, mouseY), oriScreen).heading());
     if (angle < 0) 
       angle += 360;
 
-    //mainCanvas.text(angle, mouseX, mouseY-40)
+    mainCanvas.text(angle, mouseX, mouseY-40)
 
     let n, deltaX, deltaY, x, y, currentTile;
     let aperture = 10;
@@ -99,11 +121,9 @@ class MapEditor {
       return [path, tileId];
     }
 
-
-
     currentTile = ori.copy();
     n = abs(end.y - ori.y) + abs(end.x - ori.x);
-    if ((angle >= 90-aperture && angle < 90)) {   // direction south
+    if ((angle >= 90-aperture*4 && angle < 90)) {   // direction south
       tileId = [0x35,0x34];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -117,7 +137,7 @@ class MapEditor {
         }        
       }
     }
-    else if ((angle >= 90 && angle < 90+aperture)) {   // direction south
+    else if ((angle >= 90 && angle < 90+aperture*4)) {   // direction south
       tileId = [0x34,0x35];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -132,7 +152,7 @@ class MapEditor {
       }
     }
 
-    else if ((angle >= 270 && angle < 270 + aperture)) {   // direction north
+    else if ((angle >= 270 && angle < 270 + aperture*4)) {   // direction north
       tileId = [0x35,0x34];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -146,7 +166,7 @@ class MapEditor {
         }        
       }
     }
-    else if ((angle >= 270 - aperture && angle < 270)) {   // direction north
+    else if ((angle >= 270 - aperture*4 && angle < 270)) {   // direction north
       tileId = [0x34,0x35];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -161,7 +181,7 @@ class MapEditor {
       }
     }
 
-    else if ((angle >= 180-aperture && angle < 180)) {   // direction west
+    else if ((angle >= 180-aperture*2 && angle < 180)) {   // direction west
       tileId = [0x33,0x32];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -175,7 +195,7 @@ class MapEditor {
         }        
       }
     }
-    else if ((angle >= 180 && angle < 180+aperture)) {   // direction west
+    else if ((angle >= 180 && angle < 180+aperture*2)) {   // direction west
       tileId = [0x32,0x33];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -190,7 +210,7 @@ class MapEditor {
       }
     }
 
-    else if ((angle >= 360-aperture && angle <= 360)) {   // direction east
+    else if ((angle >= 360-aperture*2 && angle <= 360)) {   // direction east
       tileId = [0x32,0x33];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -204,7 +224,7 @@ class MapEditor {
         }        
       }
     }
-    else if ((angle >= 0 && angle < 0+aperture)) {   // direction east
+    else if ((angle >= 0 && angle < 0+aperture*2)) {   // direction east
       tileId = [0x33,0x32];
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
@@ -226,11 +246,21 @@ class MapEditor {
   onClick(mousePos) {
     let tilePos = screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
     if (this.buildSelection == "City") {
-      console.log(`Setting tile ${tilePos.x}${tilePos.y} to city`)
       this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0xA0);
+    } else if (this.buildSelection == "Industry") {
+      this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0xA1);
+    } else if (this.buildSelection == "Water") {
+      this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0x00);
+    } else if (this.buildSelection == "Ground") {
+      this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0x01);
+    } else if (this.buildSelection == "Forest") {
+      this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0x5A);
+    } else if (this.buildSelection == "Event") {
+      this.tileBoard.board[tilePos.y][tilePos.x].setTileId(this.tileBoard.board[tilePos.y][tilePos.x].tileId | 0x100);
       let a=0;
-    }
-    else {
+    } else if (this.buildSelection == "Fix") {
+      this.fixRail(tilePos)
+    } else {
       if (this.posOri === null) {
         this.posOri = tilePos.copy();
       } else {
@@ -247,12 +277,33 @@ class MapEditor {
               this.tileBoard.board[pos.y][pos.x].setTileId(tileId[i%tileId.length]);
           }
         }
-        this.posOri = path.at(-1);
+        // this.posOri = path.at(-1);
+        this.posOri = null;
         this.posEnd = null;
 
       }
     }
     console.log(`Clicked on Tile ${tilePos}`)
+  }
+
+  fixRail(tilePos) {
+    console.log(tilePos.array());
+    let t = this.tileBoard.board[tilePos.y][tilePos.x];
+    let tA = this.tileBoard.board[tilePos.y][tilePos.x-1];
+    let tB = this.tileBoard.board[tilePos.y-1][tilePos.x];
+    let tC = this.tileBoard.board[tilePos.y+1][tilePos.x];
+    let tD = this.tileBoard.board[tilePos.y][tilePos.x+1];
+
+    if (tA.isRail && tB.isRail && tC.isRail) {
+      t.setTileId(0x3C);
+    } else if (tA.isRail && tB.isRail && tD.isRail) {
+      t.setTileId(0x3A);
+    } else if (tA.isRail && tC.isRail && tD.isRail) {
+      t.setTileId(0x3B);
+    } else if (tB.isRail && tC.isRail && tD.isRail) {
+      t.setTileId(0x3D);
+    }
+
   }
 
   processKey(key) {
@@ -269,18 +320,40 @@ class MapEditor {
       case("ArrowDown"):
       this.camera.move(createVector(0, 300));
       break;
-      case("d"):
-        this.downloadMap()
+      case("w"):
+        this.buildSelection = "Water";
+      break;
+      case("g"):
+        this.buildSelection = "Ground";
       break;
       case("c"):
         this.buildSelection = "City";
+      break;
+      case("i"):
+        this.buildSelection = "Industry";
       break;
       case("r"):
         this.buildSelection = "Rail";
         this.posOri = null;
       break;
+      case("f"):
+        this.buildSelection = "Forest";
+      break;
+      case("x"):
+        this.buildSelection = "Fix";
+      break;
+      case("e"):
+        this.buildSelection = "Event";
+      break;
+      case("s"):
+        this.saveMap();
+      break;
     }
+    draw();
+  }
 
+  mouseMoved() {
+    draw();
   }
 
   showHud() {
@@ -298,7 +371,7 @@ class MapEditor {
   }
 
   show() {
-    this.tileBoard.show2D(mainCanvas, this.camera.position); 
+    this.tileBoard.draw3D(mainCanvas, this.camera.position); 
     
     let tilePos = screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
 
@@ -310,15 +383,34 @@ class MapEditor {
     }
     else if (this.buildSelection == "City") {
       Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(tilePos, this.camera.position))
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-2)), this.camera.position));
+    } else if (this.buildSelection == "Industry") {
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-2)), this.camera.position));
+    } else if (this.buildSelection == "Ground") {
+      Tile.draw2DColor(mainCanvas, "gray", boardToScreenSmall(tilePos, this.camera.position));
+    } else if (this.buildSelection == "Fix") {
+      Tile.draw2DColor(mainCanvas, "black", boardToScreenSmall(tilePos, this.camera.position));
+    } else if (this.buildSelection == "Water") {
+      Tile.draw2DColor(mainCanvas, "blue", boardToScreenSmall(tilePos, this.camera.position));
+    } else if (this.buildSelection == "Forest") {
+      Tile.draw2DColor(mainCanvas, "green", boardToScreenSmall(tilePos, this.camera.position));
+    } else if (this.buildSelection == "Event") {
+      Tile.draw2DColor(mainCanvas, color(100,100,200), boardToScreenSmall(tilePos, this.camera.position));
     }
-
-    // mainCanvas.push();
-    // mainCanvas.stroke("red")
-    // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
-    // mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
-    // mainCanvas.pop();
-
-
-
   }
 }

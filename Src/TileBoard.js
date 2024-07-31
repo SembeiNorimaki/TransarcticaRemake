@@ -29,7 +29,7 @@ class TileBoard {
         try {  
         this.board[row][col] = new Tile(createVector(col, row), mapData[row][col]);        
         } catch {
-          console.log(row,col);
+          console.log(`Error initializing tile: ${row},${col}`);
         }
       }
     }
@@ -86,7 +86,7 @@ class TileBoard {
     }
   }
 
-  show2D(canvas, cameraPos) {
+  draw3D(canvas, cameraPos) {
     let off = mainCanvasDim[0] / (2*TILE_MINI_WIDTH);
     let n = off
     let m = n;
@@ -97,6 +97,7 @@ class TileBoard {
     let startRow = row0;
     
     let orderIdx = 0;
+    mainCanvas.background("gray")
 
     for (let j=0; j<n;j++) {
       col = col0;
@@ -104,10 +105,12 @@ class TileBoard {
       for (let i=0; i<m; i++) {
         if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
           screenPos = boardToScreenSmall(createVector(col, row), cameraPos)  
-          Tile.draw2D(mainCanvas, 0x00, screenPos);
+          Tile.draw3D(mainCanvas, 0x00, screenPos);
           //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
         } else {
-          this.board[row][col].show2D(canvas, cameraPos, orderIdx);
+          try {
+            this.board[row][col].draw3D(canvas, cameraPos, orderIdx);
+          } catch {}
           orderIdx++;
         }
         col++;
@@ -118,10 +121,12 @@ class TileBoard {
       for (let i=0; i<m; i++) {
         if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
           screenPos = boardToScreenSmall(createVector(col, row), cameraPos);
-          Tile.draw2D(mainCanvas, 0x00, screenPos);
+          Tile.draw3D(mainCanvas, 0x00, screenPos);
           //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
         } else {
-          this.board[row][col].show2D(canvas, cameraPos, orderIdx);
+          try {
+          this.board[row][col].draw3D(canvas, cameraPos, orderIdx);
+          } catch{}
           orderIdx++;
         }
         col++;

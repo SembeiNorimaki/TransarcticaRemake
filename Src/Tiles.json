@@ -77,6 +77,7 @@
     "Building_4":  {"filename": "resources/buildings/4598_zi4.png"},
     "Building_5":  {"filename": "resources/buildings/4599_zi4.png"},
     "Building_6":  {"filename": "resources/buildings/4600_zi4.png"},
+    "Village":  {"filename": "resources/Village_small.png"},
 
     "Industry_Forest":      {"filename": "resources/industries_big/forest.png"},
     "Industry_Chemical":    {"filename": "resources/industries_big/chemical.png"},
@@ -90,6 +91,8 @@
     "Industry_Powerplant":  {"filename": "resources/industries_big/powerplant.png"},
     "Industry_Wood":        {"filename": "resources/industries_big/wood.png"},
     "Industry_Workshop":    {"filename": "resources/industries_big/workshop.png"},
+    "Industry_ClayMine":    {"filename": "resources/industries_big/ClayMine.png"},
+    "Industry_BrickFactory":{"filename": "resources/industries_big/BrickFactory.png"},
 
     "Mine1": {"filename": "resources/industries/mine/2284_zi4.png"},
     "Mine2": {"filename": "resources/industries/mine/2285_zi4.png"},
@@ -117,6 +120,12 @@
     "OilRig4": {"filename": "resources/industries/oil_rig/2177_zi4.png"},
     "OilRig5": {"filename": "resources/industries/oil_rig/2178_zi4.png"},
     "OilRig6": {"filename": "resources/industries/oil_rig/2179_zi4.png"},
+
+    "Pyramid_1": {"filename": "resources/pyramid1.png"},
+    "Pyramid_2": {"filename": "resources/pyramid2.png"},
+    "Lighthouse_1": {"filename": "resources/lighthouse1.png"},
+    "Lighthouse_2": {"filename": "resources/lighthouse2.png"},
+    "Lighthouse_3": {"filename": "resources/lighthouse3.png"},
     
 
     "Forest": {"filename": "resources/terrain/forest_zi2.png"},
@@ -212,25 +221,34 @@
     "0x7D": {"imgName": "Road_Bc" , "offset": [0, 0]},
     "0x7E": {"imgName": "Road_Cb" , "offset": [0, 0]},
 
-    "0xA0": {"imgName": "Building_1" , "offset": [-64, -236]},
+    "0xA0": {"imgName": "Village" , "offset": [-116, -130]},
+    "0xA6": {"imgName": "Building_1" , "offset": [-64, -236]},
     "0xA1": {"imgName": "Building_2" , "offset": [-64, -219]},
     "0xA2": {"imgName": "Building_3" , "offset": [-64, -70]},
     "0xA3": {"imgName": "Building_4" , "offset": [-64, -70]},
     "0xA4": {"imgName": "Building_5" , "offset": [-64, -70]},
     "0xA5": {"imgName": "Building_6" , "offset": [-64, -94]},
 
+    "0xA7": {"imgName": "Pyramid_1" , "offset": [-235, -355]},
+    "0xA8": {"imgName": "Pyramid_2" , "offset": [-137, -178]},
+    "0xA9": {"imgName": "Lighthouse_1" , "offset": [-139, -490]},
+    "0xAA": {"imgName": "Lighthouse_2" , "offset": [-137, -400]},
+    "0xAB": {"imgName": "Lighthouse_3" , "offset": [-85, -235]},
+
     "0xB0": {"imgName": "Industry_Forest"      , "offset": [-64, -94]},
-    "0xB1": {"imgName": "Industry_Chemical"    , "offset": [-320, -460]},
-    "0xB2": {"imgName": "Industry_Container"   , "offset": [-320, -460]},
-    "0xB3": {"imgName": "Industry_Copper"      , "offset": [-320, -460]},
-    "0xB4": {"imgName": "Industry_Farm"        , "offset": [-320, -460]},
-    "0xB5": {"imgName": "Industry_Grain"       , "offset": [-320, -460]},
-    "0xB6": {"imgName": "Industry_Iron"        , "offset": [-320, -460]},
-    "0xB7": {"imgName": "Industry_Lumber"      , "offset": [-320, -460]},
-    "0xB8": {"imgName": "Industry_Oil"         , "offset": [-320, -460]},
-    "0xB9": {"imgName": "Industry_Powerplant"  , "offset": [-320, -460]},
-    "0xBA": {"imgName": "Industry_Wood"        , "offset": [-320, -460]},
-    "0xBB": {"imgName": "Industry_Workshop"    , "offset": [-320, -460]},
+    "0xB1": {"imgName": "Industry_Chemical"    , "offset": [-322, -459]},
+    "0xB2": {"imgName": "Industry_Container"   , "offset": [-322, -449]},
+    "0xB3": {"imgName": "Industry_Copper"      , "offset": [-330, -340]},
+    "0xB4": {"imgName": "Industry_Farm"        , "offset": [-320, -340]},
+    "0xB5": {"imgName": "Industry_Grain"       , "offset": [-322, -515]},
+    "0xB6": {"imgName": "Industry_Iron"        , "offset": [-280, -300]},
+    "0xB7": {"imgName": "Industry_Lumber"      , "offset": [-320, -405]},
+    "0xB8": {"imgName": "Industry_Oil"         , "offset": [-321, -512]},
+    "0xB9": {"imgName": "Industry_Powerplant"  , "offset": [-320, -484]},
+    "0xBA": {"imgName": "Industry_Wood"        , "offset": [-320, -430]},
+    "0xBB": {"imgName": "Industry_Workshop"    , "offset": [-321, -394]},
+    "0xBC": {"imgName": "Industry_ClayMine"    , "offset": [-445, -553]},
+    "0xBD": {"imgName": "Industry_BrickFactory", "offset": [-447, -445]},
 
     "0xC0": {"imgName": "Mine1"    , "offset": [-64, -64]},
     "0xC1": {"imgName": "Mine2"    , "offset": [-64, -128]},
@@ -248,7 +266,6 @@
     "0xCD": {"imgName": "OilRig4"    , "offset": [-64, -128]},
     "0xCE": {"imgName": "OilRig5"    , "offset": [-64, -146]},
     "0xCF": {"imgName": "OilRig6"    , "offset": [-64, -256]},
-    
 
     "0xFE": {"imgName": "Ground"      , "offset": [0,   0]},
     "0xFF": {"imgName": "Ground"      , "offset": [0,   0]}

@@ -1,6 +1,6 @@
 {
-  "Barcelona": {
-    "name": "Barcelona",
+  "Alexandria": {
+    "name": "Marrakesh",
     "resources": {
       "Oil": {
         "Qty": 2,
@@ -44,81 +44,319 @@
       }
     }
   },
-  "Madrid": {
-    "name": "Madrid",
+  "Cairo": {
+    "name": "Marrakesh",
     "resources": {
       "Oil": {
+        "Qty": 2,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Meat": {
+        "Qty": 3,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Container": {
         "Qty": 1,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Iron": {
+        "Qty": 4,
         "Sell": 2,
         "Buy": 1
       }
     },
     "objectives": {
-      "title": "Kill 5 wolves and bring the fur to Madrid",
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
-        "Wolves are getting more aggressive and attack our citizens!",
-        "Kill 5 wolves and bring their fur to us."  
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
       ],
       "completed": false,
       "resources": {
-        "Wolf Fur": {
-          "needed": 5,
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
           "delivered": 0,
           "completed": false
         }
       }
     }
   },
-  "Valencia": {
-    "name": "Valencia",
+  "In Salah": {
+    "name": "Marrakesh",
     "resources": {
-      "Resource1": {
-        "Qty": 10,
+      "Oil": {
+        "Qty": 2,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Meat": {
+        "Qty": 3,
         "Sell": 2,
         "Buy": 1
       },
-      "Resource2": {
-        "Qty": 10,
+      "Container": {
+        "Qty": 1,
         "Sell": 2,
         "Buy": 1
       },
-      "Resource3": {
-        "Qty": 10,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Resource4": {
-        "Qty": 10,
+      "Iron": {
+        "Qty": 4,
         "Sell": 2,
         "Buy": 1
       }
     },
-    "objectives": {}
+    "objectives": {
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+      ],
+      "completed": false,
+      "resources": {
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
   },
-  "Sevilla": {
-    "name": "Sevilla",
+  "Luxor": {
+    "name": "Marrakesh",
     "resources": {
-      "Resource1": {
-        "Qty": 10,
+      "Oil": {
+        "Qty": 2,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Meat": {
+        "Qty": 3,
         "Sell": 2,
         "Buy": 1
       },
-      "Resource2": {
-        "Qty": 10,
+      "Container": {
+        "Qty": 1,
         "Sell": 2,
         "Buy": 1
       },
-      "Resource3": {
-        "Qty": 10,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Resource4": {
-        "Qty": 10,
+      "Iron": {
+        "Qty": 4,
         "Sell": 2,
         "Buy": 1
       }
     },
-    "objectives": {}
+    "objectives": {
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+      ],
+      "completed": false,
+      "resources": {
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
+  },
+  "Marrakesh": {
+    "name": "Marrakesh",
+    "resources": {
+      "Oil": {
+        "Qty": 0,
+        "Sell": 20,
+        "Buy": 10
+      },      
+      "Wolf Meat": {
+        "Qty": 5,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Salt": {
+        "Qty": 5,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Caviar": {
+        "Qty": 3,
+        "Sell": 20,
+        "Buy": 10
+      }
+    },
+    "objectives": {
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+      ],
+      "completed": false,
+      "resources": {
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
+  },
+  "Tanger": {
+    "name": "Marrakesh",
+    "resources": {
+      "Oil": {
+        "Qty": 2,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Meat": {
+        "Qty": 3,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Container": {
+        "Qty": 1,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Iron": {
+        "Qty": 4,
+        "Sell": 2,
+        "Buy": 1
+      }
+    },
+    "objectives": {
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+      ],
+      "completed": false,
+      "resources": {
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
+  },
+  "Taoudeni": {
+    "name": "Marrakesh",
+    "resources": {
+      "Oil": {
+        "Qty": 2,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Meat": {
+        "Qty": 3,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Container": {
+        "Qty": 1,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Iron": {
+        "Qty": 4,
+        "Sell": 2,
+        "Buy": 1
+      }
+    },
+    "objectives": {
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+      ],
+      "completed": false,
+      "resources": {
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
+  },
+  "Tibesti": {
+    "name": "Marrakesh",
+    "resources": {
+      "Oil": {
+        "Qty": 2,
+        "Sell": 20,
+        "Buy": 10
+      },
+      "Meat": {
+        "Qty": 3,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Container": {
+        "Qty": 1,
+        "Sell": 2,
+        "Buy": 1
+      },
+      "Iron": {
+        "Qty": 4,
+        "Sell": 2,
+        "Buy": 1
+      }
+    },
+    "objectives": {
+      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+      "summary": [
+        "Please help us, the city is starving!",
+        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+      ],
+      "completed": false,
+      "resources": {
+        "Oil": {
+          "needed": 500,
+          "delivered": 0,
+          "completed": false
+        },
+        "Iron": {
+          "needed": 400,
+          "delivered": 0,
+          "completed": false
+        }
+      }
+    }
   }
 }

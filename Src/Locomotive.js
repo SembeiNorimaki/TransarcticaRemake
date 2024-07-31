@@ -27,12 +27,10 @@ class Locomotive {
     this.acceleration = createVector(0.0002, 0).setHeading(radians(this.orientation));
     this.velocity = createVector(0.0, 0.0);
     this.braking = createVector(0.0005, 0); 
-    this.maxVelocity = 0.06;
+    this.maxVelocity = 0.1;
     this.spriteIdx = 0;
     this.gear = "N";
   }
-
-
 
   start() {
     this.gear = "D";
@@ -212,8 +210,10 @@ class Locomotive {
     this.fuel -= this.velocity.mag();
     
 
-    let aux = boardToCamera(this.position);
-    //game.navigationScene.camera.setPos(aux);
+    if (game.cameraFollowsLocomotive) {
+      let aux = boardToCamera(this.position);
+      game.navigationScene.camera.setPos(aux);
+    }
     
 
   }

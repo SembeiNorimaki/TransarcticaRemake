@@ -121,21 +121,128 @@ class Tile {
       screenPos.y - TILE_HEIGHT_HALF);
   }
 
-  static draw2D(canvas, tileId, screenPos) {
-    //canvas.rect(screenPos.x-5, screenPos.y-5, 10, 10);
 
+  static draw2D(canvas, tileId, screenPos) {
+    // canvas.rect(screenPos.x, screenPos.y, 10, 10);
     switch(Tile.idxToName[tileId]) {
-      case("Ground"):
-      mainCanvas.push();
-      mainCanvas.noStroke();
-      mainCanvas.fill("gray");
-      mainCanvas.beginShape();
-      mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
-      mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
-      mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
-      mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
-      mainCanvas.endShape(CLOSE);
-      mainCanvas.pop();
+      case("Rail_AD"):
+      canvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y);
+      break;
+      case("Rail_BC"):
+      canvas.line(
+          screenPos.x,
+          screenPos.y-TILE_MINI_WIDTH/2,
+          screenPos.x,
+          screenPos.y+TILE_MINI_WIDTH/2);
+      break;
+      case("Rail_AB"):
+      canvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y,
+          screenPos.x,
+          screenPos.y-TILE_MINI_WIDTH/2);
+      break;
+      case("Rail_AC"):
+      canvas.line(
+          screenPos.x-TILE_MINI_WIDTH/2,
+          screenPos.y,
+          screenPos.x,
+          screenPos.y+TILE_MINI_WIDTH/2);
+      break;
+      case("Rail_BD"):
+      canvas.line(
+          screenPos.x,
+          screenPos.y-TILE_MINI_WIDTH/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y);
+      break;
+      case("Rail_CD"):
+      canvas.line(
+          screenPos.x,
+          screenPos.y+TILE_MINI_WIDTH/2,
+          screenPos.x+TILE_MINI_WIDTH/2,
+          screenPos.y);
+      break;
+
+      case("Rail_ABc"):
+      case("Rail_ACb"):
+      case("Rail_BCa"):
+      
+      break;
+      case("Rail_ABd"):
+      case("Rail_ADb"):
+      case("Rail_BDa"):
+       
+      break;
+      case("Rail_ACd"):
+      case("Rail_ADc"):
+      case("Rail_CDa"):
+        
+      break;
+      case("Rail_BCd"):
+      case("Rail_BDc"):
+      case("Rail_CDb"):
+        
+      break;
+      case("Water"): // Water
+        mainCanvas.push();
+        // mainCanvas.noStroke();
+        mainCanvas.fill("blue");
+        mainCanvas.rect(screenPos.x-TILE_MINI_WIDTH/2,screenPos.y-TILE_MINI_WIDTH/2,TILE_MINI_WIDTH, TILE_MINI_WIDTH);
+        mainCanvas.pop();
+      break;
+      case("Ground"): // Water
+        mainCanvas.push();
+        // mainCanvas.noStroke();
+        mainCanvas.fill("gray");
+        mainCanvas.rect(screenPos.x-TILE_MINI_WIDTH/2,screenPos.y-TILE_MINI_WIDTH/2,TILE_MINI_WIDTH, TILE_MINI_WIDTH);
+        mainCanvas.pop();
+      break;
+      case("Building_1"):
+        // mainCanvas.push();
+        // mainCanvas.noStroke();
+        // mainCanvas.fill("red");
+        // mainCanvas.beginShape();
+        // mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        // mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        // mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        // mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        // mainCanvas.endShape(CLOSE);
+        // mainCanvas.pop();
+      break;
+      default:
+        // mainCanvas.push();
+        // mainCanvas.noStroke();
+        // mainCanvas.fill("black");
+        // mainCanvas.beginShape();
+        // mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        // mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        // mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        // mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        // mainCanvas.endShape(CLOSE);
+        // mainCanvas.pop();
+      break;
+    }
+  }
+
+  static draw3D(canvas, tileId, screenPos, isEvent) {
+    let boardPos;
+    mainCanvas.push();
+    // mainCanvas.noStroke();
+    // mainCanvas.stroke(0)
+    switch(Tile.idxToName[tileId]) {
+      case("Ground"):      
+      // mainCanvas.fill("gray");
+      // mainCanvas.beginShape();
+      // mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+      // mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+      // mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+      // mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+      // mainCanvas.endShape(CLOSE);
       break;
       case("Rail_AD"):
         mainCanvas.line(
@@ -256,8 +363,8 @@ class Tile {
           screenPos.x+TILE_MINI_WIDTH/2,
           screenPos.y+TILE_MINI_HEIGHT/2); 
       break;
+
       case("Water"): // Water
-        mainCanvas.push();
         mainCanvas.noStroke();
         mainCanvas.fill("blue");
         mainCanvas.beginShape();
@@ -266,12 +373,8 @@ class Tile {
         mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
         mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
         mainCanvas.endShape(CLOSE);
-        mainCanvas.pop();
-        //mainCanvas.circle(screenPos.x, screenPos.y, TILE_MINI_WIDTH);
-        //mainCanvas.noFill();
       break;
       case("Building_1"):
-        mainCanvas.push();
         mainCanvas.noStroke();
         mainCanvas.fill("red");
         mainCanvas.beginShape();
@@ -280,10 +383,28 @@ class Tile {
         mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
         mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
         mainCanvas.endShape(CLOSE);
-        mainCanvas.pop();
+      break;
+      case("Building_2"):
+        mainCanvas.noStroke();
+        mainCanvas.fill(200,200,100);
+        mainCanvas.beginShape();
+        mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        mainCanvas.endShape(CLOSE);
+      break;
+      case("Forest"):
+        mainCanvas.noStroke();
+        mainCanvas.fill("green");
+        mainCanvas.beginShape();
+        mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+        mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+        mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+        mainCanvas.endShape(CLOSE);
       break;
       default:
-        mainCanvas.push();
         mainCanvas.noStroke();
         mainCanvas.fill("black");
         mainCanvas.beginShape();
@@ -292,10 +413,27 @@ class Tile {
         mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
         mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
         mainCanvas.endShape(CLOSE);
-        mainCanvas.pop();
       break;
     }
+    
 
+    if (isEvent) {
+      
+      mainCanvas.noStroke();
+      mainCanvas.fill(100,100,0,200);
+      mainCanvas.beginShape();
+      mainCanvas.vertex(screenPos.x-TILE_MINI_WIDTH, screenPos.y);
+      mainCanvas.vertex(screenPos.x, screenPos.y-TILE_MINI_HEIGHT);
+      mainCanvas.vertex(screenPos.x+TILE_MINI_WIDTH, screenPos.y);
+      mainCanvas.vertex(screenPos.x, screenPos.y+TILE_MINI_HEIGHT);
+      mainCanvas.endShape(CLOSE);
+      mainCanvas.fill(255);
+      mainCanvas.stroke(0);
+      let boardPos = screenToBoardSmall(screenPos, game.currentScene.camera.position);
+      mainCanvas.text(`${boardPos.x},${boardPos.y}`,screenPos.x, screenPos.y-20)
+    }
+    
+    mainCanvas.pop();
   }
 
   static draw2DColor(canvas, color, screenPos) {
@@ -363,6 +501,7 @@ class Tile {
     this.tileName = null;
     this.offset = null;
     this.img = null;
+    this.isEvent = false;
 
     this.setTileId(tileId);
 
@@ -371,12 +510,15 @@ class Tile {
     this.isRail = this.tileName.startsWith("Rail");
     this.isIntersection = this.tileName in Tile.tileChanges;
     
+    
   }
 
   setTileId(tileId) {
-    this.tileId = tileId;
-    this.tileName = tileCodes[tileId].imgName;
-    this.offset = tileCodes[tileId].offset;
+    let id = tileId & 0xFF;
+    this.isEvent = Boolean(tileId & 0x100);
+    this.tileId = id;
+    this.tileName = tileCodes[id].imgName;
+    this.offset = tileCodes[id].offset;
     this.img = tileImgs[this.tileName].img;    
   }
 
@@ -391,38 +533,39 @@ class Tile {
   show(canvas, cameraPos, auxText) {
     let screenPos = boardToScreen(this.boardPosition, cameraPos);    
 
-    // Bridges need 
+    // Bridges  
     if (this.tileId == 0x50) {
       Tile.draw(mainCanvas, 0x00, screenPos.copy());
     } else if (this.tileId == 0x51) {
       Tile.draw(mainCanvas, 0x02, screenPos.copy());
     } else if (this.tileId == 0x52) {
       Tile.draw(mainCanvas, 0x05, screenPos.copy());
-    }
-    else if (this.tileId == 0x53) {
+    } else if (this.tileId == 0x53) {
       Tile.draw(mainCanvas, 0x00, screenPos.copy());
     } else if (this.tileId == 0x54) {
       Tile.draw(mainCanvas, 0x03, screenPos.copy());
     } else if (this.tileId == 0x55) {
       Tile.draw(mainCanvas, 0x04, screenPos.copy());
     }
+
+    // Houses need ground below them
     else if (this.tileId >= 0xA0 && this.tileId <= 0xAF || this.tileId == 0x5A || this.tileId == 0x5B) {
       Tile.draw(canvas, 0x01, screenPos);
     }
     
-    if (this.tileId == 0xFE) {
-      Tile.draw(canvas, 0x00, screenPos);
-      let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
-      if (posStr in industriesLocations) {
+    // ?? what is FE?
+    // if (this.tileId == 0xFE) {
+    //   Tile.draw(canvas, 0x00, screenPos);
+    //   let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
+    //   if (posStr in industriesLocations) {
         
-        canvas.image(game.industries[industriesLocations[posStr]].imgNav,
-          screenPos.x - game.industries[industriesLocations[posStr]].offsetNav[0], 
-          screenPos.y - game.industries[industriesLocations[posStr]].offsetNav[1]);
+    //     canvas.image(game.industries[industriesLocations[posStr]].imgNav,
+    //       screenPos.x - game.industries[industriesLocations[posStr]].offsetNav[0], 
+    //       screenPos.y - game.industries[industriesLocations[posStr]].offsetNav[1]);
         
-        // Tile.draw(canvas, 0x02, screenPos);
-      }
-      return;
-    }
+    //   }
+    //   return;
+    // }
 
     Tile.draw(canvas, this.tileId, screenPos);
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
@@ -434,56 +577,8 @@ class Tile {
 
   }
 
-  show2D(canvas, cameraPos, auxText) {
+  draw3D(canvas, cameraPos, auxText) {
     let screenPos = boardToScreenSmall(this.boardPosition, cameraPos);    
-
-    // Bridges need 
-    if (this.tileId == 0x50) {
-      Tile.draw2D(mainCanvas, 0x00, screenPos.copy());
-    } else if (this.tileId == 0x51) {
-      Tile.draw2D(mainCanvas, 0x02, screenPos.copy());
-    } else if (this.tileId == 0x52) {
-      Tile.draw2D(mainCanvas, 0x05, screenPos.copy());
-    }
-    else if (this.tileId == 0x53) {
-      Tile.draw2D(mainCanvas, 0x00, screenPos.copy());
-    } else if (this.tileId == 0x54) {
-      Tile.draw2D(mainCanvas, 0x03, screenPos.copy());
-    } else if (this.tileId == 0x55) {
-      Tile.draw2D(mainCanvas, 0x04, screenPos.copy());
-    }
-    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF) {
-      Tile.draw2D(canvas, 0x01, screenPos);
-    }
-    
-    // if (this.tileId == 0xFE) {
-    //   Tile.draw2D(canvas, 0x00, screenPos);
-    //   let posStr = str(this.boardPosition.x) + "," + str(this.boardPosition.y) 
-    //   if (posStr in industriesLocations) {
-        
-    //     canvas.image(industriesInfo[game.industries[industriesLocations[posStr]].name].imgNav,
-    //       screenPos.x - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[0], 
-    //       screenPos.y - industriesInfo[game.industries[industriesLocations[posStr]].name].offsetNav[1]);
-        
-    //     // Tile.draw(canvas, 0x02, screenPos);
-    //   }
-    //   return;
-    // }
-    if (this.tileId >= 0x30 && this.tileId <= 0x47) {
-      Tile.draw2D(canvas, 0x01, screenPos);
-    } else {
-      // Tile.draw2D(canvas, 0x01, screenPos);
-      // Tile.drawGhostRail(canvas, this.tileId, screenPos);
-    }
-    Tile.draw2D(canvas, this.tileId, screenPos);
-    
-    // canvas.textSize(4)
-    // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
-    // canvas.text(auxText, screenPos.x, screenPos.y); 
-
-    if (this.isSelected) {
-      Tile.drawOutline(canvas, screenPos);
-    }
-
+    Tile.draw3D(canvas, this.tileId, screenPos, this.isEvent);
   }
 }

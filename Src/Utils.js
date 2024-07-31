@@ -22,8 +22,7 @@
 
 
 
-function downloadText(content) {
-  let filename = "output.txt";
+function downloadText(content, filename) {
   var blob = new Blob([content], {
     type: "text/plain"
    });
@@ -172,5 +171,74 @@ function showWolfWalk() {
     y+=80;
     x=100;
   }
+}
+
+function showTrainSummary() {
+  push();
+  background(255,255,255,200);
+  let x = 100;
+  let y = 100;
+  
+  for (let wagon of game.playerTrain.wagons) {
+    text(`${wagon.usedSpace} ${wagon.unit} of ${wagon.cargo}`, x, y);
+    image(wagon.img[wagon.spriteId],x,y);
+    y+=100;
+  }
+  pop();
+}
+
+function assembleBuilding() {
+  mainCanvas.background(0,0,0,255)
+  
+  // Tile.draw(mainCanvas, 0xC0, boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC1, boardToScreen(createVector(1,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC2, boardToScreen(createVector(3,0), createVector(0,0)))
+
+  // Tile.draw(mainCanvas, 0xC3, boardToScreen(createVector(0,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC4, boardToScreen(createVector(1,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC5, boardToScreen(createVector(3,1), createVector(0,0)))
+  
+  // Tile.draw(mainCanvas, 0xC6, boardToScreen(createVector(0,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC7, boardToScreen(createVector(1,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC8, boardToScreen(createVector(3,3), createVector(0,0)))
+
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,0), createVector(0,0)))
+  
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,1), createVector(0,0)))
+  
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,2), createVector(0,0)))
+
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,3), createVector(0,0)))
+  
+  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,0), createVector(0,0)))
+  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,0), createVector(0,0)))
+  
+  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,2), createVector(0,0)))
+  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,2), createVector(0,0)))
+  
+  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(0,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA3, boardToScreen(createVector(0,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(0,4), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA5, boardToScreen(createVector(2,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA5, boardToScreen(createVector(2,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(2,4), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA2, boardToScreen(createVector(4,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(4,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA3, boardToScreen(createVector(4,4), createVector(0,0)))
+  
+  mainCanvas.save("Village")
+
+  image(mainCanvas,0,0)
+
 }
 

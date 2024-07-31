@@ -18,21 +18,21 @@ class NavigationScene {
   constructor() {
     this.selectedIntersection = null;
     //this.camera = new Camera(boardToCamera(createVector(10,10)));
-    this.camera = new Camera(boardToCamera(createVector(12,13)));
+    this.camera = new Camera(boardToCamera(createVector(52,195)), createVector(0,0));
     this.tileBoard = new TileBoard(gameData.mapBoard);
-    this.locomotive = new Locomotive(createVector(15, 13), 0.0);
+    this.locomotive = new Locomotive(createVector(53, 195), 180.0);
   }
 
   initialize() {
     // populate cities in the tileBoard
-    for (let [locationStr, name] of Object.entries(citiesLocations)) {
-      let aux = locationStr.split(",")
-      this.tileBoard.buildCity(createVector(int(aux[0]), int(aux[1])));
-    }
-    for (let [locationStr, name] of Object.entries(industriesLocations)) {
-      let aux = locationStr.split(",")
-      this.tileBoard.buildIndustry(createVector(int(aux[0]), int(aux[1])));
-    }
+    // for (let [locationStr, name] of Object.entries(citiesLocations)) {
+    //   let aux = locationStr.split(",")
+    //   this.tileBoard.buildCity(createVector(int(aux[0]), int(aux[1])));
+    // }
+    // for (let [locationStr, name] of Object.entries(industriesLocations)) {
+    //   let aux = locationStr.split(",")
+    //   this.tileBoard.buildIndustry(createVector(int(aux[0]), int(aux[1])));
+    // }
 
   }
 

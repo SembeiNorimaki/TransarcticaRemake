@@ -1,7 +1,7 @@
 {
   "Barcelona_Mine": {
     "name": "Barcelona_Mine",
-    "industryType": "Wood",
+    "industryType": "ClayMine",
     "produces": "Wood",
     "requires": {
     },

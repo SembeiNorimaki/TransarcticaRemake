@@ -62,7 +62,7 @@ class Hud {
   }
 
   show() {
-
+    hudCanvas.background(100)
     for (let button of this.buttons) {
       button.show(hudCanvas);
     }
@@ -80,5 +80,7 @@ class Hud {
     x-=140;
     hudCanvas.image(gameData.hudData.frame, x, y);
     hudCanvas.text(`${game.navigationScene.locomotive.gear}`, x, y);
+
+    hudCanvas.text(screenToBoard(game.navigationScene.camera.position, createVector(0,0)).array(), 600,30)
   }
 }

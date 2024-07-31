@@ -23,6 +23,8 @@ class Game {
     }
     Tile.initialize();
 
+    this.cameraFollowsLocomotive = false;
+
     this.navigationScene = new NavigationScene();
     this.navigationScene.initialize();
 
@@ -46,32 +48,33 @@ class Game {
     }
 
     this.events = {};
+    
     // Cities are 2x2
     for (let [cityLocation, cityName] of Object.entries(citiesLocations)) {
       let aux = cityLocation.split(",");
       let x = int(aux[0]);
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = cityName;
-      this.events[`${x-1},${y-1}`] = cityName;
-      this.events[`${x},${y-1}`] = cityName;
-      this.events[`${x-1},${y}`] = cityName;
+    //   this.events[`${x-1},${y-1}`] = cityName;
+    //   this.events[`${x},${y-1}`] = cityName;
+    //   this.events[`${x-1},${y}`] = cityName;
     }
-    // Industries are 3x3
-    for (let [industryLocation, industryName] of Object.entries(industriesLocations)) {
-      let aux = industryLocation.split(",");
-      let x = int(aux[0]);
-      let y = int(aux[1]); 
-      this.events[`${x},${y}`] = industryName;
-      this.events[`${x-1},${y}`] = industryName;
-      this.events[`${x-2},${y}`] = industryName;
-      this.events[`${x},${y-1}`] = industryName;
-      this.events[`${x-2},${y-1}`] = industryName;
-      this.events[`${x},${y-2}`] = industryName;
-      this.events[`${x-1},${y-2}`] = industryName;
-      this.events[`${x-2},${y-2}`] = industryName;
+    // // Industries are 3x3
+    // for (let [industryLocation, industryName] of Object.entries(industriesLocations)) {
+    //   let aux = industryLocation.split(",");
+    //   let x = int(aux[0]);
+    //   let y = int(aux[1]); 
+    //   this.events[`${x},${y}`] = industryName;
+    //   this.events[`${x-1},${y}`] = industryName;
+    //   this.events[`${x-2},${y}`] = industryName;
+    //   this.events[`${x},${y-1}`] = industryName;
+    //   this.events[`${x-2},${y-1}`] = industryName;
+    //   this.events[`${x},${y-2}`] = industryName;
+    //   this.events[`${x-1},${y-2}`] = industryName;
+    //   this.events[`${x-2},${y-2}`] = industryName;
       
-    }
-    console.log(this.events)
+    // }
+    
 
     this.objectives = [];
     this.objectivesVisible = false;
@@ -84,11 +87,11 @@ class Game {
 
     // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
-    // this.currentScene = new CityTradeScene(this.cities["Barcelona"]);
+    this.currentScene = new CityTradeScene(this.cities["Marrakesh"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
-    this.currentScene = this.navigationScene;
+    // this.currentScene = this.navigationScene;
     this.currentScene.initialize();
 
     this.conversationPanel.fillData({
@@ -143,7 +146,7 @@ class Game {
     this.currentScene.show(); 
     if (this.objectivesVisible) 
       this.showObjectives();  
-    this.conversationPanel.show();
+    //this.conversationPanel.show();
     //this.showCharacter();
   }
 

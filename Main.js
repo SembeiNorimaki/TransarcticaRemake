@@ -15,12 +15,15 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+let mapFile = "maps/Tutorial.txt";
+let loadFromLocalStorage = true;
+
 const TILE_WIDTH_HALF = 64;
 const TILE_HEIGHT_HALF = 32;
 
 // Minimap tile size
-const TILE_MINI_WIDTH = 6;
-const TILE_MINI_HEIGHT = 3;
+const TILE_MINI_WIDTH = 12;
+const TILE_MINI_HEIGHT = 6;
 
 let screenDim = [TILE_WIDTH_HALF*27 , TILE_HEIGHT_HALF*27+60];
 let mainCanvas, hudCanvas;
@@ -58,8 +61,6 @@ let backgroundImg;
 
 let wolfImg;
 
-let mapFile = "maps/spain.txt";
-
 let i=0;
 
 let saveData = {
@@ -67,88 +68,19 @@ let saveData = {
     fuel: 123,
     gold: 456,
     wagons: [
-      {"name": "Locomotive"},
-      {"name": "Tender"},
-      {"name": "Machinegun"},
-      {"name": "Cannon"},
-      {"name": "Oil Tanker"},
-      {"name": "Oil Tanker"},
-      {"name": "Oil Tanker"},
+      {"name": "Locomotive"}
     ]
   },
   "EnemyTrain": {
     fuel: 123,
     gold: 456,
     wagons: [
-      {"name": "Locomotive_vu"},
-      {"name": "Tender_vu"},
-      {"name": "Cannon_vu"},
+      {"name": "Locomotive_vu"}
     ]
   }
 }
 
-
-function showTrainSummary() {
-  push();
-  background(255,255,255,200);
-  let x = 100;
-  let y = 100;
-  
-  for (let wagon of game.playerTrain.wagons) {
-    text(`${wagon.usedSpace} ${wagon.unit} of ${wagon.cargo}`, x, y);
-    image(wagon.img[wagon.spriteId],x,y);
-    y+=100;
-  }
-  pop();
-}
-
 let ori = 7;
-
-
-
-function assembleMine() {
-  mainCanvas.background(0,0,0,255)
-  
-  // Tile.draw(mainCanvas, 0xC0, boardToScreen(createVector(0,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC1, boardToScreen(createVector(1,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC2, boardToScreen(createVector(3,0), createVector(0,0)))
-
-  // Tile.draw(mainCanvas, 0xC3, boardToScreen(createVector(0,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC4, boardToScreen(createVector(1,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC5, boardToScreen(createVector(3,1), createVector(0,0)))
-  
-  // Tile.draw(mainCanvas, 0xC6, boardToScreen(createVector(0,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC7, boardToScreen(createVector(1,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC8, boardToScreen(createVector(3,3), createVector(0,0)))
-
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,0), createVector(0,0)))
-  
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,1), createVector(0,0)))
-  
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,2), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,2), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,2), createVector(0,0)))
-
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,3), createVector(0,0)))
-  
-  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,0), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,0), createVector(0,0)))
-  
-  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,2), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,2), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,2), createVector(0,0)))
-  mainCanvas.save("OilRig")
-  image(mainCanvas,0,0)
-
-}
-
 
 function preload() {
 
@@ -290,25 +222,28 @@ function preload() {
 
 
   // NavigationMap into gameData.mapBoard
-  gameData.mapBoard = getItem("SavedMap");
-  if (gameData.mapBoard === null) {
-    console.log("No saved map found, loading it from file")
+  let mapData = getItem("SavedMap");
+  if (mapData !== null && loadFromLocalStorage) {
+    // aux is an array of arrays of strings [["00", "01"],["00", "0A"]]
+    let NCOLS = mapData[0].length;
+    let NROWS = mapData.length;
+    gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+    for (const [rowId, rowData] of mapData.entries()) {
+      for (const [colId, elem] of rowData.entries()) {
+        gameData.mapBoard[rowId][colId] = Number("0x" + elem);
+      }
+    }
+  } else {
     loadStrings(mapFile, mapData => {
-      let NCOLS = split(mapData[0], ',').length - 1;
-      let NROWS = mapData.length - 1;
+      let NCOLS = split(mapData[0], ',').length;
+      let NROWS = mapData.length;
       gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-      for (const [row, txtLine] of mapData.entries()) {
-        if (row == 0)  // skip first row
-          continue;
-        for (const [col, elem] of split(txtLine, ',').entries()) {
-          if (col == 0)  // skip first col
-            continue;
-          gameData.mapBoard[row-1][col-1] = Number("0x" + elem);
+      for (const [rowId, rowData] of mapData.entries()) {
+        for (const [colId, elem] of split(rowData, ',').entries()) {
+          gameData.mapBoard[rowId][colId] = Number("0x" + elem);
         }
       }
     });
-  } else {
-    console.log("Using saved map")
   }
 
   // City template map into gameData.cityBoard
@@ -464,6 +399,7 @@ function setupCanvas() {
 
 function setup() {
   frameRate(50);
+  // noLoop();
   document.addEventListener('contextmenu', event => event.preventDefault());
 
   createCanvas(screenDim[0], screenDim[1]);
@@ -482,6 +418,8 @@ function setup() {
 
 function draw() {  
   // showWolfWalk();
+  // assembleBuilding();
+  // return;
 
   mainCanvas.background(0)
   game.update();
@@ -512,4 +450,8 @@ function keyPressed() {
 
 function mousePressed() {
   game.onMousePressed(createVector(mouseX, mouseY));
+}
+
+function mouseMoved() {
+  // game.currentScene.mouseMoved();
 }

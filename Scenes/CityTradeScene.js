@@ -12,6 +12,33 @@ class CityTradeScene extends TradeScene {
       "textLines": this.city.objective.summary
     });
   }
+  
+  populateBuyableWagons() {
+    let row = 0;
+    let col = 0;
+    for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
+      for (let i=0; i<resourceInfo.Qty; i++) {
+        let wagonName = Wagon.resourceToWagon[resourceName];
+        let wagon;
+        if (wagonName == "Merchandise") {
+          wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
+        } else {
+          wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+        }
+        wagon.setPos(createVector(
+          1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
+          352 + row*TILE_HEIGHT_HALF*3
+        ));
+        wagon.fillWagon();
+        this.buyableWagons.push(wagon);
+        col++;
+        if (col >=3+row) {
+          row++;
+          col = 0;
+        }
+      }
+    }
+  }
 
   showConversation() {
     this.conversationPanel.show();
@@ -155,29 +182,21 @@ class CityTradeScene extends TradeScene {
 
   }
 
-
-
-
   show() {
     mainCanvas.image(this.backgroundImg, 0, 0);    
     this.trafficLight.show();
     this.horizontalTrain.show(createVector(0,0));
 
-    let i=0;
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {
         wagon.showHorizontal();
-        i++;
+        mainCanvas.textAlign(CENTER)
+        mainCanvas.textSize(20)
+        mainCanvas.fill(0)
+        mainCanvas.text(wagon.cargo, wagon.position.x, wagon.position.y+25)
       }
     }
-    i=0;
-    for (let [resourceName, val] of Object.entries(this.city.resources)) {
-      mainCanvas.textSize(20)
-      mainCanvas.text(resourceName, 
-        1100 - i*2*TILE_WIDTH_HALF, 
-        394 + i*TILE_HEIGHT_HALF*2 -25)
-      i++;
-    }
+    
     this.infoPanel.show();
 
     // show red debug lines
