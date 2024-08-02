@@ -549,7 +549,7 @@ class Tile {
     }
 
     // Houses need ground below them
-    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF || this.tileId == 0x5A || this.tileId == 0x5B) {
+    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF || this.tileId == 0x5A || this.tileId == 0x5B || this.tileId == 0x4C || this.tileId == 0x4D) {
       Tile.draw(canvas, 0x01, screenPos);
     }
     

@@ -15,8 +15,12 @@ class Soldier extends Unit {
     }
     this.halfSize = createVector(20, 20);
     
+    let soldierTypeId = 0;
+    if (this.owner == "cpu") {
+      soldierTypeId = 1;
+    }
     let spriteData = {
-      "imgs": gameData.unitsData.soldier[1],
+      "imgs": gameData.unitsData.soldier[soldierTypeId],
       "actions": ["idle", "walk", "shoot"],
       "nSprites": {"idle": 1, "walk": 6, "shoot": 2},
       "spriteDuration": {"idle": 100, "walk": 10, "shoot": 20}
@@ -261,12 +265,12 @@ class Soldier extends Unit {
         mainCanvas.stroke("black")
         //mainCanvas.strokeWeight(1)
       }
-      mainCanvas.line(position.x, position.y, this.path[0].x-cameraPos.x, this.path[0].y-cameraPos.y);
+      // mainCanvas.line(position.x, position.y, this.path[0].x-cameraPos.x, this.path[0].y-cameraPos.y);
       for (let i=0; i<this.path.length-1; i++) {
         //mainCanvas.circle(this.path[i].x, this.path[i].y, 10);
-        mainCanvas.line(this.path[i].x-cameraPos.x, this.path[i].y-cameraPos.y, this.path[i+1].x-cameraPos.x, this.path[i+1].y-cameraPos.y);
+        // mainCanvas.line(this.path[i].x-cameraPos.x, this.path[i].y-cameraPos.y, this.path[i+1].x-cameraPos.x, this.path[i+1].y-cameraPos.y);
       }
-      mainCanvas.circle(this.path.at(-1).x-cameraPos.x, this.path.at(-1).y-cameraPos.y, 10);
+      // mainCanvas.circle(this.path.at(-1).x-cameraPos.x, this.path.at(-1).y-cameraPos.y, 10);
       mainCanvas.pop();
     }
 
@@ -280,13 +284,13 @@ class Soldier extends Unit {
     
     //mainCanvas.fill(0,0,0,100);
     //if (this.owner == "cpu") {
-      mainCanvas.push();
-      mainCanvas.noFill();
-      mainCanvas.stroke("red");
-      mainCanvas.circle(position.x, position.y, this.range*2);
-      mainCanvas.stroke("blue");
-      mainCanvas.circle(position.x, position.y, this.viewRange*2);
-      mainCanvas.pop();
+      // mainCanvas.push();
+      // mainCanvas.noFill();
+      // mainCanvas.stroke("red");
+      // mainCanvas.circle(position.x, position.y, this.range*2);
+      // mainCanvas.stroke("blue");
+      // mainCanvas.circle(position.x, position.y, this.viewRange*2);
+      // mainCanvas.pop();
     //}
   }
 }

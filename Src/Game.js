@@ -23,7 +23,7 @@ class Game {
     }
     Tile.initialize();
 
-    this.cameraFollowsLocomotive = false;
+    this.cameraFollowsLocomotive = true;
 
     this.navigationScene = new NavigationScene();
     this.navigationScene.initialize();
@@ -87,9 +87,10 @@ class Game {
 
     // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
+    this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Marrakesh"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
-    this.currentScene = new MapEditor();
+    // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
     // this.currentScene = this.navigationScene;
     this.currentScene.initialize();

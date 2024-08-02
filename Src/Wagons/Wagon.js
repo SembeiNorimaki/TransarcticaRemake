@@ -302,7 +302,7 @@ class LocomotiveWagon extends Wagon {
 
   showHorizontal(cameraPos) {
     super.showHorizontal(cameraPos);
-    this.showWeightBar(cameraPos);
+    // this.showWeightBar(cameraPos);
   }
 }
 

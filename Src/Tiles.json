@@ -40,6 +40,9 @@
     "Rail_CDa":  {"filename": "resources/tracks/Rail_CDa.png"  },
     "Rail_CDb":  {"filename": "resources/tracks/Rail_CDb.png"  },
     "Rail_ADBC": {"filename": "resources/tracks/Rail_ADBC.png"},
+
+    "Plattform_BC_R": {"filename": "resources/tracks/Plattform_BC_R.png"},
+    "Plattform_BC_L": {"filename": "resources/tracks/Plattform_BC_L.png"},
     
     "Tunnel_A": {"filename": "resources/tracks/Tunnel_A.png"      },
     "Tunnel_B": {"filename": "resources/tracks/Tunnel_B.png"      },
@@ -193,6 +196,11 @@
     "0x49": {"imgName": "Tunnel_B"   , "offset": [0, 0]},
     "0x4A": {"imgName": "Tunnel_C"   , "offset": [0, -16]},
     "0x4B": {"imgName": "Tunnel_D"   , "offset": [0, -16]},
+
+    "0x4C": {"imgName": "Plattform_BC_R"   , "offset": [10, -40]},
+    "0x4D": {"imgName": "Plattform_BC_L"   , "offset": [25, -34]},
+
+    
 
     "0x50": {"imgName": "Bridge_D"   , "offset": [1, 2]},  
     "0x51": {"imgName": "Bridge_D"   , "offset": [1, 2]},  

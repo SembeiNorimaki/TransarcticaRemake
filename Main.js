@@ -58,6 +58,7 @@ let citiesLocations = {};
 
 let charactersData = {};
 let backgroundImg;
+let resources = {};
 
 let wolfImg;
 
@@ -83,6 +84,14 @@ let saveData = {
 let ori = 7;
 
 function preload() {
+  loadJSON("Src/Resources.json", jsonData => {
+    for (const [name, filename] of Object.entries(jsonData)) {
+      console.log(filename)
+      resources[name] = loadImage(filename);
+    }
+  });
+
+
 
   loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
     let spriteSize = [70, 70];
@@ -306,12 +315,34 @@ function preload() {
 
   // Soldiers data into gameData.unitsData.soldier
   // Structure: gameData.unitsData.soldier[soldierId (type)][action][orientation][spriteId]
-  loadImage("resources/units/soldier0_big.png", soldierAtlas => {
+  loadImage("resources/units/soldierBlue.png", soldierAtlas => {
     loadJSON("Src/Units/Soldier.json", jsonData => {
       const spriteSize = jsonData.spriteSize;
       const offset = jsonData.offset;
       gameData.unitsData.soldier = [];
-      for (let soldierId=0; soldierId<5; soldierId++) {
+      for (let soldierId=0; soldierId<1; soldierId++) {
+        gameData.unitsData.soldier.push({});
+        for (const [action, value] of Object.entries(jsonData.actions)) {
+          gameData.unitsData.soldier[soldierId][action] = {};
+          for (const [j, ori] of Object.entries(jsonData.orientations)) {
+            gameData.unitsData.soldier[soldierId][action][ori] = [];
+            for (let i of value) {
+              let x = spriteSize[0] * i + offset[0];
+              let y = spriteSize[1] * j + offset[1];
+              gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+            }
+          }
+        }  
+      }
+    });
+  });
+
+  loadImage("resources/units/soldierRed.png", soldierAtlas => {
+    loadJSON("Src/Units/Soldier.json", jsonData => {
+      const spriteSize = jsonData.spriteSize;
+      const offset = jsonData.offset;
+      // gameData.unitsData.soldier = [];
+      for (let soldierId=1; soldierId<2; soldierId++) {
         gameData.unitsData.soldier.push({});
         for (const [action, value] of Object.entries(jsonData.actions)) {
           gameData.unitsData.soldier[soldierId][action] = {};

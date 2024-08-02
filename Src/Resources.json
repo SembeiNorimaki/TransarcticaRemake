@@ -1,0 +1,18 @@
+{
+  "Alcohol": "/resources/resources/alcohol.png",
+  "Antiques": "/resources/resources/antiques.png",
+  "Caviar": "/resources/resources/caviar.png",
+  "Mamooth Dung": "/resources/resources/dung.png",
+  "Fish": "/resources/resources/fish.png",
+  "Fishing Rods": "/resources/resources/fishing_rods.png",
+  "Furs": "/resources/resources/furs.png",
+  "Gasoline": "/resources/resources/gasoline.png",
+  "Wolf Meat": "/resources/resources/meat.png",
+  "Missiles": "/resources/resources/missiles.png",
+  "Oil": "/resources/resources/oil.png",
+  "Plants": "/resources/resources/plants.png",
+  "Rails": "/resources/resources/rails.png",
+  "Salt": "/resources/resources/salt.png",
+  "Vehicle Inspeaction": "/resources/resources/vehicle_inspection.png",
+  "Wood": "/resources/resources/wood.png"
+}

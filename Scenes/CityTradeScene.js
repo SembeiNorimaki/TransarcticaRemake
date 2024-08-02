@@ -190,12 +190,24 @@ class CityTradeScene extends TradeScene {
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {
         wagon.showHorizontal();
-        mainCanvas.textAlign(CENTER)
-        mainCanvas.textSize(20)
-        mainCanvas.fill(0)
-        mainCanvas.text(wagon.cargo, wagon.position.x, wagon.position.y+25)
+        let resourceName = wagon.cargo
+        mainCanvas.image(resources[resourceName], wagon.position.x, wagon.position.y+5, 60,23)
+        // mainCanvas.image(resources[resourceName], wagon.position.x-30, wagon.position.y, 60,23)
+        // mainCanvas.image(resources[resourceName], wagon.position.x-15, wagon.position.y+10, 60,23)
+        
+        // mainCanvas.image(resources[resourceName], wagon.position.x, wagon.position.y, 60,23)
+
+        // mainCanvas.textAlign(CENTER)
+        // mainCanvas.textSize(20)
+        // mainCanvas.fill(0)
+        // mainCanvas.text(wagon.cargo, wagon.position.x, wagon.position.y+25)
       }
     }
+    
+    mainCanvas.image(resources.Salt,          1075+64*0, 215-32*0, 100,40)
+    mainCanvas.image(resources.Caviar,        1075+64*1, 215-32*1, 100,40)
+    mainCanvas.image(resources["Wolf Meat"],  1075+64*2, 215-32*2, 100,40)
+    mainCanvas.image(resources.Furs,          1075+64*3, 215-32*3, 100,40)
     
     this.infoPanel.show();
 
