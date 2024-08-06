@@ -38,7 +38,7 @@ class Wagon {
     "Antiques":            "Merchandise",
     "Fishing Rods":        "Merchandise",
     "Caviar":              "Merchandise",
-    "Line Inspection car": "Merchandise",
+    "Line Inspection Car": "Merchandise",
     "Furs":                "Merchandise",
     "Mamooth Dung":        "Merchandise",
     "Missiles":            "Merchandise",
@@ -52,6 +52,7 @@ class Wagon {
   constructor(id, name, wagonData) {
     this.id = id;
     this.name = name;
+    console.log(name)
     this.img = wagonData.img;
     this.halfSize = createVector(wagonData.img[0].width/2, wagonData.img[0].height/2);
     this.offset = wagonData.offset;
@@ -69,19 +70,30 @@ class Wagon {
     this.hp = 50;
     this.maxHp = 100;
 
+    this.purchasePrice = 0;
+
     this.destination = null;
 
-    this.infoPanelData = {
-      "title": this.name,
-      "image": this.img[this.spriteId],
-      "lines": [
-        `Content: ${this.usedSpace} ${this.unit} of ${this.cargo}`,
-        `Weight: ${this.weight}`,
-      ],
-      "buttons": ""
-    }
+    this.infoPanelData = this.generatePanelInfoData();
     
 
+  }
+
+  generatePanelInfoData() {
+    let data = {
+      "title": this.name,
+      "image": this.img[this.spriteId],
+      "lines": [],
+      "buttons": ""
+    };
+    if (this.usedSpace == 0) {
+      data.lines.push("Content: Empty");
+    } else {
+      data.lines.push(`Content: ${this.usedSpace} ${this.unit} of ${this.cargo}`);
+    }
+    data.lines.push(`Weight: ${this.weight}`);
+
+    return data;
   }
 
   checkClick(mousePos) {
@@ -101,6 +113,10 @@ class Wagon {
     this.destination = destination;
   }
 
+  setCargo(cargo) {
+    this.cargo = cargo;
+  }
+
   addResource(qty) {
     if (qty > this.availableSpace) {
       throw "Not enough space";
@@ -110,12 +126,25 @@ class Wagon {
     //this.recalculateSpriteId();
   }
 
+  removeResource(qty) {
+    if (qty >= this.usedSpace) {
+      this.usedSpace = 0;
+      this.availableSpace = this.capacity;
+    } else {
+      this.usedSpace -= qty;
+      this.availableSpace += qty;
+    }
+    //this.recalculateSpriteId();
+  }
+
   fillWagon(resourceName) {
-    this.cargo = resourceName;  // TODO: Dangerous. This is good for merchandise, but dangerous for other wagons
-    this.usedSpace = this.capacity;
-    this.availableSpace = 0;
-    this.spriteId = this.img.length-1;
-    this.infoPanelData.lines[0] = `Content: ${this.usedSpace} ${this.unit} of ${this.cargo}`;
+    this.setCargo(resourceName);  // TODO: Dangerous. This is good for merchandise, but dangerous for other wagons
+    this.addResource(this.capacity)
+  }
+
+  emptyWagon() {
+    this.setCargo(null);  // TODO: Dangerous. This is good for merchandise, but dangerous for other wagons
+    this.removeResource(this.usedSpace);
   }
 
   receiveDamage(amount) {
@@ -145,7 +174,11 @@ class Wagon {
     mainCanvas.image(
       this.img[this.spriteId], 
       position.x - this.offset[this.spriteId][0], 
-      position.y - this.offset[this.spriteId][1]);
+      position.y - this.offset[this.spriteId][1]
+    );
+    try {
+      mainCanvas.image(resources[this.cargo], position.x, position.y+10,75,30);
+    }catch{}
 
     mainCanvas.noFill();
     // mainCanvas.stroke("red")

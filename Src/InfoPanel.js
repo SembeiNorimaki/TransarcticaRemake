@@ -19,7 +19,7 @@ class InfoPanel {
     this.selectedObject = industriesInfo["Chemical"];
 
     this.buttons = {};
-    this.buttons.Buy = new ClickableRegion(createVector(mainCanvasDim[0]-150, 500), createVector(80, 30), null, "Buy 1 wagon",null);
+    this.buttons.Buy = new ClickableRegion(createVector(mainCanvasDim[0]-150, 500), createVector(80, 30), null, "Buy",null);
     this.buttons.Sell = new ClickableRegion(createVector(mainCanvasDim[0]-150, 500), createVector(80, 30), null, "Sell",null);
     this.buttons.Close = new ClickableRegion(createVector(mainCanvasDim[0]-150, 500), createVector(80, 30), null, "Close",null);
 

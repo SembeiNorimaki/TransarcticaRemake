@@ -45,8 +45,18 @@
     "offset": [[64,43]],
     
     "cargo": "Any",
-    "units": "",
-    "capacity": 3,
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Merchandise XL": {
+    "files": ["resources/tr_wagons/trn_merchandise_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+    
+    "cargo": "Any",
+    "units": "tons",
+    "capacity": 40,
     "weight": 100
   },
   "Merchandise_vu": {
@@ -149,6 +159,16 @@
     "capacity": 50,
     "weight": 100
   },
+  "Barracks XL": {
+    "files": ["resources/tr_wagons/trn_barracks_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,44]],
+    
+    "cargo": "soldiers",
+    "units": "soldiers",
+    "capacity": 50,
+    "weight": 100
+  },
   "Barracks_vu": {
     "files": ["resources/tr_wagons/trn_barracks_vu.png"],
     "dimensions": [128, 54],
@@ -159,6 +179,59 @@
     "capacity": 50,
     "weight": 1000
   },
+
+  "Tank": {
+    "files": ["resources/tr_wagons/trn_tanker_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "liquid",
+    "units": "liters",
+    "capacity": 50,
+    "weight": 1000
+  },
+  "Oil Tank": {
+    "files": ["resources/tr_wagons/trn_tanker_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "liquid",
+    "units": "liters",
+    "capacity": 50,
+    "weight": 1000
+  },
+  "Alcatraz": {
+    "files": ["resources/tr_wagons/trn_alcatraz_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "liquid",
+    "units": "liters",
+    "capacity": 50,
+    "weight": 1000
+  },
+  "Observation Box": {
+    "files": ["resources/tr_wagons/trn_observatory_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "liquid",
+    "units": "liters",
+    "capacity": 50,
+    "weight": 1000
+  },
+  "Crane": {
+    "files": ["resources/tr_wagons/trn_crane_tr.png"],
+    "dimensions": [128, 54],
+    "offset": [[64,50]],
+    
+    "cargo": "liquid",
+    "units": "liters",
+    "capacity": 50,
+    "weight": 1000
+  },
+
+
   "Wreck": {
     "files": ["resources/tr_wagons/trn_wreck2_tr.png"],
     "dimensions": [128, 52],

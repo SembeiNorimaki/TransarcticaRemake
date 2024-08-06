@@ -19,8 +19,10 @@ class City {
     // this.cityData = cityData;
     this.name = cityData.name;
     this.resources = cityData.resources;
+    this.wagons = cityData.wagons;
     this.objectiveData = cityData.objectives;
 
+    
     this.objective = new Objective(this.objectiveData);
     
   }  

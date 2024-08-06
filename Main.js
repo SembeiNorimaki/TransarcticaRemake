@@ -69,7 +69,9 @@ let saveData = {
     fuel: 123,
     gold: 456,
     wagons: [
-      {"name": "Locomotive"}
+      {"name": "Locomotive"},
+      {"name": "Merchandise"},
+      {"name": "Merchandise"}
     ]
   },
   "EnemyTrain": {
@@ -82,11 +84,18 @@ let saveData = {
 }
 
 let ori = 7;
+let sounds = {};
+let table
 
 function preload() {
+
+  //sounds.travelling = loadSound('/music/travelling.mp3');
+
+  
+
+
   loadJSON("Src/Resources.json", jsonData => {
     for (const [name, filename] of Object.entries(jsonData)) {
-      console.log(filename)
       resources[name] = loadImage(filename);
     }
   });
@@ -195,6 +204,38 @@ function preload() {
   loadJSON("Src/Cities.json", jsonData => {
     gameData.citiesData = jsonData;
   });
+
+  loadTable("resource_prices.csv", "csv", "header", table => {
+    let resourceList = table.columns.slice(2);
+    for (let row of table.rows) {
+      let cityName = row.arr[0];
+      let action = row.arr[1]
+      for (let [i, resourceName] of resourceList.entries()) {
+        if (resourceName in gameData.citiesData[cityName].resources) {
+          gameData.citiesData[cityName].resources[resourceName][action] = Number(row.arr[i+2]);
+        } else {
+          gameData.citiesData[cityName].resources[resourceName] = {};
+          gameData.citiesData[cityName].resources[resourceName][action] = Number(row.arr[i+2]);
+        }
+      }
+    }
+  });
+
+  loadTable("wagon_prices.csv", "csv", "header", table => {
+    let wagonList = table.columns.slice(2);
+    for (let row of table.rows) {
+      let cityName = row.arr[0];
+      let action = row.arr[1]
+      for (let [i, wagonName] of wagonList.entries()) {
+        if (wagonName in gameData.citiesData[cityName].wagons) {
+          gameData.citiesData[cityName].wagons[wagonName][action] = Number(row.arr[i+2]);
+        } else {
+          gameData.citiesData[cityName].wagons[wagonName] = {};
+          gameData.citiesData[cityName].wagons[wagonName][action] = Number(row.arr[i+2]);
+        }
+      }
+    }
+  });
   
   // Industries into gameData.industriesData
   loadJSON("Src/Industries.json", jsonData => {
@@ -243,7 +284,9 @@ function preload() {
       }
     }
   } else {
-    loadStrings(mapFile, mapData => {
+    loadStrings("maps/Europe.txt", mapData => {
+      
+    
       let NCOLS = split(mapData[0], ',').length;
       let NROWS = mapData.length;
       gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
@@ -429,6 +472,7 @@ function setupCanvas() {
 }
 
 function setup() {
+  //sounds.travelling.play();
   frameRate(50);
   // noLoop();
   document.addEventListener('contextmenu', event => event.preventDefault());
@@ -484,5 +528,5 @@ function mousePressed() {
 }
 
 function mouseMoved() {
-  // game.currenrtScene.mouseMoved();
+  game.currentScene.mouseMoved();
 }

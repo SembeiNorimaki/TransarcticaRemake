@@ -1,4 +1,4 @@
-let imageFile = "maps/Tutorial_map.png";
+let imageFile = "maps/Europe.png";
 let img;
 
 class ImageConverter {

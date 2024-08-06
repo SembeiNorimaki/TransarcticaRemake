@@ -1,28 +1,8 @@
 {
   "Alexandria": {
-    "name": "Marrakesh",
-    "resources": {
-      "Oil": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
-      }
-    },
+    "name": "Alexandria",
+    "resources": {},
+    "wagons": {},
     "objectives": {
       "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
@@ -44,120 +24,47 @@
       }
     }
   },
+  "Beyrouth": {
+    "name": "Beyrouth",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Delhi": {
+    "name": "Delhi",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Kanosa": {
+    "name": "Kanosa",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+},
+  "Machad": {
+    "name": "Machad",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Mont Saint Michel": {
+    "name": "Mont Saint Michel",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Rome": {
+    "name": "Rome",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+
   "Cairo": {
-    "name": "Marrakesh",
-    "resources": {
-      "Oil": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
-      }
-    },
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
-      }
-    }
-  },
-  "In Salah": {
-    "name": "Marrakesh",
-    "resources": {
-      "Oil": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
-      }
-    },
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
-      }
-    }
-  },
-  "Luxor": {
-    "name": "Marrakesh",
-    "resources": {
-      "Oil": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
-      }
-    },
+    "name": "Cairo",
+    "resources": {},
+    "wagons": {},
     "objectives": {
       "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
@@ -181,23 +88,8 @@
   },
   "Marrakesh": {
     "name": "Marrakesh",
-    "resources": {
-      "Wolf Meat": {
-        "Qty": 5,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Salt": {
-        "Qty": 5,
-        "Sell": 20,
-        "Buy": 15
-      },
-      "Caviar": {
-        "Qty": 3,
-        "Sell": 20,
-        "Buy": 20
-      }
-    },
+    "resources": {},
+    "wagons": {},
     "objectives": {
       "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
@@ -221,13 +113,8 @@
   },
   "Tanger": {
     "name": "Tanger",
-    "resources": {
-      "Wolf Meat": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      }
-    },
+    "resources": {},
+    "wagons": {},
     "objectives": {
       "title": "Rebuild the bridge in the strait of Gibraltar.",
       "summary": [
@@ -245,29 +132,9 @@
     }
   },
   "Taoudeni": {
-    "name": "Marrakesh",
-    "resources": {
-      "Oil": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
-      }
-    },
+    "name": "Taoudeni",
+    "resources": {},
+    "wagons": {},
     "objectives": {
       "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
@@ -290,29 +157,9 @@
     }
   },
   "Tibesti": {
-    "name": "Marrakesh",
-    "resources": {
-      "Oil": {
-        "Qty": 2,
-        "Sell": 20,
-        "Buy": 10
-      },
-      "Meat": {
-        "Qty": 3,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Container": {
-        "Qty": 1,
-        "Sell": 2,
-        "Buy": 1
-      },
-      "Iron": {
-        "Qty": 4,
-        "Sell": 2,
-        "Buy": 1
-      }
-    },
+    "name": "Tibesti",
+    "resources": {},
+    "wagons": {},
     "objectives": {
       "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
       "summary": [
@@ -333,5 +180,252 @@
         }
       }
     }
+  },
+  "Amsterdam": {
+    "name": "Amsterdam",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Athens": {
+    "name": "Athens",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Babylon": {
+    "name": "Babylon",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Copenhagen": {
+    "name": "Copenhagen",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Djirgalant": {
+    "name": "Djirgalant",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Gorky": {
+    "name": "Gorky",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Granada": {
+    "name": "Granada",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Helsinki": {
+    "name": "Helsinki",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Istanbul": {
+    "name": "Istanbul",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Kiev": {
+    "name": "Kiev",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Krasnojarsk": {
+    "name": "Krasnojarsk",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Kuwait": {
+    "name": "Kuwait",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "London": {
+    "name": "London",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Paris": {
+    "name": "Paris",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Saratov": {
+    "name": "Saratov",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Sebastopol": {
+    "name": "Sebastopol",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Tunis": {
+    "name": "Tunis",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Turin": {
+    "name": "Turin",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+
+  "In Salah": {
+    "name": "In Salah",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Baku": {
+    "name": "Baku",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Gdansk": {
+    "name": "Gdansk",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Omsk": {
+    "name": "Omsk",
+    "resources": {},
+    "wagons": {},    
+    "objectives": {}
+  },
+  "New Peking": {
+    "name": "New Peking",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Ruhr": {
+    "name": "Ruhr",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Rum": {
+    "name": "Rum",
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+
+  "Abu Dhabi": {
+    "name": "Abu Dhabi",
+    "troops": {
+      "soldiers": 6
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {
+    }
+  },
+  "Berlin": {
+    "name": "Berlin",
+    "troops": {
+      "soldiers": 12,
+      "spies": 12
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Moscow": {
+    "name": "Moscow",
+    "troops": {
+      "soldiers": 10
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Sparta": {
+    "name": "Sparta",
+    "troops": {
+      "soldiers": 12,
+      "spies": 12
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Taskent": {
+    "name": "Taskent",
+    "troops": {
+      "soldiers": 7
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+
+  "Luxor": {
+    "name": "Luxor",
+    "troops": {
+      "slaves": 12
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Serov": {
+    "name": "Serov",
+    "troops": {
+      "slaves": 14
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+
+  "Bhopal": {
+    "name": "Bhopal",
+    "troops": {
+      "mamooths": 250
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Casablanca": {
+    "name": "Casablanca",
+    "troops": {
+      "mamooths": 350
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
+  },
+  "Temir Tau": {
+    "name": "Temir Tau",
+    "troops": {
+      "mamooths": 300
+    },
+    "resources": {},
+    "wagons": {},
+    "objectives": {}
   }
 }

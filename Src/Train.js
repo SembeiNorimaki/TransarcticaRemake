@@ -33,12 +33,37 @@ class Train {
   }
 
   initialize(saveData) {
-    // this.gold = saveData.gold;
-    // this.fuel = saveData.fuel;
+    this.gold = saveData.gold;
+    this.fuel = saveData.fuel;
     for (let wagonSaveData of saveData.wagons) {
       this.addWagon(wagonSaveData.name);
-      this.wagons.at(-1).fillWagon(wagonSaveData.cargo);
     }
+  }
+
+  addResource(resourceName, totalCost) {
+    // adds the resource to the train. Returns true if possible and false if not possible
+    if (totalCost > this.gold) {
+      return false;
+    }
+
+    // find a suitable wagon to store the resource
+    let wagonName = Wagon.resourceToWagon[resourceName];
+
+    for (let [i, wagon] of this.wagons.entries()) {
+      if (wagon.name == wagonName && wagon.usedSpace == 0) {
+        wagon.setCargo(resourceName);
+        wagon.fillWagon(resourceName);
+        wagon.purchasePrice = totalCost;
+        this.gold -= totalCost;
+        return true;
+      }
+    }
+    return false;    
+  }
+
+  removeResource(wagonId, totalPrice) {
+    this.wagons[wagonId].emptyWagon();
+    this.gold += totalPrice;
   }
 
   addWagon(wagonType) { 
@@ -72,4 +97,4 @@ class Train {
     this.weight -= this.wagons[idx].weight;
     this.wagons.splice(idx, 1);
   }
-}
+};

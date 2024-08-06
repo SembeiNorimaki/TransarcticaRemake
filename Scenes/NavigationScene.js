@@ -18,9 +18,9 @@ class NavigationScene {
   constructor() {
     this.selectedIntersection = null;
     //this.camera = new Camera(boardToCamera(createVector(10,10)));
-    this.camera = new Camera(boardToCamera(createVector(64,157)), createVector(0,0));
+    this.camera = new Camera(boardToCamera(createVector(78,361)), createVector(0,0));
     this.tileBoard = new TileBoard(gameData.mapBoard);
-    this.locomotive = new Locomotive(createVector(64, 157), 90.0);
+    this.locomotive = new Locomotive(createVector(75, 362), 0.0);
   }
 
   initialize() {
