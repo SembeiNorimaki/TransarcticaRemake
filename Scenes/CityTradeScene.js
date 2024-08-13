@@ -6,7 +6,7 @@ class CityTradeScene extends TradeScene {
     
     this.backgroundImg = this.generateBackgroundImage();
     
-    this.populateBuyableWagons();
+    this.populateBuyableSpecialWagons();
     this.populateBuyableResources();
 
     this.conversationPanel.fillData({
@@ -15,118 +15,6 @@ class CityTradeScene extends TradeScene {
     });
 
     
-  }
-  
-  // populateResourceWagons() {
-  //   let row = 0;
-  //   let col = 0;
-  //   for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
-  //     for (let i=0; i<resourceInfo.Qty; i++) {
-  //       let wagonName = Wagon.resourceToWagon[resourceName];
-  //       let wagon;
-  //       if (wagonName == "Merchandise") {
-  //         wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
-  //       } else {
-  //         wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
-  //       }
-  //       wagon.setPos(createVector(
-  //         1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
-  //         352 + row*TILE_HEIGHT_HALF*3
-  //       ));
-  //       wagon.fillWagon(resourceName);
-  //       this.buyableWagons.push(wagon);
-  //       col++;
-  //       if (col >=3+row) {
-  //         row++;
-  //         col = 0;
-  //       }
-  //     }
-  //   }
-  // }
-
-  populateBuyableWagons() {
-    // Buyable wagons are:
-    // 1) Resource Wagons
-    // 2) Special Wagons
-    let row = 0;
-    let col = 0;
-    
-    // Firsts the resource wagons
-    // for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
-    //   for (let i=0; i<resourceInfo.Qty; i++) {
-    //     let wagonName = Wagon.resourceToWagon[resourceName];
-    //     let wagon;
-    //     if (wagonName == "Merchandise") {
-    //       wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
-    //     } else {
-    //       wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
-    //     }
-    //     wagon.setPos(createVector(
-    //       1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
-    //       352 + row*TILE_HEIGHT_HALF*3
-    //     ));
-    //     wagon.purchasePrice = resourceInfo.Buy;
-    //     wagon.fillWagon(resourceName);
-    //     this.buyableWagons.push(wagon);
-    //     col++;
-    //     if (col >=3+row) {
-    //       row++;
-    //       col = 0;
-    //     }
-    //   }
-    // }
-    
-    // Then other wagons
-    for (let [wagonName, wagonInfo] of Object.entries(this.city.wagons)) {
-      if (wagonInfo.Sell == 0) {
-        continue;
-      }
-      let wagon;
-      if (wagonName == "Merchandise") {
-        wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
-      } else {
-        wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
-      }
-      wagon.setPos(createVector(
-        1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
-        352 + row*TILE_HEIGHT_HALF*3
-      ));
-      wagon.purchasePrice = wagonInfo.Sell;
-      this.buyableWagons.push(wagon);
-      col++;
-      if (col >=3+row) {
-        row++;
-        col = 0;
-      }
-    }
-  }
-
-  populateBuyableResources() {
-    let row = 0;
-    let col = 0;
-    for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
-      if (resourceInfo.Sell == 0) {
-        continue;
-      }
-      let resource = new Resource(resourceName);
-      resource.setPos(createVector(
-        1100 + col * 60*2.4 - 150*row + 60, 
-        352 + row*TILE_HEIGHT_HALF*3
-      ));
-      resource.purchasePrice = resourceInfo.Sell;
-      this.buyableResources.push(resource);
-      col++;
-      if (col >=3+row) {
-        row++;
-        col = 0;
-      }
-    }
-  }
-
-
-
-  showConversation() {
-    this.conversationPanel.show();
   }
 
   generateBackgroundImage() {
@@ -142,11 +30,6 @@ class CityTradeScene extends TradeScene {
       }
     }
     return backgroundImage;
-  }
-
-  acceptMission() {
-    game.objectives.push(this.city.objective);
-    this.conversationPanel.active = false;
   }
 
   onClick(mousePos) {    
@@ -175,20 +58,19 @@ class CityTradeScene extends TradeScene {
         //let wagon = this.horizontalTrain.wagons[wagonIdx]; 
         let wagon = game.playerTrain.wagons[wagonIdx]; 
         this.selectedTrainWagonIdx = wagonIdx;
+        this.selectedBuyableResourceIdx = null;
 
         // check if the city buys this type of resource
         let price = "0";
-        let button = null;
-        
 
         // display wagon in the panel
         let infoPanelData = wagon.generatePanelInfoData();
         if(wagon.cargo in this.city.resources) {
           price = this.city.resources[wagon.cargo].Buy
-          infoPanelData.lines.push(`Price: ${price} (${round(100*(price-wagon.purchasePrice)/wagon.purchasePrice)}%)`);
-          infoPanelData.buttons = "Sell";
+          infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
+          infoPanelData.buttons = ["Sell"];
         } else {
-          infoPanelData.buttons = "Sell";
+          infoPanelData.buttons = [];
         }
         
         this.infoPanel.fillData(infoPanelData);
@@ -198,19 +80,23 @@ class CityTradeScene extends TradeScene {
 
     // Info panel
     else if (this.infoPanel.active && mousePos.x > mainCanvasDim[0]-300){
-      let buttonClicked = this.infoPanel.onClick(mousePos);
-      if (buttonClicked) {
+      let buttonText = this.infoPanel.onClick(mousePos);
+      if (buttonText !== null) {      
         if (this.selectedBuyableWagonIdx !== null) {
           console.log("buying a wagon");
           this.buyWagon();
         } else if (this.selectedBuyableResourceIdx !== null) {
           console.log("buying a resource");
-          this.buyResource();
+          if (buttonText == "Buy 1")
+            this.buyResource(1);
+          else if (buttonText == "Buy 10") {
+            this.buyResource(10);
+          }
         } else if (this.selectedTrainWagonIdx !==null) {
-          console.log("selling a wagon");
-          this.sellWagon();          
+          console.log("selling a resource");
+          this.sellResource();          
         }
-      }
+      }      
     }
     
     // TrafficLight
@@ -233,7 +119,7 @@ class CityTradeScene extends TradeScene {
 
           let infoPanelData = wagon.generatePanelInfoData();
           infoPanelData.lines.push(`Price: ${wagon.purchasePrice}`);
-          infoPanelData.buttons = "Buy";
+          infoPanelData.buttons = ["Buy"];
           this.infoPanel.fillData(infoPanelData);
           this.infoPanel.active = true;
           return;
@@ -247,10 +133,11 @@ class CityTradeScene extends TradeScene {
         if (resource.checkClick(mousePos)) {
           console.log(`Clicked resource ${resource.position.array()}`);
           this.selectedBuyableResourceIdx = i;
+          this.selectedTrainWagonIdx = null;
 
           let infoPanelData = resource.generatePanelInfoData();
-          infoPanelData.lines.push(`Price: ${resource.purchasePrice} baks (full wagon)`);
-          infoPanelData.buttons = "Buy";
+          infoPanelData.lines.push(`Unit Price: ${resource.purchasePrice} baks`);
+          infoPanelData.buttons = ["Buy 1", "Buy 10"];
           this.infoPanel.fillData(infoPanelData);
           this.infoPanel.active = true;
           return;
@@ -300,10 +187,9 @@ class CityTradeScene extends TradeScene {
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {
         wagon.showHorizontal();
-        let resourceName = wagon.cargo;
         try {
-          mainCanvas.image(resources[resourceName], wagon.position.x, wagon.position.y+5, 60,23)
-        }catch{}
+          mainCanvas.image(resources[wagon.cargo], wagon.position.x, wagon.position.y+5, 60,23)
+        } catch {}
       }
     }
 
@@ -312,11 +198,6 @@ class CityTradeScene extends TradeScene {
         resource.show();
       }
     }
-    
-    mainCanvas.image(resources.Salt,          1075+64*0, 215-32*0, 100,40)
-    mainCanvas.image(resources.Caviar,        1075+64*1, 215-32*1, 100,40)
-    mainCanvas.image(resources["Wolf Meat"],  1075+64*2, 215-32*2, 100,40)
-    mainCanvas.image(resources.Furs,          1075+64*3, 215-32*3, 100,40)
     
     this.infoPanel.show();
 
@@ -328,10 +209,10 @@ class CityTradeScene extends TradeScene {
     // mainCanvas.line(0,750,mainCanvasDim[0],750)
     // mainCanvas.pop();
 
-    //this.showHud();
     game.hud.show();
     this.showConversation();
 
+    // Show City Name
     mainCanvas.push();
     mainCanvas.textSize(40);
     mainCanvas.fill(0)

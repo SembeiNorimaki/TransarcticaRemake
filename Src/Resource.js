@@ -21,7 +21,7 @@ class Resource {
     let data = {
       "title": this.resourceName,
       "image": this.img,
-      "lines": [],
+      "lines": [`Stored in: ${Wagon.resourceToWagon[this.resourceName]}`],
       "buttons": ""
     };
 
@@ -42,8 +42,7 @@ class Resource {
   }
 
   show() {
-    mainCanvas.rect(this.position.x, this.position.y, 100, 40)
-    mainCanvas.image(this.img, this.position.x, this.position.y, 100, 40);
-    
+    mainCanvas.rect(this.position.x, this.position.y, this.img.width, this.img.height)
+    mainCanvas.image(this.img, this.position.x, this.position.y);
   }
 }

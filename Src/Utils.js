@@ -17,6 +17,289 @@
 
 // USEFUL FUNCTIONS
 
+idToTileCode = {
+  0b0000: 0x00, // wxyz Water
+  0b0001: 0x06, // wxyZ Water N
+  0b0010: 0x07, // wxYz Water W
+  0b1100: 0x02, // wxYZ Ramp SE
+  0b0100: 0x08, // wXyz Water E
+  0b1010: 0x03, // wXyZ Ramp SW
+  0b0110: 0x0E, // wXYz Saddle_WE
+  0b0111: 0x0A, // wXYZ Valley N
+  0b1000: 0x09, // Wxyz Water S
+  0b1001: 0x0F, // WxyZ Saddle_NS
+  0b0101: 0x04, // WxYz Ramp NE
+  0b1011: 0x0B, // WxYZ Valley W
+  0b0011: 0x05, // WXyz Ramp NW
+  0b1101: 0x0C, // WXyZ Valley E
+  0b1110: 0x0D, // WXYz Valley S
+  0b1111: 0x01, // WXYZ Ground
+}
+
+function textToImage(text) {
+  let img = createGraphics(text.length * 16, 19)
+
+  for (let [i, character] of Object.entries(text.toLowerCase())) {
+    img.image(characters[character], i*16, 0);
+  }
+  return img;
+}
+
+function makeMinimap() {
+  mainCanvas.noStroke()
+  let x = 0;
+  let y = 0;
+  for (let row of game.navigationScene.tileBoard.board) {
+    x = 0;
+    for (let tile of row) {
+      Tile.draw2D(mainCanvas, tile.tileId, createVector(x,y))
+      x += TILE_MINI_WIDTH;
+    }
+    y += TILE_MINI_HEIGHT;
+  }
+}
+
+function segmentImage(img) {
+  let NCOLS = img.width
+  let NROWS = img.height;
+  let board = Array.from(Array(NROWS), () => new Array(NCOLS));
+  let px;
+  for (let y=0; y<NROWS; y++) {
+    for (let x=0; x<NCOLS; x++) {
+      px = img.get(x, y).slice(0,3).toString();
+      if (px == "0,0,0") {               // land
+        board[y][x] = 0x01;
+      } else if (px == "255,255,255") {  // water
+        board[y][x] = 0x00;
+      } else if (px == "255,0,0"){       // cities
+        board[y][x] = 0xF0;
+      } else if (px == "0,0,255"){       // rails
+        board[y][x] = 0xF1;
+      } else if (px == "0,255,0"){       // events
+        board[y][x] = 0xF2;
+      }
+    }
+  }
+  return board;
+}
+
+function processHeightmap(board) {
+  let NCOLS = board[0].length;
+  let NROWS = board.length;
+  let board2 = Array.from(Array(NROWS), () => new Array(NCOLS));
+
+  for (let x=0; x<NCOLS; x++) {
+    for (let y=0; y<NROWS; y++) {
+      if (x==0 || y==0 || x==NCOLS-1 || y==NROWS-1) {
+        board2[y][x] = 0;
+        continue;
+      }
+
+      if (board[y][x] >= 0xF0) {  // skip cities, rails and stuff not related to heightmap terrain
+        board2[y][x] = board[y][x];
+        continue;
+      }
+
+      /* 
+            w
+         A / \ B
+          x   y
+         C \ / D
+            z
+      */
+
+      let tA = board[y][x-1]; 
+      let tB = board[y-1][x];
+      let tC = board[y+1][x];
+      let tD = board[y][x+1];
+      let tW = board[y-1][x-1]; 
+      let tX = board[y+1][x-1];
+      let tY = board[y-1][x+1];
+      let tZ = board[y+1][x+1];
+
+      let vW = 8; 
+      let vX = 4;   
+      let vY = 2; 
+      let vZ = 1;
+      
+      if(board[y][x]) {
+        let ref = board[y][x];
+        // Flat ramps
+        if (tA==(ref-1) && tB>=ref && tC>=ref && tD>=ref) {    
+          board2[y][x] = vY + vZ;
+        }
+        else if (tA>=ref && tB==(ref-1) && tC>=ref && tD>=ref) {    
+          board2[y][x] = vX + vZ;
+        }
+        else if (tA>=ref && tB>=ref && tC==(ref-1) && tD>=ref) {    
+          board2[y][x] = vW + vY;
+        }
+        else if (tA>=ref && tB>=ref && tC>=ref && tD==(ref-1)) {    
+          board2[y][x] = vW + vX;
+        }
+
+        // 3 vertex low
+        else if (tA==(ref-1) && tB==(ref-1) && tC>=ref && tD>=ref) {    
+          board2[y][x] = vZ;
+        }
+        else if (tA>=ref && tB==(ref-1) && tC>=ref && tD==(ref-1)) {    
+          board2[y][x] = vX;
+        }
+        else if (tA>=ref && tB>=ref && tC==(ref-1) && tD==(ref-1)) {    
+          board2[y][x] = vW;
+        }
+        else if (tA==(ref-1) && tB>=ref && tC==(ref-1) && tD>=ref) {    
+          board2[y][x] = vY;
+        }
+
+        // horse seat
+        else if (tW==(ref-1) && tZ==(ref-1)) {    
+          board2[y][x] = vX + vY;
+        }
+        else if (tX==(ref-1) && tY==(ref-1)) {    
+          board2[y][x] = vW + vZ;
+        }
+
+        // 3 vertex up
+        else if (tW==(ref-1)) {    
+          board2[y][x] = vX + vY + vZ;
+        }
+        else if (tX==(ref-1)) {    
+          board2[y][x] = vW + vY + vZ;
+        }
+        else if (tY==(ref-1)) {    
+          board2[y][x] = vW + vX + vZ;
+        }
+        else if (tZ==(ref-1)) {    
+          board2[y][x] = vW + vX + vY;
+        }
+
+        else {
+          board2[y][x] = vW + vX + vY + vZ;
+        }
+
+        if(board[y][x] == 2) {
+          board2[y][x] += 0b10000;
+        }
+      }
+      else {
+        board2[y][x] = 0;
+      }
+
+    }
+  }
+  return board2;
+}
+
+function processRails(board) {
+  let NCOLS = board[0].length;
+  let NROWS = board.length;
+  let board2 = Array.from(Array(NROWS), () => new Array(NCOLS));
+
+  for (let x=0; x<NCOLS; x++) {
+    for (let y=0; y<NROWS; y++) {
+      if (board[y][x] != 0xF1) {
+        board2[y][x] = board[y][x];
+        continue;
+      }
+
+      let tA = board[y][x-1]; 
+      let tB = board[y-1][x];
+      let tC = board[y+1][x];
+      let tD = board[y][x+1];
+
+      let neighbors = 0
+      if (tA == 0xF1)
+        neighbors += 1;
+      if (tB == 0xF1)
+        neighbors += 2;
+      if (tC == 0xF1)
+        neighbors += 4;
+      if (tD == 0xF1)
+        neighbors += 8;
+
+      switch(neighbors) {
+        case(1):
+        case(8):
+        case(9):  // AD
+          board2[y][x] = 0x30;
+        break;
+
+        case(2):
+        case(4):
+        case(6):  // BC
+          board2[y][x] = 0x31;
+        break;
+
+        case(3):  // AB
+          board2[y][x] = 0x32;
+        break;
+
+        case(12):  // CD
+          board2[y][x] = 0x33;
+        break;
+
+        case(5):  // AC
+          board2[y][x] = 0x34;
+        break;
+
+        case(10):  // BD
+          board2[y][x] = 0x35;
+        break;
+
+        case(7):  // BCa
+          board2[y][x] = 0x3C;
+        break;
+
+        case(11):  // ADb
+          board2[y][x] = 0x3A;
+        break;
+
+        case(13):  // ADc
+          board2[y][x] = 0x3B;
+        break;
+        
+        case(14):  // BCd
+          board2[y][x] = 0x3D;
+        break;
+      }
+    }
+  }
+  return board2;
+}
+
+function processOther(board) {
+  let NCOLS = board[0].length;
+  let NROWS = board.length;
+  let board2 = Array.from(Array(NROWS), () => new Array(NCOLS));
+
+  for (let x=NCOLS; x>=0; x--) {
+    for (let y=0; y<NROWS; y++) {
+      if (board[y][x] == 0xF0) {
+        board2[y][x+1] = 0xA0;
+        board2[y][x] = 0x01;
+      } else if (board[y][x] == 0xF2) {
+        board2[y][x] += 0x100;
+      } else {
+        board2[y][x] = board[y][x];
+      }
+    }
+  }
+  return board2;
+}
+
+function convertTileCodes(board) {
+  let NCOLS = board[0].length;
+  let NROWS = board.length;
+  for (let x=0; x<NCOLS; x++) {
+    for (let y=0; y<NROWS; y++) {
+      if (board[y][x] in idToTileCode) {
+        board[y][x] = idToTileCode[board[y][x]];
+      }
+    }
+  }
+  return board;
+}
 
 
 

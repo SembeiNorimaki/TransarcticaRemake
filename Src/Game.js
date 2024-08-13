@@ -15,18 +15,15 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Game {
-  constructor(saveData) {
-    this.saveData = saveData;
+  constructor() {
+    //this.saveData = saveData;
 
-    for (const [key, val] of Object.entries(tileCodes)) {
-      tileCodes[key].img = tileImgs[val.imgName];
-    }
     Tile.initialize();
 
-    this.cameraFollowsLocomotive = true;
+    this.cameraFollowsLocomotive = false;
 
     this.navigationScene = new NavigationScene();
-    this.navigationScene.initialize();
+    //this.navigationScene.initialize();
 
     this.playerTrain = new Train("Player");
     
@@ -49,7 +46,6 @@ class Game {
 
     this.events = {};
     
-    // Cities are 2x2
     for (let [cityLocation, cityName] of Object.entries(citiesLocations)) {
       let aux = cityLocation.split(",");
       let x = int(aux[0]);
@@ -78,34 +74,71 @@ class Game {
 
     this.objectives = [];
     this.objectivesVisible = false;
+
+    this.currentScene = new MainMenu();
+
+    this.newGame();
   }
 
-  initialize() {
-    // Apply saveData
-    this.playerTrain.initialize(this.saveData.PlayerTrain);
-    this.enemyTrain.initialize(this.saveData.EnemyTrain);
+  newGame() {
+    this.savedData = {
+      "PlayerTrain": {
+        fuel: 123,
+        gold: 456,
+        wagons: [
+          {"name": "Locomotive"},
+          {"name": "Merchandise"},
+          {"name": "Merchandise"},
+          {"name": "Livestock"}
+        ]
+      },
+      "EnemyTrain": {
+        fuel: 123,
+        gold: 456,
+        wagons: [
+          {"name": "Locomotive_vu"}
+        ]
+      }
+    }
+  }
 
+  loadGame() {
+    this.savedData = savedGames[0];
+  }
+
+
+
+
+  initialize() {
+    this.currentScene = this.navigationScene;
     // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
     // this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
-    // this.currentScene = new CityTradeScene(this.cities["Athens"]);
+    // this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
-    this.currentScene = new MapEditor();
+    // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
-    // this.currentScene = this.navigationScene;
+    this.currentScene = new BridgeScene(bridgeImage);
+    
+
+    // Apply saveData
+    this.playerTrain.initialize(this.savedData.PlayerTrain);
+    this.enemyTrain.initialize(this.savedData.EnemyTrain);
+
+
     this.currentScene.initialize();
 
-    this.conversationPanel.fillData({
-      "characterName": "Yuri",
-      "textLines": [
-        "Welcome to Transarctica commander, I'm Yuri your second-in-command.",
-        "Press Ctrl to start/stop Transarctica's engine. When stopped, press Shift to reverse direction",
-        "Transarctica automatically selects the next rail intersection, press Space to change it",
-        "There's a trade city to the North, let's go there. Click anywhere to close this dialog."
-      ]
-    });
-    this.conversationPanel.active = true;
+    // this.conversationPanel.fillData({
+    //   "characterName": "Yuri",
+    //   "textLines": [
+    //     "Welcome to Transarctica commander, I'm Yuri your second-in-command.",
+    //     "Press Ctrl to start/stop Transarctica's engine. When stopped, press Shift to reverse direction",
+    //     "Transarctica automatically selects the next rail intersection, press Space to change it",
+    //     "There's a trade city to the North, let's go there. Click anywhere to close this dialog."
+    //   ]
+    // });
+    // this.conversationPanel.active = true;
   }
 
   showObjectives() {

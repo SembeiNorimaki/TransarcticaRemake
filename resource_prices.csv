@@ -1,8 +1,8 @@
-Crossroads,Prices,Alcohol,Antiques,Wood,Fishing Rods,Caviar,Line Inspection Car,Furs,Mammoth Dung,Oil,Missiles,Gasoline,Plants,Fish,Rails,Salt,Wolf Meat,
+Crossroads,Prices,Alcohol,Antiques,Wood,Fishing Rods,Caviar,Line Inspection Car,Furs,Mammoth Dung,Oil,Missiles,Gasoline,Plants,Fish,Rails,Salt,Wolf Meat,Mamooth
 Amsterdam,Sell,14,,,,,,,,8,,,17,,,5,,
 Amsterdam,Buy,10,50,25,10,8,10,60,12,5,30,30,10,12,2,2,18,
-Athens,Sell,,,,,3,,,,,49,,,4,,,10,
-Athens,Buy,35,50,55,50,1,10,22,12,20,30,30,45,3,2,13,5,
+Athens,Sell,,,,,3,,,,,49,,,4,,,10,100
+Athens,Buy,35,50,55,50,1,10,22,12,20,30,30,45,3,2,13,5,60
 Babylon,Sell,,,,,3,,10,5,,,,17,,,,,
 Babylon,Buy,35,50,25,10,1,10,5,3,20,30,30,10,12,2,13,18,
 Copenhagen,Sell,,,10,,3,,,,,,,,,3,,10,

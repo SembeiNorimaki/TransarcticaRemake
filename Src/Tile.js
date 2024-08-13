@@ -17,9 +17,15 @@
 class Tile {
   static idxToName = {};
   static nameToIdx = {};
+  static tileCodes = {};
 
   static initialize() {
     for (const [code, val] of Object.entries(tileCodes)) {
+      Tile.tileCodes[code] = {
+        "imgName": val.imgName,
+        "offset": val.offset,
+        "img": tileImgs[val.imgName]
+      }
       Tile.idxToName[code] = val.imgName;
       Tile.nameToIdx[val.imgName] = code;
     }
@@ -112,17 +118,30 @@ class Tile {
 
   static draw(canvas, tileId, screenPos) {
     screenPos.add(
-      tileCodes[tileId].offset[0],
-      tileCodes[tileId].offset[1]
+      Tile.tileCodes[tileId].offset[0],
+      Tile.tileCodes[tileId].offset[1]
     );
     canvas.image(
-      tileCodes[tileId].img, 
+      Tile.tileCodes[tileId].img, 
       screenPos.x - TILE_WIDTH_HALF, 
       screenPos.y - TILE_HEIGHT_HALF);
   }
 
-
   static draw2D(canvas, tileId, screenPos) {
+    let tileName = Tile.idxToName[tileId] 
+    if (tileName.startsWith("Rail")) {
+      canvas.fill("black")
+    } else if (tileName == "Ground") {
+      canvas.fill("gray")
+    } else if (tileName == "Village") {
+      canvas.fill("red")
+    } else {
+      canvas.fill("blue");
+    }
+    canvas.rect(screenPos.x, screenPos.y, TILE_MINI_WIDTH, TILE_MINI_HEIGHT);
+  }
+
+  static draw2DOLD(canvas, tileId, screenPos) {
     // canvas.rect(screenPos.x, screenPos.y, 10, 10);
     switch(Tile.idxToName[tileId]) {
       case("Rail_AD"):
@@ -517,8 +536,8 @@ class Tile {
     let id = tileId & 0xFF;
     this.isEvent = Boolean(tileId & 0x100);
     this.tileId = id;
-    this.tileName = tileCodes[id].imgName;
-    this.offset = tileCodes[id].offset;
+    this.tileName = Tile.tileCodes[id].imgName;
+    this.offset = Tile.tileCodes[id].offset;
     this.img = tileImgs[this.tileName].img;    
   }
 
@@ -549,7 +568,7 @@ class Tile {
     }
 
     // Houses need ground below them
-    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF || this.tileId == 0x5A || this.tileId == 0x5B || this.tileId == 0x4C || this.tileId == 0x4D) {
+    else if (this.tileId >= 0xA0 && this.tileId <= 0xAF || this.tileId == 0x5A || this.tileId == 0x5B || this.tileId >= 0x4C && this.tileId <= 0x4F) {
       Tile.draw(canvas, 0x01, screenPos);
     }
     
@@ -567,10 +586,28 @@ class Tile {
     //   return;
     // }
 
-    Tile.draw(canvas, this.tileId, screenPos);
+    Tile.draw(canvas, this.tileId, screenPos.copy());
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
     // canvas.text(auxText, screenPos.x, screenPos.y); 
 
+    if (this.tileId == 0xA0) {  // if it's a City show the name
+      canvas.fill(255,255,255,200);
+      canvas.noStroke();
+      canvas.rect(screenPos.x-TILE_WIDTH_HALF, screenPos.y-122, 2*TILE_WIDTH_HALF,30)
+      canvas.textAlign(CENTER)
+      canvas.textSize(22)
+      canvas.fill(0)
+      
+      // canvas.text("Granada", screenPos.x+TILE_WIDTH_HALF*2, screenPos.y+18);
+      let tilePos = screenToBoard(screenPos, game.navigationScene.camera.position);
+      tilePos.add(createVector(-1,0));
+      let tileString = String(tilePos.x) + "," + String(tilePos.y);
+      if (tileString in citiesLocations) {
+        canvas.text(citiesLocations[tileString], screenPos.x, screenPos.y-100);
+      } else {
+        canvas.text(tilePos.array(), screenPos.x, screenPos.y-100);
+      }
+    }
     if (this.isSelected) {
       Tile.drawOutline(canvas, screenPos);
     }

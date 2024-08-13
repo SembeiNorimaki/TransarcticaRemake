@@ -55,7 +55,7 @@ class Locomotive {
 
   turn180() {
     if (this.velocity.mag() == 0) {
-      this.orientation =  (this.orientation + 180) % 360;
+      this.orientation = (this.orientation + 180) % 360;
       this.acceleration.setHeading(radians(this.orientation));
       this.update();
     }
@@ -81,110 +81,33 @@ class Locomotive {
   }
 
   enteredNewTile(sensorId) { 
-    if (sensorId == 1)  { // center sensor
-       
-      if (!this.currentTile.equals(this.prevTile)) {
-        return true;
-      }
-      return false;
+    if (sensorId == 1)  { // center sensor       
+      return !this.currentTile.equals(this.prevTile);
     } else if (sensorId == 2) { // front sensor
-      if (!this.currentTileFrontSensor.equals(this.prevTileFrontSensor)) {
-        return true;
-      }
-      return false;      
+      return !this.currentTileFrontSensor.equals(this.prevTileFrontSensor);
     }
   }
 
-  // TODO: use the static dictionaries in Tile to calculate the new orientation and position, like in getNextIntersection
-
   newOrientation() {
-    //console.log(worldMap.tileIdx2name[worldMap.board[this.currentTile.y][this.currentTile.x]]);
-    // stations make the train stop
-    // if ([0x81, 0x82].includes(worldMap.board[this.currentTile.y][this.currentTile.x])) {
-    //   this.stop();
-    //   this.braking.setMag(this.velocity.mag()*this.velocity.mag()/1.2);
-    //   console.log(this.braking.mag())
-    //   return;
-    // }
+    let newOri;
+    let tileName = Tile.idxToName[game.navigationScene.tileBoard.board[this.prevTile.y][this.prevTile.x].tileId];
+    let exitSide = Tile.orientationToExit[tileName][this.orientation];
+    let delta = Tile.sideToDelta[exitSide];
 
-    //console.log(this.currentTile.x, this.currentTile.y,worldMap.map2idx(createVector(this.currentTile.x, this.currentTile.y)))
-    
-
-    switch(Tile.idxToName[game.navigationScene.tileBoard.board[this.currentTile.y][this.currentTile.x].tileId]) {
-      case("Rail_AB"):
-      case("Rail_ABc"):
-      case("Rail_ABd"):
-        if (this.velocity.y > 0) {    
-          this.orientation = 135;
-          this.position = createVector(this.currentTile.x, this.currentTile.y - 0.5);
-        } else {
-          this.orientation = 315;
-          this.position = createVector(this.currentTile.x - 0.5, this.currentTile.y);
-        }
-      break;
-      case("Rail_AC"):
-      case("Rail_ACb"):
-      case("Rail_ACd"):
-        if (this.velocity.x > 0) {
-          this.orientation = 45;
-          this.position = createVector(this.currentTile.x - 0.5, this.currentTile.y );
-        } else {
-          this.orientation = 225;
-          this.position = createVector(this.currentTile.x, this.currentTile.y + 0.5);
-        }
-      break;
-      case("Rail_AD"):
-      case("Rail_ADb"):
-      case("Rail_ADc"):
-        if (this.velocity.x > 0) {
-          this.orientation = 0;
-          this.position = createVector(this.currentTile.x - 0.5, this.currentTile.y);
-        } else {
-          this.orientation = 180;
-          this.position = createVector(this.currentTile.x + 0.5, this.currentTile.y);
-        }
-      break;
-      case("Rail_BC"):
-      case("Rail_BCa"):
-      case("Rail_BCd"):
-        if (this.velocity.y > 0) {
-          this.orientation = 90;
-          this.position = createVector(this.currentTile.x, this.currentTile.y - 0.5);
-        } else {
-          this.orientation = 270;
-          this.position = createVector(this.currentTile.x, this.currentTile.y + 0.5);
-        }
-      break;
-      case("Rail_BD"):
-      case("Rail_BDa"):
-      case("Rail_BDc"):
-        if (this.velocity.x < 0) {
-          this.orientation = 225;
-          this.position = createVector(this.currentTile.x+0.5, this.currentTile.y);
-        } else {
-          this.orientation = 45;
-          this.position = createVector(this.currentTile.x, this.currentTile.y-0.5);
-        }
-      break;
-      case("Rail_CD"):
-      case("Rail_CDa"):
-      case("Rail_CDb"):
-        if (this.velocity.y < 0) {
-          this.orientation = 315;
-          this.position = createVector(this.currentTile.x, this.currentTile.y + 0.5);
-        } else {
-          this.orientation = 135;
-          this.position = createVector(this.currentTile.x + 0.5, this.currentTile.y);
-        }
-      break;
+    tileName =  Tile.idxToName[game.navigationScene.tileBoard.board[this.currentTile.y][this.currentTile.x].tileId];
+    let entrySide = Tile.oppositeSide[exitSide];
+    if (tileName in Tile.entryToOrientation) {
+      newOri = Tile.entryToOrientation[tileName][entrySide];
     }
+    this.orientation = newOri;
+
     this.frontSensor = createVector(0.4, 0).setHeading(radians(this.orientation)).add(this.position);
     this.velocity.setHeading(radians(this.orientation));
     this.acceleration.setHeading(radians(this.orientation));
-
   }
 
   update() {
+    // Update train velocity
     if (this.gear == "D") {
       this.velocity.add(this.acceleration);      
       if (this.velocity.mag() > this.maxVelocity) {
@@ -197,6 +120,7 @@ class Locomotive {
         this.velocity.setMag(0.0);
     }
 
+    // update position and tiles
     this.prevPosition = this.position.copy();
     this.position.add(this.velocity);  
     this.frontSensor.add(this.velocity);  
@@ -207,15 +131,14 @@ class Locomotive {
     this.prevTileFrontSensor = this.currentTileFrontSensor.copy();
     this.currentTileFrontSensor.set(round(this.frontSensor.x), round(this.frontSensor.y));
 
-    this.fuel -= this.velocity.mag();
-    
+    // update fuel
+    game.playerTrain.fuel -= this.velocity.mag();    
 
+    // update camera
     if (game.cameraFollowsLocomotive) {
       let aux = boardToCamera(this.position);
       game.navigationScene.camera.setPos(aux);
     }
-    
-
   }
 
   show() {

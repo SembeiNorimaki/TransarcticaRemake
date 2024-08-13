@@ -40,9 +40,9 @@ class Train {
     }
   }
 
-  addResource(resourceName, totalCost) {
+  buyResource(resourceName, qty, unitCost) {
     // adds the resource to the train. Returns true if possible and false if not possible
-    if (totalCost > this.gold) {
+    if (unitCost*qty > this.gold) {
       return false;
     }
 
@@ -50,18 +50,27 @@ class Train {
     let wagonName = Wagon.resourceToWagon[resourceName];
 
     for (let [i, wagon] of this.wagons.entries()) {
-      if (wagon.name == wagonName && wagon.usedSpace == 0) {
-        wagon.setCargo(resourceName);
-        wagon.fillWagon(resourceName);
-        wagon.purchasePrice = totalCost;
-        this.gold -= totalCost;
-        return true;
+      if (wagon.name == wagonName) {
+        if (wagon.usedSpace == 0) {
+          wagon.setCargo(resourceName);
+        }
+        if (wagon.availableSpace >= qty) {
+          wagon.addResource(qty, unitCost);
+          wagon.purchasePrice = unitCost * qty;
+          this.gold -= unitCost * qty;
+          return true;
+        } else {
+          wagon.addResource(wagon.availableSpace, unitCost);
+          wagon.purchasePrice = unitCost * wagon.availableSpace;
+          this.gold -= unitCost * wagon.availableSpace;
+          qty -= wagon.availableSpace;
+        }
       }
     }
     return false;    
   }
 
-  removeResource(wagonId, totalPrice) {
+  sellResource(wagonId, totalPrice) {
     this.wagons[wagonId].emptyWagon();
     this.gold += totalPrice;
   }

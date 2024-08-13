@@ -52,9 +52,21 @@ class TradeScene {
     this.horizontalTrain.setPosition(createVector(1400, 800));
     this.horizontalTrain.setVelocity(0);
   }
-  
-  populateBuyableWagons() {
+
+  // Mission related functions
+  showConversation() {
+    this.conversationPanel.show();
+  }
+  acceptMission() {
+    game.objectives.push(this.city.objective);
+    this.conversationPanel.active = false;
+  }
+
+  // Populate functions
+  populateBuyableResourceWagons() {
     let row = 0;
+    let col = 0;
+    
     for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
       for (let i=0; i<resourceInfo.Qty; i++) {
         let wagonName = Wagon.resourceToWagon[resourceName];
@@ -65,25 +77,84 @@ class TradeScene {
           wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
         }
         wagon.setPos(createVector(
-          1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
-          386 + row*TILE_HEIGHT_HALF*2
+          1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
+          352 + row*TILE_HEIGHT_HALF*3
         ));
+        wagon.purchasePrice = resourceInfo.Buy;
         wagon.fillWagon(resourceName);
         this.buyableWagons.push(wagon);
+        col++;
+        if (col >=3+row) {
+          row++;
+          col = 0;
+        }
       }
-      row++;
+    }
+  }
+    
+  populateBuyableSpecialWagons() {
+    let row = 0;
+    let col = 0;
+    
+    for (let [wagonName, wagonInfo] of Object.entries(this.city.wagons)) {
+      if (wagonInfo.Sell == 0) {
+        continue;
+      }
+      let wagon;
+      if (wagonName == "Merchandise") {
+        wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
+      } else {
+        wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+      }
+      wagon.setPos(createVector(
+        1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
+        352 + row*TILE_HEIGHT_HALF*3
+      ));
+      wagon.purchasePrice = wagonInfo.Sell;
+      this.buyableWagons.push(wagon);
+      col++;
+      if (col >=3+row) {
+        row++;
+        col = 0;
+      }
     }
   }
 
-  buyResource() {
+  populateBuyableResources() {
+    let row = 0;
+    let col = 0;
+    for (let [resourceName, resourceInfo] of Object.entries(this.city.resources)) {
+      if (resourceInfo.Sell == 0) {
+        continue;
+      }
+      let resource = new Resource(resourceName);
+      resource.setPos(createVector(
+        1100 + col * 60*2.4 - 150*row + 60, 
+        352 + row*TILE_HEIGHT_HALF*3
+      ));
+      resource.purchasePrice = resourceInfo.Sell;
+      this.buyableResources.push(resource);
+      col++;
+      if (col >=3+row) {
+        row++;
+        col = 0;
+      }
+    }
+  }
+
+
+  //Resource Functions
+  buyResource(qty) {
     let resourceName = this.buyableResources[this.selectedBuyableResourceIdx].resourceName;
-    let totalCost = this.buyableResources[this.selectedBuyableResourceIdx].purchasePrice;
-    game.playerTrain.addResource(resourceName, totalCost);
+    game.playerTrain.buyResource(resourceName, qty, this.buyableResources[this.selectedBuyableResourceIdx].purchasePrice);
   }
 
   sellResource() {
     let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
-    game.playerTrain.sellResource(wagonId, this.city.resources[resourceName].Sell);
+    game.playerTrain.sellResource(this.selectedTrainWagonIdx, this.city.resources[resourceName].Sell);
+    let infoPanelData = game.playerTrain.wagons[this.selectedTrainWagonIdx].generatePanelInfoData();
+    infoPanelData.buttons = "Sell";
+    this.infoPanel.fillData();
   }
 
   buyWagon() {
@@ -149,6 +220,7 @@ class TradeScene {
     // Exit sequence
     if (this.exitSequence && this.horizontalTrain.wagons.at(-1).position.x > mainCanvasDim[0]+200) {
       game.currentScene = game.navigationScene;
+      game.navigationScene.getNewIntersection(game.navigationScene.locomotive.currentTile, game.navigationScene.locomotive.orientation);
     }
 
     this.horizontalTrain.update();

@@ -15,15 +15,16 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-let mapFile = "maps/Tutorial.txt";
-let loadFromLocalStorage = true;
+//let mapFile = "maps/Tutorial.txt";
+let mapImage = "maps/Europe.png";
+let loadFromLocalStorage = false;
 
 const TILE_WIDTH_HALF = 64;
 const TILE_HEIGHT_HALF = 32;
 
 // Minimap tile size
-const TILE_MINI_WIDTH = 12;
-const TILE_MINI_HEIGHT = 6;
+const TILE_MINI_WIDTH = 3;
+const TILE_MINI_HEIGHT = 3;
 
 let screenDim = [TILE_WIDTH_HALF*27 , TILE_HEIGHT_HALF*27+60];
 let mainCanvas, hudCanvas;
@@ -64,35 +65,62 @@ let wolfImg;
 
 let i=0;
 
-let saveData = {
-  "PlayerTrain": {
-    fuel: 123,
-    gold: 456,
-    wagons: [
-      {"name": "Locomotive"},
-      {"name": "Merchandise"},
-      {"name": "Merchandise"}
-    ]
-  },
-  "EnemyTrain": {
-    fuel: 123,
-    gold: 456,
-    wagons: [
-      {"name": "Locomotive_vu"}
-    ]
+let savedGames = [];
+savedGames.push(
+  {
+    "PlayerTrain": {
+      fuel: 1230,
+      gold: 4560,
+      wagons: [
+        {"name": "Locomotive"},
+        {"name": "Merchandise"},
+        {"name": "Merchandise"},
+        {"name": "Livestock"}
+      ]
+    },
+    "EnemyTrain": {
+      fuel: 123,
+      gold: 456,
+      wagons: [
+        {"name": "Locomotive_vu"}
+      ]
+    }
   }
-}
+);
 
 let ori = 7;
 let sounds = {};
-let table
+let table;
+let bridgeImage;
+
+let characters = {};
 
 function preload() {
 
+  loadImage("resources/font.png", img => {
+    let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
+    for (let [x, character] of alphabet.entries()) {
+      characters[character] = img.get(16*x,0,16,19);
+    }
+  });
+
+  bridgeImage = loadImage("resources/bridgeScene.png")
+
+  loadImage(mapImage, img => {
+    let NCOLS = img.width;
+    let NROWS = img.height;
+    gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+
+    gameData.mapBoard = segmentImage(img);
+    gameData.mapBoard = processHeightmap(gameData.mapBoard);
+    gameData.mapBoard = convertTileCodes(gameData.mapBoard);
+    // gameData.mapBoard = processRails(gameData.mapBoard);
+    gameData.mapBoard = processOther(gameData.mapBoard);
+    gameData.mapBoard = processRails(gameData.mapBoard);
+
+  });
+
   //sounds.travelling = loadSound('/music/travelling.mp3');
-
-  
-
 
   loadJSON("Src/Resources.json", jsonData => {
     for (const [name, filename] of Object.entries(jsonData)) {
@@ -272,31 +300,31 @@ function preload() {
 
 
   // NavigationMap into gameData.mapBoard
-  let mapData = getItem("SavedMap");
-  if (mapData !== null && loadFromLocalStorage) {
-    // aux is an array of arrays of strings [["00", "01"],["00", "0A"]]
-    let NCOLS = mapData[0].length;
-    let NROWS = mapData.length;
-    gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-    for (const [rowId, rowData] of mapData.entries()) {
-      for (const [colId, elem] of rowData.entries()) {
-        gameData.mapBoard[rowId][colId] = Number("0x" + elem);
-      }
-    }
-  } else {
-    loadStrings("maps/Europe.txt", mapData => {
+  // let mapData = getItem("SavedMap");
+  // if (mapData !== null && loadFromLocalStorage) {
+  //   // aux is an array of arrays of strings [["00", "01"],["00", "0A"]]
+  //   let NCOLS = mapData[0].length;
+  //   let NROWS = mapData.length;
+  //   gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+  //   for (const [rowId, rowData] of mapData.entries()) {
+  //     for (const [colId, elem] of rowData.entries()) {
+  //       gameData.mapBoard[rowId][colId] = Number("0x" + elem);
+  //     }
+  //   }
+  // } else {
+  //   loadStrings("maps/Europe.txt", mapData => {
       
     
-      let NCOLS = split(mapData[0], ',').length;
-      let NROWS = mapData.length;
-      gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-      for (const [rowId, rowData] of mapData.entries()) {
-        for (const [colId, elem] of split(rowData, ',').entries()) {
-          gameData.mapBoard[rowId][colId] = Number("0x" + elem);
-        }
-      }
-    });
-  }
+  //     let NCOLS = split(mapData[0], ',').length;
+  //     let NROWS = mapData.length;
+  //     gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+  //     for (const [rowId, rowData] of mapData.entries()) {
+  //       for (const [colId, elem] of split(rowData, ',').entries()) {
+  //         gameData.mapBoard[rowId][colId] = Number("0x" + elem);
+  //       }
+  //     }
+  //   });
+  // }
 
   // City template map into gameData.cityBoard
   loadStrings("maps/cityTemplate.txt", mapData => {
@@ -474,7 +502,6 @@ function setupCanvas() {
 function setup() {
   //sounds.travelling.play();
   frameRate(50);
-  // noLoop();
   document.addEventListener('contextmenu', event => event.preventDefault());
 
   createCanvas(screenDim[0], screenDim[1]);
@@ -484,39 +511,15 @@ function setup() {
   setupCanvas();
   
   // TODO: Check if theres a game saved, if so, load it instead of starting a new one
-  game = new Game(saveData);  
-  game.initialize();
-
-
-  
+  game = new Game();   
+  game.initialize(); 
 }
 
 function draw() {  
-  // showWolfWalk();
-  // assembleBuilding();
-  // return;
-
-  mainCanvas.background(0)
   game.update();
 
   image(mainCanvas, 0, 0);
   image(hudCanvas, 0, mainCanvasDim[1]);
-
-  // let img = gameData.unitsData.wolf[0]["walk"][ori][int(i)]; 
-  // rect(400, 400, img.width, img.height)
-  // image(img, 400,400)
-  // i+=0.5;
-  // if (int(i)>7) {
-  //   i=0;
-  // }
-
-  //showTrainSummary();
-
-  // image(gameData.unitsData.ultralisk.move[9][int(i/10)%8],500,100+i/2);
-  // i++;
-  // if (i>8*5) {
-  //   i=0;
-  // }
 }
 
 function keyPressed() {
@@ -528,5 +531,5 @@ function mousePressed() {
 }
 
 function mouseMoved() {
-  game.currentScene.mouseMoved();
+  // game.currentScene.mouseMoved();
 }

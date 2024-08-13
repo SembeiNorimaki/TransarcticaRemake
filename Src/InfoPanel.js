@@ -26,10 +26,10 @@ class InfoPanel {
     this.title = "";
     this.image = null;
     this.lines = [""];
-    this.activeButton = null;
+    this.buttons = [];
 
     this.active = false;
-    this.activeButtons = [];
+    
   }
 
   fillData(data) {
@@ -37,23 +37,33 @@ class InfoPanel {
     this.title = data.title;
     this.image = data.image;
     this.lines = data.lines;
-    this.activeButton = data.buttons;
-
-    // this.active = true;
+    let x = 60;
+    for (let [i, buttonText] of data.buttons.entries()) {
+      this.buttons.push(new ClickableRegion(createVector(mainCanvasDim[0]-210+120*i, 500), createVector(50, 25), null, buttonText, null));
+      
+    }
   }
 
   onClick(mousePos) {
-    if (this.activeButton !== null) {
-      return this.buttons[this.activeButton].checkClick(mousePos);
-    } else {
-      return {};
+    for (let button of this.buttons) {
+      if (button.checkClick(mousePos)) {
+        return button.text;
+      }
     }
+    return null;
+
+    // if (this.activeButton !== null) {
+    //   return this.buttons[this.activeButton].checkClick(mousePos);
+    // } else {
+    //   return {};
+    // }
   }
 
   show() {
     if (!this.active) {
       return;
     }
+
     let texty = 220;
     mainCanvas.push();
     mainCanvas.fill(255,255,255,200);
@@ -73,16 +83,15 @@ class InfoPanel {
       mainCanvas.text(line, mainCanvasDim[0]-250, texty);  
       texty += 34;
     }
-    
-    // mainCanvas.text(`Unit Price: ${resourceData[this.selectedObject.resourceName].price}`, width-380, texty);
-    // texty += 50;
-    // mainCanvas.text(`Train capacity: ${train.usedSpace[this.selectedObject.resourceName]} / ${train.capacity[this.selectedObject.resourceName]}`, width-380, texty);
-    // texty += 50;
-
     mainCanvas.pop();
-    if (this.activeButton !== null) {
-      this.buttons[this.activeButton].showText();      
-    }    
+    
+    for (let button of this.buttons) {
+      button.showText();
+    }
+    
+    // if (this.activeButton !== null) {
+    //   this.buttons[this.activeButton].showText();      
+    // }    
   }
 
 

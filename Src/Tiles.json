@@ -58,6 +58,10 @@
     "Bridge_D2": {"filename": "resources/bridges/2543_zi2.png"      },
     "Bridge_D1": {"filename": "resources/bridges/2500_zi2.png"      },
 
+    "Fence_AD": {"filename": "resources/terrain/4102_zi2.png"      },
+    "Fence_BC": {"filename": "resources/terrain/4103_zi2.png"      },
+
+
     "Road_AD":  {"filename": "resources/roads/1351.png"},
     "Road_BC":  {"filename": "resources/roads/1352.png"},
     "Road_AB":  {"filename": "resources/roads/1359.png"},
@@ -199,6 +203,9 @@
 
     "0x4C": {"imgName": "Plattform_BC_R"   , "offset": [10, -40]},
     "0x4D": {"imgName": "Plattform_BC_L"   , "offset": [25, -34]},
+    
+    "0x4E": {"imgName": "Fence_AD"   , "offset": [26, 0]},
+    "0x4F": {"imgName": "Fence_BC"   , "offset": [26, 5]},
 
     
 

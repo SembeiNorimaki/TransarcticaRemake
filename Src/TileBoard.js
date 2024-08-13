@@ -29,7 +29,7 @@ class TileBoard {
         try {  
         this.board[row][col] = new Tile(createVector(col, row), mapData[row][col]);        
         } catch {
-          console.log(`Error initializing tile: ${row},${col}`);
+          console.log(`Error initializing tile: ${row},${col},${mapData[row][col]}`);
         }
       }
     }

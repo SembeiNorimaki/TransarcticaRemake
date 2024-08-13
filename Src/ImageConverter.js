@@ -1,4 +1,4 @@
-let imageFile = "maps/Europe.png";
+let imageFile = "maps/europe.png";
 let img;
 
 class ImageConverter {
@@ -42,19 +42,19 @@ class ImageConverter {
   imageToBinaryListStr(img) {
     let board = [];
     let currentRow = [];
+
     for (let row=0; row<img.height; row++) {
       currentRow = [];
       for (let col=0; col<img.width; col++) {
-        let b = brightness(img.get(col,row));
-        if (b > 80) {
-          img.set(col,row,2);
-          currentRow.push("00");
-        } else if (b > 40) {
-          img.set(col,row,1);
-          currentRow.push("00");
-        } else {
-          img.set(col,row,0);
-          currentRow.push("01");
+        let px = img.get(col,row).slice(0,3).toString();
+        if (px == "0,0,0") {               // land
+          currentRow.push("001");
+        } else if (px == "255,255,255") {  // water
+          currentRow.push("000");
+        } else if (px == "255,0,0"){       // cities
+          currentRow.push("020");
+        } else if (px == "0,0,255"){       // rails
+          currentRow.push("010");
         }
       }
       
@@ -271,7 +271,8 @@ class ImageConverter {
     let NROWS = board.length - 1;
     for (let x=0; x<NCOLS; x++) {
       for (let y=0; y<NROWS; y++) {
-        board[y][x] = ImageConverter.idToTileCode[board[y][x]];
+        if (board[y][x] in ImageConverter.idToTileCode)
+          board[y][x] = ImageConverter.idToTileCode[board[y][x]];
       }
     }
     return board;
@@ -321,8 +322,8 @@ class ImageConverter {
   }
 
   processHeightmap(board) {
-    let NCOLS = board[0].length - 1;
-    let NROWS = board.length - 1;
+    let NCOLS = board[0].length;
+    let NROWS = board.length;
 
     let board2 = Array.from(Array(NROWS), () => new Array(NCOLS));
 
@@ -330,6 +331,10 @@ class ImageConverter {
       for (let y=0; y<NROWS; y++) {
         if (x==0 || y==0 || x==NCOLS-1 || y==NROWS-1) {
           board2[y][x] = 0;
+          continue;
+        }
+        if (board[y][x] == 0x010 || board[y][x] == 0x020) {
+          board2[y][x] = board[y][x];
           continue;
         }
 
@@ -355,7 +360,11 @@ class ImageConverter {
         let vY = 2; 
         let vZ = 1;
         
-        if(board[y][x]) {
+        if (board[y][x] == 0x020) {
+          console.log("city")
+          board2[y][x] = 0x020;
+        }
+        else if(board[y][x]) {
           let ref = board[y][x];
           // Flat ramps
           if (tA==(ref-1) && tB>=ref && tC>=ref && tD>=ref) {    
@@ -430,6 +439,88 @@ class ImageConverter {
       (x + y) * this.tileHalfSize.y
     );
   }
+
+
+  calculateRails(board) {
+    let NCOLS = board[0].length;
+    let NROWS = board.length;
+
+    let board2 = Array.from(Array(NROWS), () => new Array(NCOLS));
+
+    for (let x=0; x<NCOLS; x++) {
+      for (let y=0; y<NROWS; y++) {
+        if (board[y][x] == 0x020) {
+          board2[y][x] = 0xA0;
+        }
+        else if (board[y][x] != 0x010) {
+          board2[y][x] = board[y][x];
+          continue;
+        }
+
+        let tA = board[y][x-1]; 
+        let tB = board[y-1][x];
+        let tC = board[y+1][x];
+        let tD = board[y][x+1];
+
+        let neighbors = 0
+        if (tA == 0x010)
+          neighbors += 1;
+        if (tB == 0x010)
+          neighbors += 2;
+        if (tC == 0x010)
+          neighbors += 4;
+        if (tD == 0x010)
+          neighbors += 8;
+
+        switch(neighbors) {
+          case(1):
+          case(8):
+          case(9):  // AD
+            board2[y][x] = 0x30;
+          break;
+
+          case(2):
+          case(4):
+          case(6):  // BC
+            board2[y][x] = 0x31;
+          break;
+
+          case(3):  // AB
+            board2[y][x] = 0x32;
+          break;
+
+          case(12):  // CD
+            board2[y][x] = 0x33;
+          break;
+
+          case(5):  // AC
+            board2[y][x] = 0x34;
+          break;
+
+          case(10):  // BD
+            board2[y][x] = 0x35;
+          break;
+
+          case(7):  // BCa
+            board2[y][x] = 0x3C;
+          break;
+
+          case(11):  // ADb
+            board2[y][x] = 0x3A;
+          break;
+
+          case(13):  // ADc
+            board2[y][x] = 0x3B;
+          break;
+          
+          case(14):  // BCd
+            board2[y][x] = 0x3D;
+          break;
+        }
+      }
+    }
+    return board2;
+  }  
 }
 
 function preload() {
@@ -442,9 +533,10 @@ function setup() {
   let imgStr = converter.imageToBinaryListStr(img);
   let board = converter.binaryListStrToBoard(imgStr);
   board = converter.processHeightmap(board);
-  board = converter.filterPeninsulas(board);
+  //board = converter.filterPeninsulas(board);
   //converter.drawMap(board);
   board = converter.convertTileCodes(board);
+  board = converter.calculateRails(board)
   
   let str = []
   for (let row of board) {

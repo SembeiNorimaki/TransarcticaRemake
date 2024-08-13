@@ -357,17 +357,17 @@ class MapEditor {
   }
 
   showHud() {
-    hudCanvas.image(tileCodes[0x30].img, TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x31].img, 3*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x32].img, 5*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x33].img, 7*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x34].img, 9*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x35].img, 11*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x30].img, TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x31].img, 3*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x32].img, 5*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x33].img, 7*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x34].img, 9*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x35].img, 11*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
 
-    hudCanvas.image(tileCodes[0x3A].img, 13*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x3B].img, 15*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x3C].img, 17*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(tileCodes[0x3D].img, 19*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x3A].img, 13*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x3B].img, 15*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x3C].img, 17*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x3D].img, 19*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
   }
 
   show() {

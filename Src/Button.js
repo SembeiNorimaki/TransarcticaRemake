@@ -23,10 +23,10 @@ class Button {
   }
 
   show(canvas) {
-    canvas.push();
-    
-    
-    
+    if (!this.active) {
+      return;
+    }
+    canvas.push();    
     if (this.image !== null) {
       canvas.image(this.image, this.position.x, this.position.y)
     } else {
@@ -42,9 +42,7 @@ class Button {
       canvas.textAlign(CENTER, CENTER);
       canvas.textSize(32);
       canvas.text(this.text, this.position.x, this.position.y);
-    }
-
-    
+    }  
     
     canvas.pop();
   }

@@ -1,9 +1,9 @@
 class MainMenu {
   constructor() {
     this.buttons = [
-      new Button(1,createVector(200, 100), createVector(150, 40), "New Game"),
-      new Button(2,createVector(200, 250), createVector(150, 40), "Continue"),
-      new Button(3,createVector(200, 400), createVector(150, 40), "Settings")
+      new Button(1, true, createVector(200, 100), createVector(150, 40), "New Game"),
+      new Button(2, true, createVector(200, 250), createVector(150, 40), "Continue"),
+      new Button(3, false, createVector(200, 400), createVector(150, 40), "Settings")
     ];
   }
 
@@ -24,10 +24,14 @@ class MainMenu {
       case(null):
       break;
       case(1):
-      console.log("New Game")
+        console.log("New Game");
+        game.newGame();
+        game.initialize();
       break;
       case(2):
-      console.log("Continue")
+        console.log("Continue");
+        game.loadGame();
+        game.initialize();
       break;
       case(3):
       console.log("Settings")

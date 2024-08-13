@@ -45,14 +45,16 @@ class Wagon {
     "Fish":                "Merchandise",
     "Rails":               "Merchandise",
     "Salt":                "Merchandise",
-    "Wolf Meat":           "Merchandise"
+    "Wolf Meat":           "Merchandise",
+
+    "Mamooth":             "Livestock"
+
   };
   
 
   constructor(id, name, wagonData) {
     this.id = id;
     this.name = name;
-    console.log(name)
     this.img = wagonData.img;
     this.halfSize = createVector(wagonData.img[0].width/2, wagonData.img[0].height/2);
     this.offset = wagonData.offset;
@@ -70,7 +72,7 @@ class Wagon {
     this.hp = 50;
     this.maxHp = 100;
 
-    this.purchasePrice = 0;
+    this.merchandiseValue = 0;
 
     this.destination = null;
 
@@ -83,7 +85,7 @@ class Wagon {
     let data = {
       "title": this.name,
       "image": this.img[this.spriteId],
-      "lines": [],
+      "lines": [`Capacity: ${this.capacity} ${this.unit}`],
       "buttons": ""
     };
     if (this.usedSpace == 0) {
@@ -117,22 +119,25 @@ class Wagon {
     this.cargo = cargo;
   }
 
-  addResource(qty) {
+  addResource(qty, unitPrice) {
     if (qty > this.availableSpace) {
       throw "Not enough space";
     }
     this.usedSpace += qty;
     this.availableSpace -= qty; 
+    this.merchandiseValue += qty * unitPrice;
     //this.recalculateSpriteId();
   }
 
-  removeResource(qty) {
+  removeResource(qty, unitPrice) {
     if (qty >= this.usedSpace) {
       this.usedSpace = 0;
       this.availableSpace = this.capacity;
+      this.merchandiseValue = 0;
     } else {
       this.usedSpace -= qty;
       this.availableSpace += qty;
+      this.merchandiseValue -= qty * unitPrice;
     }
     //this.recalculateSpriteId();
   }
@@ -161,8 +166,7 @@ class Wagon {
     mainCanvas.fill("red");
     mainCanvas.rect(this.position.x + this.halfSize.x - 50, this.position.y+30, 100, 4);
     mainCanvas.fill("green");
-    mainCanvas.rect(this.position.x + this.halfSize.x - 50, this.position.y+30, 100*this.hp/this.maxHp, 4);
-    
+    mainCanvas.rect(this.position.x + this.halfSize.x - 50, this.position.y+30, 100*this.hp/this.maxHp, 4);    
     mainCanvas.pop();
   }
 
@@ -220,92 +224,22 @@ class Wagon {
 
 
 
-class CannonWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
-    this.reloadTime = 300;
-    this.reloadCount = this.reloadTime;
-  }
 
-  isReadyToFire() {
-    return (this.reloadCount == 0);
-  }
 
-  update() {
-    if (this.reloadCount > 0) {
-      this.reloadCount--;
-    }
-  }
 
-  fire() {
-    if (this.isReadyToFire()) {
-      this.reloadCount = this.reloadTime;
-      let spawnPosition = createVector(this.position.x + this.halfSize.x, this.position.y-40); 
-      game.currentScene.cannonball = new Cannonball(spawnPosition);
-    }
-  }
 
-  showReloadBar(cameraPos) {
-    mainCanvas.push();
-    mainCanvas.rect(this.position.x-cameraPos.x, this.position.y+22,this.halfSize.x*2,5);
-    mainCanvas.fill("green");
-    mainCanvas.rect(this.position.x-cameraPos.x, this.position.y+22,
-      this.reloadCount*this.halfSize.x*2/this.reloadTime,5);
+// class PlayerMachinegunWagon extends MachinegunWagon {
+//   constructor(id, name, wagonData) {
+//     super(id, name, wagonData);
     
-    mainCanvas.pop();
+//   }
+// }
+// class EnemyMachinegunWagon extends MachinegunWagon {
+//   constructor(id, name, wagonData) {
+//     super(id, name, wagonData);
     
-  }
-
-}
-
-class MachinegunWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
-    this.reloadTime = 50;
-    this.reloadCount = this.reloadTime;
-  }
-
-  isReadyToFire() {
-    return (this.reloadCount == 0);
-  }
-
-  update() {
-    if (this.reloadCount > 0) {
-      this.reloadCount--;
-    }
-  }
-
-  fire() {
-    if (this.isReadyToFire()) {
-      this.reloadCount = this.reloadTime;
-      let spawnPosition = createVector(this.position.x + this.halfSize.x, this.position.y-40); 
-      game.currentScene.machinegunbullets = new MachinegunBullets(spawnPosition);
-    }
-  }
-
-  showReloadBar(cameraPos) {
-    mainCanvas.push();
-    mainCanvas.rect(this.position.x-cameraPos.x, this.position.y+22,this.halfSize.x*2,5);
-    mainCanvas.fill("green");
-    mainCanvas.rect(this.position.x-cameraPos.x, this.position.y+22,
-      this.reloadCount*this.halfSize.x*2/this.reloadTime,5);
-    mainCanvas.pop(); 
-  }
-
-}
-
-class PlayerMachinegunWagon extends MachinegunWagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
-    
-  }
-}
-class EnemyMachinegunWagon extends MachinegunWagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
-    
-  }
-}
+//   }
+// }
 
 class LivestockWagon extends Wagon {
   constructor(id, name, wagonData) {
@@ -318,26 +252,7 @@ class BarracksWagon extends Wagon {
   }
 }
 
-class LocomotiveWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
-  }
 
-  showWeightBar(cameraPos) {
-    mainCanvas.push();
-    mainCanvas.rect(this.position.x-this.halfSize.x-cameraPos.x, this.position.y+20,this.halfSize.x*2,5);
-    //mainCanvas.rect(this.position.x-cameraPos.x, this.position.y+22, 100,100);
-    mainCanvas.fill("green");
-    mainCanvas.rect(this.position.x-this.halfSize.x-cameraPos.x, this.position.y+20,
-      game.playerTrain.weight * this.halfSize.x * 2 / game.playerTrain.maxWeight, 5);
-    mainCanvas.pop(); 
-  }
-
-  showHorizontal(cameraPos) {
-    super.showHorizontal(cameraPos);
-    // this.showWeightBar(cameraPos);
-  }
-}
 
 
 

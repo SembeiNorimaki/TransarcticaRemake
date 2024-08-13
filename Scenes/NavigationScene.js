@@ -18,9 +18,9 @@ class NavigationScene {
   constructor() {
     this.selectedIntersection = null;
     //this.camera = new Camera(boardToCamera(createVector(10,10)));
-    this.camera = new Camera(boardToCamera(createVector(78,361)), createVector(0,0));
+    this.camera = new Camera(boardToCamera(createVector(85,444)), createVector(0,0));
     this.tileBoard = new TileBoard(gameData.mapBoard);
-    this.locomotive = new Locomotive(createVector(75, 362), 0.0);
+    this.locomotive = new Locomotive(createVector(85, 444), 0.0);
   }
 
   initialize() {
@@ -34,6 +34,7 @@ class NavigationScene {
     //   this.tileBoard.buildIndustry(createVector(int(aux[0]), int(aux[1])));
     // }
 
+    this.getNewIntersection(this.locomotive.currentTile, this.locomotive.orientation);
   }
 
   processKey(key) {
@@ -56,7 +57,7 @@ class NavigationScene {
   }
 
   onClick(mousePos) {
-
+    console.log(`Clicked tile ${screenToBoard(mousePos, this.camera.position)}`)
   }
 
   // TODO: precompute next intersection
@@ -72,6 +73,10 @@ class NavigationScene {
       }
       
       let tileName =  Tile.idxToName[this.tileBoard.board[newPos.y][newPos.x].tileId];
+      if (!(tileName in Tile.orientationToExit)) {
+        this.selectedIntersection = null;
+        return;
+      }
       let exitSide = Tile.orientationToExit[tileName][newOri];
       let delta = Tile.sideToDelta[exitSide];
       
@@ -79,7 +84,6 @@ class NavigationScene {
       
       newPos.add(createVector(delta[0], delta[1]));
       tileName =  Tile.idxToName[this.tileBoard.board[newPos.y][newPos.x].tileId];
-      
       
 
       let entrySide = Tile.oppositeSide[exitSide];
