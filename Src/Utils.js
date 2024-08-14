@@ -34,6 +34,23 @@ idToTileCode = {
   0b1101: 0x0C, // WXyZ Valley E
   0b1110: 0x0D, // WXYz Valley S
   0b1111: 0x01, // WXYZ Ground
+
+  0b10000: 0x10, // wxyz Water
+  0b10001: 0x16, // wxyZ Water N
+  0b10010: 0x17, // wxYz Water W
+  0b11100: 0x12, // wxYZ Ramp SE
+  0b10100: 0x18, // wXyz Water E
+  0b11010: 0x13, // wXyZ Ramp SW
+  0b10110: 0x1E, // wXYz Saddle_WE
+  0b10111: 0x1A, // wXYZ Valley N
+  0b11000: 0x19, // Wxyz Water S
+  0b11001: 0x1F, // WxyZ Saddle_NS
+  0b10101: 0x14, // WxYz Ramp NE
+  0b11011: 0x1B, // WxYZ Valley W
+  0b10011: 0x15, // WXyz Ramp NW
+  0b11101: 0x1C, // WXyZ Valley E
+  0b11110: 0x1D, // WXYz Valley S
+  0b11111: 0x11  // WXYZ Ground
 }
 
 function textToImage(text) {
@@ -66,17 +83,20 @@ function segmentImage(img) {
   let px;
   for (let y=0; y<NROWS; y++) {
     for (let x=0; x<NCOLS; x++) {
-      px = img.get(x, y).slice(0,3).toString();
-      if (px == "0,0,0") {               // land
-        board[y][x] = 0x01;
-      } else if (px == "255,255,255") {  // water
+      px = img.get(x, y).toString();
+      if (px == "0,0,0,255") {               // water
         board[y][x] = 0x00;
-      } else if (px == "255,0,0"){       // cities
+      } else if (px == "255,255,255,255") {  // land high
+        board[y][x] = 0x02;
+      } else if (px == "100,100,100,255") {  // land 
+          board[y][x] = 0x01;
+      } else if (px == "255,0,0,255"){       // cities
         board[y][x] = 0xF0;
-      } else if (px == "0,0,255"){       // rails
+      } else if (px == "0,0,255,255"){       // rails
         board[y][x] = 0xF1;
-      } else if (px == "0,255,0"){       // events
-        board[y][x] = 0xF2;
+      }
+      else {
+        let a = 0;
       }
     }
   }
@@ -123,6 +143,9 @@ function processHeightmap(board) {
       let vZ = 1;
       
       if(board[y][x]) {
+        if (board[y][x] == 2) {
+          let a = 0;
+        }
         let ref = board[y][x];
         // Flat ramps
         if (tA==(ref-1) && tB>=ref && tC>=ref && tD>=ref) {    
@@ -268,6 +291,22 @@ function processRails(board) {
   return board2;
 }
 
+function processEvents(board) {
+  let NCOLS = board[0].length;
+  let NROWS = board.length;
+  let board2 = Array.from(Array(NROWS), () => new Array(NCOLS));
+  for (let x=0; x<NCOLS; x++) {
+    for (let y=0; y<NROWS; y++) {
+      if (board[y][x] == 0xF2) {
+        board2[y][x] = 0x1F1;
+      } else {
+        board2[y][x] = board[y][x];
+      }
+    }
+  }
+  return board2;
+}
+
 function processOther(board) {
   let NCOLS = board[0].length;
   let NROWS = board.length;
@@ -278,8 +317,6 @@ function processOther(board) {
       if (board[y][x] == 0xF0) {
         board2[y][x+1] = 0xA0;
         board2[y][x] = 0x01;
-      } else if (board[y][x] == 0xF2) {
-        board2[y][x] += 0x100;
       } else {
         board2[y][x] = board[y][x];
       }

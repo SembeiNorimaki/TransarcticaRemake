@@ -30,6 +30,8 @@ class Train {
       "Wood": 0,
       "Container": 0
     }
+
+    this.contents = {};
   }
 
   initialize(saveData) {
@@ -37,6 +39,10 @@ class Train {
     this.fuel = saveData.fuel;
     for (let wagonSaveData of saveData.wagons) {
       this.addWagon(wagonSaveData.name);
+      if ("content" in wagonSaveData) {
+        this.wagons.at(-1).setCargo(wagonSaveData.content.resourceName);
+        this.wagons.at(-1).addResource(wagonSaveData.content.qty, 0);
+      }
     }
   }
 
@@ -44,6 +50,10 @@ class Train {
     // adds the resource to the train. Returns true if possible and false if not possible
     if (unitCost*qty > this.gold) {
       return false;
+    }
+
+    if (resourceName in this.contents === false) {
+      this.contents[resourceName] = 0;
     }
 
     // find a suitable wagon to store the resource
@@ -56,11 +66,13 @@ class Train {
         }
         if (wagon.availableSpace >= qty) {
           wagon.addResource(qty, unitCost);
+          this.contents[resourceName] += qty;
           wagon.purchasePrice = unitCost * qty;
           this.gold -= unitCost * qty;
           return true;
         } else {
           wagon.addResource(wagon.availableSpace, unitCost);
+          this.contents[resourceName] += wagon.availableSpace;
           wagon.purchasePrice = unitCost * wagon.availableSpace;
           this.gold -= unitCost * wagon.availableSpace;
           qty -= wagon.availableSpace;
@@ -70,9 +82,15 @@ class Train {
     return false;    
   }
 
-  sellResource(wagonId, totalPrice) {
+  // TODO: Wrong, we must pass a qty param
+  sellResource(wagonId, qty, totalPrice) {
     this.wagons[wagonId].emptyWagon();
     this.gold += totalPrice;
+  }
+
+  
+  sellResourceByName(resourceName, qty, totalPrice) {
+    // Look for a wagon containing that resource
   }
 
   addWagon(wagonType) { 

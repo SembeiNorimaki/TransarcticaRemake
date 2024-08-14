@@ -44,6 +44,13 @@ class Game {
       this.cities[cityName] = new City(cityVal);
     }
 
+    this.bridges = {};
+    for (let [bridgeName, bridgeVal] of Object.entries(gameData.bridgesData)) {
+      this.bridges[bridgeName] = new Bridge(bridgeVal);
+    }
+
+
+
     this.events = {};
     
     for (let [cityLocation, cityName] of Object.entries(citiesLocations)) {
@@ -51,10 +58,15 @@ class Game {
       let x = int(aux[0]);
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = cityName;
-    //   this.events[`${x-1},${y-1}`] = cityName;
-    //   this.events[`${x},${y-1}`] = cityName;
-    //   this.events[`${x-1},${y}`] = cityName;
     }
+
+    for (let [bridgeLocation, bridgeName] of Object.entries(bridgesLocations)) {
+      let aux = bridgeLocation.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = bridgeName;
+    }
+
     // // Industries are 3x3
     // for (let [industryLocation, industryName] of Object.entries(industriesLocations)) {
     //   let aux = industryLocation.split(",");
@@ -85,12 +97,37 @@ class Game {
       "PlayerTrain": {
         fuel: 123,
         gold: 456,
+        position: createVector(73, 366),
+        orientation: 180,
         wagons: [
           {"name": "Locomotive"},
-          {"name": "Merchandise"},
-          {"name": "Merchandise"},
-          {"name": "Livestock"}
+          {"name": "Merchandise", "content": {"resourceName": "Salt", "qty": 6}},
+          {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
+          {"name": "Livestock",   "content": {"resourceName": "Mamooth", "qty": 3}}
         ]
+      },
+      "EnemyTrain": {
+        fuel: 123,
+        gold: 456,
+        wagons: [
+          {"name": "Locomotive_vu", "content": {"resourceName": "", "qty": 0}}
+        ]
+      }
+    }
+  }
+
+  loadGame() {
+    this.savedData = savedGames[0];
+  }
+
+  saveGame() {
+    this.savedData = {
+      "PlayerTrain": {
+        fuel: this.playerTrain.fuel,
+        gold: this.playerTrain.gold,
+        position: this.navigationScene.locomotive.currentTile,
+        orientation: this.navigationScene.locomotive.orientation,
+        wagons: []
       },
       "EnemyTrain": {
         fuel: 123,
@@ -100,10 +137,9 @@ class Game {
         ]
       }
     }
-  }
-
-  loadGame() {
-    this.savedData = savedGames[0];
+    for (let wagon of this.playerTrain.wagons) {
+      this.savedData.PlayerTrain.wagons.push(wagon.name);
+    }
   }
 
 
@@ -119,13 +155,14 @@ class Game {
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
-    this.currentScene = new BridgeScene(bridgeImage);
+    // this.currentScene = new BridgeScene(bridgeImage);
     
 
     // Apply saveData
     this.playerTrain.initialize(this.savedData.PlayerTrain);
     this.enemyTrain.initialize(this.savedData.EnemyTrain);
 
+    this.navigationScene.locomotive.initialize(this.savedData.PlayerTrain);
 
     this.currentScene.initialize();
 
@@ -181,7 +218,7 @@ class Game {
     this.currentScene.show(); 
     if (this.objectivesVisible) 
       this.showObjectives();  
-    //this.conversationPanel.show();
+    this.conversationPanel.show();
     //this.showCharacter();
   }
 

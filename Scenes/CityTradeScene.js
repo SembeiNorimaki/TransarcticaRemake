@@ -11,7 +11,8 @@ class CityTradeScene extends TradeScene {
 
     this.conversationPanel.fillData({
       "characterName": "Trader",
-      "textLines": this.city.objective.summary
+      "textLines": this.city.objective.summary,
+      "buttons": ["Yes", "No"]
     });
 
     

@@ -18,9 +18,9 @@ class NavigationScene {
   constructor() {
     this.selectedIntersection = null;
     //this.camera = new Camera(boardToCamera(createVector(10,10)));
-    this.camera = new Camera(boardToCamera(createVector(85,444)), createVector(0,0));
+    this.camera = new Camera(boardToCamera(createVector(73,366)), createVector(0,0));
     this.tileBoard = new TileBoard(gameData.mapBoard);
-    this.locomotive = new Locomotive(createVector(85, 444), 0.0);
+    this.locomotive = new Locomotive(createVector(73, 366), 180.0);
   }
 
   initialize() {
@@ -38,11 +38,14 @@ class NavigationScene {
   }
 
   processKey(key) {
+    console.log(key)
     if (key == "Control") {
       this.locomotive.startStop();
+      this.getNewIntersection(this.locomotive.currentTile, this.locomotive.orientation);
     } else if (key == "Shift") {
       this.locomotive.turn180();
-    } else if (key == "Enter" && this.selectedIntersection !== null) {
+      this.getNewIntersection(this.locomotive.currentTile, this.locomotive.orientation);
+    } else if (key == " " && this.selectedIntersection !== null) {
       this.selectedIntersection.changeTile();
     } else if (key == "ArrowLeft") {
       this.camera.move(createVector(-500,0))
@@ -57,7 +60,12 @@ class NavigationScene {
   }
 
   onClick(mousePos) {
-    console.log(`Clicked tile ${screenToBoard(mousePos, this.camera.position)}`)
+    if (game.conversationPanel.active && mousePos.y > mainCanvasDim[1]-200) {
+      let result = game.conversationPanel.onClick(mousePos);
+      console.log(result)
+    } else {
+      console.log(`Clicked tile ${screenToBoard(mousePos, this.camera.position)}`)
+    }
   }
 
   // TODO: precompute next intersection
@@ -156,9 +164,12 @@ class NavigationScene {
         if (locationName in game.cities) {
           console.log(`Arrived to city ${locationName} at ${tileString}`);
           game.currentScene = new CityTradeScene(game.cities[locationName]);
-        } else {
+        } else if (locationName in game.industries) {
           console.log(`Arrived to industry ${locationName} at ${tileString}`);
           game.currentScene = new IndustryTradeScene(game.industries[locationName]);  
+        } else if (locationName in game.bridges) {
+          console.log(`Arrived to bridge ${locationName} at ${tileString}`);
+          game.bridges[locationName].process();
         }
         game.currentScene.initialize();
       }  

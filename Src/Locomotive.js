@@ -32,6 +32,18 @@ class Locomotive {
     this.gear = "N";
   }
 
+  initialize(savedData) {
+    this.orientation = savedData.orientation;
+    this.position = savedData.position; 
+    this.prevPosition = this.position.copy();
+    this.frontSensor = createVector(0.4, 0).setHeading(radians(this.orientation)).add(this.position);
+    this.currentTile = this.position.copy();
+    this.prevTile = this.currentTile.copy();
+    this.currentTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
+    this.prevTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
+    this.acceleration = createVector(0.0002, 0).setHeading(radians(this.orientation));
+  }
+
   start() {
     this.gear = "D";
   }

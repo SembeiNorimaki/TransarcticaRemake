@@ -1,0 +1,26 @@
+{
+  "Bridge_Gibraltar": {
+    "name": "Bridge_Gibraltar",
+    "type": "Bridge",
+    "resources": {
+      "Salt": 5
+    },
+    "wagons": {
+      "Crane": 1
+    },
+    "tiles": [[70,373], [70,372], [70,371], [70,370]],
+    "orientation": "BC" 
+  },
+  "Rails_Granada": {
+    "name": "Rails_Granada",
+    "type": "Rail",
+    "resources": {
+      "Salt": 5
+    },
+    "wagons": {
+      "Crane": 1
+    },
+    "tiles": [[75,366], [76,366], [77,366]],
+    "orientation": "AD" 
+  }
+}

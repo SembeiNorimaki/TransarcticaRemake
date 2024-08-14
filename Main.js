@@ -47,6 +47,7 @@ let gameData = {
   "citiesData": {},       // contains info abou the cities in the map: eg: Barcelona -> info
   "hudData": {},
   "industriesData": {},   // same for industries
+  "bridgesData": {},   
   "trafficLightData": {},
   "cannonballData": {},
   "unitsData": {}
@@ -56,6 +57,7 @@ let gameData = {
 let events;
 let industriesLocations = {};
 let citiesLocations = {};
+let bridgesLocations = {};
 
 let charactersData = {};
 let backgroundImg;
@@ -112,11 +114,12 @@ function preload() {
     gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
 
     gameData.mapBoard = segmentImage(img);
+    gameData.mapBoard = processEvents(gameData.mapBoard);
     gameData.mapBoard = processHeightmap(gameData.mapBoard);
     gameData.mapBoard = convertTileCodes(gameData.mapBoard);
-    // gameData.mapBoard = processRails(gameData.mapBoard);
-    gameData.mapBoard = processOther(gameData.mapBoard);
     gameData.mapBoard = processRails(gameData.mapBoard);
+    gameData.mapBoard = processOther(gameData.mapBoard);
+    
 
   });
 
@@ -284,6 +287,12 @@ function preload() {
     }
   });
 
+  // Bridges into gameData.bridgesData
+  loadJSON("Src/Bridges.json", jsonData => {
+    gameData.bridgesData = jsonData;
+  });
+
+
   // Industry Locations
   loadJSON("Src/IndustriesLocations.json", jsonData => {
     for (const [key, val] of Object.entries(jsonData)) {
@@ -297,6 +306,14 @@ function preload() {
       citiesLocations[key] = val;
     }
   });
+
+  // Bridges Locations
+  loadJSON("Src/BridgesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      bridgesLocations[key] = val;
+    }
+  });
+  
 
 
   // NavigationMap into gameData.mapBoard
