@@ -2,7 +2,7 @@
   "OilRig": {      
     "industryName": "OilRig",
     "resourceName": "Oil",
-    "file": "oil.png",
+    "file": "OilRig.png",
     "files": [],
     "minQty": 150,
     "units": "tons",
@@ -13,7 +13,7 @@
   "Forest": {
     "industryName": "Forest",
     "resourceName": "Wood",
-    "file": "forest.png",
+    "file": "Forest.png",
     "files": [],
     "minQty": 150,
     "units": "tons",
@@ -25,7 +25,7 @@
   "Iron": {
     "industryName": "Iron mine",
     "resourceName": "Iron",
-    "file": "iron.png",
+    "file": "Iron.png",
     "files": [],
     "minQty": 150,
     "units": "tons",
@@ -33,10 +33,21 @@
     "offsetNav": [173,162],
     "offsetTrade": [345,325]
   },
+  "Copper": {
+    "industryName": "Copper mine",
+    "resourceName": "Copper",
+    "file": "Copper.png",
+    "files": [],
+    "minQty": 150,
+    "units": "tons",
+    "price": 100,
+    "offsetNav": [200,275],
+    "offsetTrade": [400,550]
+  },
   "Container": {
     "industryName": "Container workshop",
     "resourceName": "Container",
-    "file": "container.png",
+    "file": "Container.png",
     "files": [],
     "minQty": 2,
     "units": "tons",
@@ -45,7 +56,9 @@
     "offsetTrade": [400,550]
   },
   "Wood": {
-    "file": "wood.png",
+    "industryName": "Wood",
+    "resourceName": "Wood",
+    "file": "Wood.png",
     "files": [],    
     "resourceType": "Wood",
     "minQty": 100,
@@ -56,6 +69,8 @@
     "offsetTrade": [400,550]
   },
   "ClayMine": {
+    "industryName": "ClayMine",
+    "resourceName": "Clay",
     "file": "ClayMine.png",
     "files": [],    
     "resourceType": "Clay",
@@ -64,9 +79,11 @@
     "price": 80,
     "offsety": 0,
     "offsetNav": [200,275],
-    "offsetTrade": [400,550]
+    "offsetTrade": [387,439]
   },
   "BrickFactory": {
+    "industryName": "Brick Factory",
+    "resourceName": "Bricks",
     "file": "BrickFactory.png",
     "files": [],    
     "resourceType": "Clay",
@@ -77,21 +94,10 @@
     "offsetNav": [200,275],
     "offsetTrade": [400,550]
   },
-  "Copper": {
-    "industryName": "Copper mine",
-    "resourceName": "Copper",
-    "file": "copper.png",
-    "files": [],
-    "minQty": 150,
-    "units": "tons",
-    "price": 100,
-    "offsetNav": [200,275],
-    "offsetTrade": [400,550]
-  },
   "Farm": {
     "industryName": "Farm",
     "resourceName": "Livestock",
-    "file": "farm.png",
+    "file": "Farm.png",
     "files": [],    
     "minQty": 1,
     "units": "Livestock",
@@ -100,7 +106,9 @@
     "offsetTrade": [385,372]
   },
   "Powerplant": {
-    "file": "powerplant.png",
+    "industryName": "PowerPlant",
+    "resourceName": "",
+    "file": "Powerplant.png",
     "files": [],    
     "resourceType": "-",
     "offsetNav": [200,275],
@@ -109,7 +117,7 @@
   "Oil": {
     "industryName": "Oil industry",
     "resourceName": "Oil",
-    "file": "oil.png",
+    "file": "Oil.png",
     "files": [],    
     "minQty": 100,
     "offsety": -90,
@@ -118,25 +126,24 @@
     "offsetTrade": [385,543]
   },
   "Grain": {
-    "file": "grain.png",
+    "file": "Grain.png",
     "files": [],    
     "resourceType": "Grain",
     "offsetNav": [200,275],
     "offsetTrade": [400,550]
   },
   "Chemical": {
-    "file": "chemical.png",
+    "file": "Chemical.png",
     "files": [],    
     "resourceType": "Chemical",
     "offsetNav": [193,245],
     "offsetTrade": [385,490]
   },
   "Lumber": {
-    "file": "lumber.png",
+    "file": "LumberMill.png",
     "files": [],    
     "resourceType": "Lumber",
     "offsetNav": [195,275],
     "offsetTrade": [400,550]
   }
-
 }

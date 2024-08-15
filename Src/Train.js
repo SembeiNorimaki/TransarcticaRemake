@@ -16,7 +16,7 @@
 
 class Train {
   constructor(owner) {
-    this.fuel = 0;
+    this.coal = 0;
     this.gold = 0;
     this.weight = 0;
     this.maxWeight = 1500;
@@ -36,7 +36,7 @@ class Train {
 
   initialize(saveData) {
     this.gold = saveData.gold;
-    this.fuel = saveData.fuel;
+    this.coal = saveData.coal;
     for (let wagonSaveData of saveData.wagons) {
       this.addWagon(wagonSaveData.name);
       if ("content" in wagonSaveData) {

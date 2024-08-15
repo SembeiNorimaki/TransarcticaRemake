@@ -2,47 +2,40 @@
   "Barcelona_Mine": {
     "name": "Barcelona_Mine",
     "industryType": "ClayMine",
-    "produces": "Wood",
+    "produces": "Clay",
     "requires": {
     },
 
     "resources": {
-      "Wood": {
+      "Clay": {
         "Production": 2,
         "Qty": 4,
-        "Sell": 0,
-        "Buy": 20
+        "Sell": 50,
+        "Buy": 0
       }
-    }
-
+    },
+    "wagons": {
+      "Gondola": {"Buy": 8}
+    },
+    "objectives": {}
   },
-  "Madrid Forest": {
-    "name": "Madrid Forest",
-    "industryType": "Lumber",
-    "produces": "Wood",
+  "Madrid_Mine": {
+    "name": "Madrid_Mine",
+    "industryType": "BrickFactory",
+    "produces": "Bricks",
     "requires": {
       "Oil": 2,
       "Copper": 3
     },
     "resources": {
-      "Iron": {
+      "Bricks": {
         "Production": 2,
         "Qty": 3,
-        "Sell": 0,
+        "Sell": 30,
         "Buy": 20
-      },
-      "Oil": {
-        "Production": 2,
-        "Qty": 0,
-        "Sell": 0,
-        "Buy": 20
-      },
-      "Copper": {
-        "Production": 0,
-        "Qty": 0,
-        "Sell": 20,
-        "Buy": 0
       }
-    }
+    },
+    "wagons": {},
+    "objectives": {}
   }
 }

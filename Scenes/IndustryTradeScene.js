@@ -5,33 +5,25 @@ class IndustryTradeScene extends TradeScene {
     
     this.industry = industry;
     this.backgroundImg = this.generateBackgroundImage();
+
+    // this.populateBuyableWagons();
+    this.populateBuyableResources();
     
+    // this.conversationPanel.fillData({
+    //   "characterName": "Trader",
+    //   "textLines": this.industry.objective.summary,
+    //   "buttons": ["Yes", "No"]
+    // });
+
+
     // first rail is for the produced resource
-    this.railResourceNames = [];
+    // this.railResourceNames = [];
 
-    // the other rails are for required resources
-    for (let resourceName of Object.keys(this.industry.resources)) {
-      this.railResourceNames.push(resourceName)
-    }
-    this.populateBuyableWagons();    
-  }
-
-  populateBuyableWagons() {
-    this.buyableWagons = [];
-    let row = 0;
-    for (let [resourceName, resourceInfo] of Object.entries(this.industry.resources)) {
-      for (let i=0; i<resourceInfo.Qty; i++) {
-        let wagonName = Wagon.resourceToWagon[resourceName];
-        let wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
-        wagon.setPos(createVector(
-          1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
-          386 + row*TILE_HEIGHT_HALF*2
-        ));
-        wagon.fillWagon(resourceName);
-        this.buyableWagons.push(wagon);
-      }
-      row++;
-    }
+    // // the other rails are for required resources
+    // for (let resourceName of Object.keys(this.industry.resources)) {
+    //   this.railResourceNames.push(resourceName)
+    // }
+    // this.populateBuyableWagons();    
   }
 
   generateBackgroundImage() {
@@ -58,6 +50,49 @@ class IndustryTradeScene extends TradeScene {
     }
     return backgroundImage;
   }
+
+
+  populateBuyableWagons() {
+    let row = 0;
+    let col = 0;
+
+    for (let [wagonName, wagonInfo] of Object.entries(this.industry.wagons)) {
+      if (wagonInfo.Sell == 0) {
+        continue;
+      }
+      let wagon;
+      if (wagonName == "Merchandise") {
+        wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
+      } else {
+        wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+      }
+      wagon.setPos(createVector(
+        1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
+        352 + row*TILE_HEIGHT_HALF*3
+      ));
+      wagon.purchasePrice = wagonInfo.Sell;
+      this.buyableWagons.push(wagon);
+      col++;
+      if (col >=3+row) {
+        row++;
+        col = 0;
+      }
+
+      // for (let i=0; i<resourceInfo.Qty; i++) {
+      //   let wagonName = Wagon.resourceToWagon[resourceName];
+      //   let wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+      //   wagon.setPos(createVector(
+      //     1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
+      //     386 + row*TILE_HEIGHT_HALF*2
+      //   ));
+      //   wagon.fillWagon(resourceName);
+      //   this.buyableWagons.push(wagon);
+      // }
+      // row++;
+    }
+  }
+
+
   
   onClick(mousePos) {    
     // check conversation panel
@@ -84,19 +119,27 @@ class IndustryTradeScene extends TradeScene {
       if (wagonIdx !== null) {
         let wagon = this.horizontalTrain.wagons[wagonIdx]; 
         this.selectedTrainWagonIdx = wagonIdx;
+        this.selectedBuyableResourceIdx = null;
 
         // check if the city buys this type of resource
-        let price = "N/A";
-        let button = null;
-        if(wagon.cargo in this.city.resources) {
-          price = this.city.resources[wagon.cargo].Sell
-          button = "Sell";
-        }
+        let price = "0";
+
+        // let button = null;
+        // if(wagon.cargo in this.city.resources) {
+        //   price = this.city.resources[wagon.cargo].Sell
+        //   button = "Sell";
+        // }
 
         // display wagon in the panel
-        let infoPanelData = wagon.infoPanelData;
-        infoPanelData.lines.push(`Price: ${price}`);
-        infoPanelData.buttons = button;
+        let infoPanelData = wagon.generatePanelInfoData();
+        if(wagon.cargo in this.city.resources) {
+          price = this.city.resources[wagon.cargo].Buy
+          infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
+          infoPanelData.buttons = ["Sell"];
+        } else {
+          infoPanelData.buttons = [];
+        }
+
         this.infoPanel.fillData(infoPanelData);
         this.infoPanel.active = true;
       }
@@ -104,12 +147,19 @@ class IndustryTradeScene extends TradeScene {
 
     // Info panel
     else if (this.infoPanel.active && mousePos.x > mainCanvasDim[0]-300){
-      let buttonClicked = this.infoPanel.onClick(mousePos);
-      if (buttonClicked) {
+      let buttonText = this.infoPanel.onClick(mousePos);
+      if (buttonText !== null) {
         if (this.selectedBuyableWagonIdx !== null) {
           console.log("buying a wagon");
           this.buyWagon();
-        } else if (this.selectedTrainWagonIdx !==null) {
+        } else if (this.selectedBuyableResourceIdx !== null) {
+          console.log("buying a resource");
+          if (buttonText == "Buy 1")
+            this.buyResource(1);
+          else if (buttonText == "Buy 10") {
+            this.buyResource(10);
+          }
+        } else if (this.selectedTrainWagonIdx !== null) {
           console.log("selling a wagon");
           this.sellWagon();          
         }
@@ -134,15 +184,32 @@ class IndustryTradeScene extends TradeScene {
           console.log(`Clicked wagon ${wagon.position.array()}`);
           this.selectedBuyableWagonIdx = i;
 
-          let infoPanelData = wagon.infoPanelData;
-          infoPanelData.lines.push(`Price: ${this.city.resources[wagon.cargo].Buy}`);
-          infoPanelData.buttons = "Buy";
+          let infoPanelData = wagon.generatePanelInfoData();
+          infoPanelData.lines.push(`Price: ${wagon.purchasePrice}`);
+          infoPanelData.buttons = ["Buy"];
           this.infoPanel.fillData(infoPanelData);
           this.infoPanel.active = true;
           return;
         }
       }
+      // check if we clicked a buyable resource
+      for (const [i, resource] of this.buyableResources.entries()) {
+        if (resource === null) {
+          continue;
+        }
+        if (resource.checkClick(mousePos)) {
+          console.log(`Clicked resource ${resource.position.array()}`);
+          this.selectedBuyableResourceIdx = i;
+          this.selectedTrainWagonIdx = null;
 
+          let infoPanelData = resource.generatePanelInfoData();
+          infoPanelData.lines.push(`Unit Price: ${resource.purchasePrice} baks`);
+          infoPanelData.buttons = ["Buy 1", "Buy 10"];
+          this.infoPanel.fillData(infoPanelData);
+          this.infoPanel.active = true;
+          return;
+        }
+      }
     
       // check if we clicked the industry
       let boardPos = screenToBoard(mousePos, this.cameraPos);
@@ -169,61 +236,61 @@ class IndustryTradeScene extends TradeScene {
 
   }
 
-  buyWagon() {
-    let wagonName = this.buyableWagons[this.selectedBuyableWagonIdx].name;
-    let resourceName = this.buyableWagons[this.selectedBuyableWagonIdx].cargo;
-    // Add wagon to the train (it also updates the weight)
-    game.playerTrain.addWagon(wagonName, 0);
-    // Fill the wagon
-    game.playerTrain.wagons.at(-1).fillWagon(resourceName);
-    // Substract wagon cost from player gold
-    game.playerTrain.gold -= this.city.resources[resourceName].Buy;
+  // buyWagon() {
+  //   let wagonName = this.buyableWagons[this.selectedBuyableWagonIdx].name;
+  //   let resourceName = this.buyableWagons[this.selectedBuyableWagonIdx].cargo;
+  //   // Add wagon to the train (it also updates the weight)
+  //   game.playerTrain.addWagon(wagonName, 0);
+  //   // Fill the wagon
+  //   game.playerTrain.wagons.at(-1).fillWagon(resourceName);
+  //   // Substract wagon cost from player gold
+  //   game.playerTrain.gold -= this.city.resources[resourceName].Buy;
     
-    // substract the wagon resources from the industry qty
-    this.industry.resources[resourceName].Qty--;
-    // deselect the removed wagon
-    this.selectedBuyableWagonIdx = null;
-    // hide panel
-    this.infoPanel.active = false;
+  //   // substract the wagon resources from the industry qty
+  //   this.industry.resources[resourceName].Qty--;
+  //   // deselect the removed wagon
+  //   this.selectedBuyableWagonIdx = null;
+  //   // hide panel
+  //   this.infoPanel.active = false;
 
-    // update the BuyableWagons
-    this.populateBuyableWagons();
-  }
+  //   // update the BuyableWagons
+  //   this.populateBuyableWagons();
+  // }
 
-  sellWagon() {
-    let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
-    let resourceQty = game.playerTrain.wagons[this.selectedTrainWagonIdx].usedSpace;
+  // sellWagon() {
+  //   let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
+  //   let resourceQty = game.playerTrain.wagons[this.selectedTrainWagonIdx].usedSpace;
 
-    // Add wagon to city
-    this.industry.resources[resourceName].Qty++;
-    // Add selling price to player's gold
-    game.playerTrain.gold += this.city.resources[resourceName].Sell;
-    // Remove wagon from the train (it also updates the weight)
-    game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
-    // deselect wagon
-    this.selectedTrainWagonIdx = null;
-    // hide panel
-    this.infoPanel.active = false;
+  //   // Add wagon to city
+  //   this.industry.resources[resourceName].Qty++;
+  //   // Add selling price to player's gold
+  //   game.playerTrain.gold += this.city.resources[resourceName].Sell;
+  //   // Remove wagon from the train (it also updates the weight)
+  //   game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
+  //   // deselect wagon
+  //   this.selectedTrainWagonIdx = null;
+  //   // hide panel
+  //   this.infoPanel.active = false;
     
-    // check if industry has enough resources to produce goods.
-    // TODO: This should be in a loop, in case more than 1 wagon can be produced
-    let canProduce = true;
-    for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
-      if (this.industry.resources[resourceName].Qty < requiredQty) {
-        canProduce = false;
-        break;
-      }
-    }
-    if (canProduce) {
-      // Add 1 wagon of the produced resource
-      this.industry.resources[this.industry.produces].Qty++;
-      // Substract the resources required to produce that wagon
-      for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
-        this.industry.resources[resourceName].Qty -= requiredQty;
-      }
-    }
-    this.populateBuyableWagons();
-  }
+  //   // check if industry has enough resources to produce goods.
+  //   // TODO: This should be in a loop, in case more than 1 wagon can be produced
+  //   let canProduce = true;
+  //   for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
+  //     if (this.industry.resources[resourceName].Qty < requiredQty) {
+  //       canProduce = false;
+  //       break;
+  //     }
+  //   }
+  //   if (canProduce) {
+  //     // Add 1 wagon of the produced resource
+  //     this.industry.resources[this.industry.produces].Qty++;
+  //     // Substract the resources required to produce that wagon
+  //     for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
+  //       this.industry.resources[resourceName].Qty -= requiredQty;
+  //     }
+  //   }
+  //   this.populateBuyableWagons();
+  // }
 
   show() {
     mainCanvas.image(this.backgroundImg, 0, 0);    
@@ -231,22 +298,29 @@ class IndustryTradeScene extends TradeScene {
     this.horizontalTrain.show(createVector(0,0));
 
     // show buyable wagons
-    let i=0;
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {
         wagon.showHorizontal();
-        i++;
+        try {
+          mainCanvas.image(resources[wagon.cargo], wagon.position.x, wagon.position.y+5, 60,23)
+        } catch {}
       }
     }
 
-    i=0;
-    for (let resourceName of this.railResourceNames) {
-      mainCanvas.textSize(20)
-      mainCanvas.text(resourceName, 
-        1100 - i*2*TILE_WIDTH_HALF, 
-        394 + i*TILE_HEIGHT_HALF*2 -25)
-      i++;
+    for (let resource of this.buyableResources) {
+      if (resource !== null) {
+        resource.show();
+      }
     }
+
+    // i=0;
+    // for (let resourceName of this.railResourceNames) {
+    //   mainCanvas.textSize(20)
+    //   mainCanvas.text(resourceName, 
+    //     1100 - i*2*TILE_WIDTH_HALF, 
+    //     394 + i*TILE_HEIGHT_HALF*2 -25)
+    //   i++;
+    // }
     this.infoPanel.show();
 
     // show red debug lines
@@ -262,6 +336,9 @@ class IndustryTradeScene extends TradeScene {
 
     // this.showHud();
     game.hud.show();
+    this.showConversation();
+
+    // Show Industry Name
     mainCanvas.push();
     mainCanvas.textSize(40);
     mainCanvas.fill(0)

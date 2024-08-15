@@ -72,8 +72,8 @@ class Hud {
     hudCanvas.image(gameData.hudData.frame, x, y);
     hudCanvas.text(`${int(game.navigationScene.locomotive.velocity.mag()*300/9*300)} Km/h`, x, y);
     x-=140;
-    hudCanvas.image(gameData.hudData.fuel, x, y);
-    hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
+    hudCanvas.image(gameData.hudData.coal, x, y);
+    hudCanvas.text(`${int(game.playerTrain.coal)}`, x, y);
     x-=140;
     hudCanvas.image(gameData.hudData.gold, x, y);
     hudCanvas.text(`${game.playerTrain.gold}`, x, y);

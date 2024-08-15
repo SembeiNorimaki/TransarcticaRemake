@@ -95,22 +95,27 @@ class Game {
   newGame() {
     this.savedData = {
       "PlayerTrain": {
-        fuel: 123,
+        coal: 123,
         gold: 456,
         position: createVector(73, 366),
         orientation: 180,
         wagons: [
           {"name": "Locomotive"},
+          {"name": "Tender", "content": {"resourceName": "Coal", "qty": 6}},
           {"name": "Merchandise", "content": {"resourceName": "Salt", "qty": 6}},
           {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
+          {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
+          {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
+          {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
+          {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 7}},
           {"name": "Livestock",   "content": {"resourceName": "Mamooth", "qty": 3}}
         ]
       },
       "EnemyTrain": {
-        fuel: 123,
+        coal: 123,
         gold: 456,
         wagons: [
-          {"name": "Locomotive_vu", "content": {"resourceName": "", "qty": 0}}
+          {"name": "Locomotive_vu"}
         ]
       }
     }
@@ -123,14 +128,14 @@ class Game {
   saveGame() {
     this.savedData = {
       "PlayerTrain": {
-        fuel: this.playerTrain.fuel,
+        coal: this.playerTrain.coal,
         gold: this.playerTrain.gold,
         position: this.navigationScene.locomotive.currentTile,
         orientation: this.navigationScene.locomotive.orientation,
         wagons: []
       },
       "EnemyTrain": {
-        fuel: 123,
+        coal: 123,
         gold: 456,
         wagons: [
           {"name": "Locomotive_vu"}
@@ -146,6 +151,10 @@ class Game {
 
 
   initialize() {
+    // this.navigationScene.tileBoard.board[366][75].setTileId(0x60)
+    // this.navigationScene.tileBoard.board[365][75].setTileId(0x61)
+    // this.navigationScene.tileBoard.board[364][76].setTileId(0x62)
+
     this.currentScene = this.navigationScene;
     // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
@@ -153,6 +162,7 @@ class Game {
     // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
     // this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
+    this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
     // this.currentScene = new BridgeScene(bridgeImage);

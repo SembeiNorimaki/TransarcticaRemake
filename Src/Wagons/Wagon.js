@@ -27,13 +27,17 @@ class Wagon {
 
   static resourceToWagon = {
     "Oil":                 "Oil Tanker",   
-    "Iron":                "Iron Gondola", 
-    "Copper":              "Copper Gondola",
+    "Gasoline":            "Oil Tanker",   
+    "Water":               "Water Tanker", 
+
+    "Iron":                "Gondola", 
+    "Copper":              "Gondola",
+    "Clay":                "Gondola",
+    
     "Iron bars":           "Iron bars",
     "Wood":                "Wood Wagon",      
-    "Container":           "Container",    
-    "Gasoline":            "Oil Tanker",   
-    "Water":               "Water Tanker",   
+    
+    "Container":           "Container",        
     
     "Antiques":            "Merchandise",
     "Fishing Rods":        "Merchandise",
@@ -47,7 +51,8 @@ class Wagon {
     "Salt":                "Merchandise",
     "Wolf Meat":           "Merchandise",
 
-    "Mamooth":             "Livestock"
+    "Mamooth":             "Livestock",
+    "Wolf":                "Livestock"
 
   };
   
@@ -181,7 +186,10 @@ class Wagon {
       position.y - this.offset[this.spriteId][1]
     );
     try {
-      mainCanvas.image(resources[this.cargo], position.x, position.y+10,75,30);
+      if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
+        mainCanvas.image(resources[this.cargo], position.x-resources[this.cargo].width/2, position.y+10);
+      }
+      // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
     }catch{}
 
     mainCanvas.noFill();

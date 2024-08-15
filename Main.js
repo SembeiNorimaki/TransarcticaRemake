@@ -71,7 +71,7 @@ let savedGames = [];
 savedGames.push(
   {
     "PlayerTrain": {
-      fuel: 1230,
+      coal: 1230,
       gold: 4560,
       wagons: [
         {"name": "Locomotive"},
@@ -81,7 +81,7 @@ savedGames.push(
       ]
     },
     "EnemyTrain": {
-      fuel: 123,
+      coal: 123,
       gold: 456,
       wagons: [
         {"name": "Locomotive_vu"}
@@ -108,6 +108,7 @@ function preload() {
 
   bridgeImage = loadImage("resources/bridgeScene.png")
 
+  // Load worldmap image into board
   loadImage(mapImage, img => {
     let NCOLS = img.width;
     let NROWS = img.height;
@@ -125,6 +126,7 @@ function preload() {
 
   //sounds.travelling = loadSound('/music/travelling.mp3');
 
+  // Load resource images
   loadJSON("Src/Resources.json", jsonData => {
     for (const [name, filename] of Object.entries(jsonData)) {
       resources[name] = loadImage(filename);
@@ -132,7 +134,7 @@ function preload() {
   });
 
 
-
+  // load wolf
   loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
     let spriteSize = [70, 70];
     let x = 101
@@ -236,6 +238,7 @@ function preload() {
     gameData.citiesData = jsonData;
   });
 
+  // Load resource prices csv
   loadTable("resource_prices.csv", "csv", "header", table => {
     let resourceList = table.columns.slice(2);
     for (let row of table.rows) {
@@ -252,6 +255,7 @@ function preload() {
     }
   });
 
+  // Wagon prices
   loadTable("wagon_prices.csv", "csv", "header", table => {
     let wagonList = table.columns.slice(2);
     for (let row of table.rows) {
@@ -277,15 +281,25 @@ function preload() {
   loadJSON("Src/IndustriesInfo.json", jsonData => {
     industriesInfo = jsonData;
     for (const [key, val] of Object.entries(jsonData)) {
-      industriesInfo[key].imgNav = loadImage(`resources/industries/${val.file}`);
-      industriesInfo[key].imgTrade = loadImage(`resources/industries_big/${val.file}`);
-      industriesInfo[key].imgInfo = loadImage(`resources/industries_small/${val.file}`);
-      industriesInfo[key].imgs = [];
-      for (let filename of val.files) {
-        industriesInfo[key].imgs.push(loadImage(`resources/industries/${filename}`));
-      }
+      loadImage(`resources/industries/${val.file}`, img => {
+        industriesInfo[key].imgTrade = img.get(0,0,img.width,img.height);
+        industriesInfo[key].imgNav  = img.get(0,0,img.width,img.height);
+        industriesInfo[key].imgInfo = img.get(0,0,img.width,img.height);
+        industriesInfo[key].imgNav.resize(img.width/2, 0);
+        industriesInfo[key].imgInfo.resize(img.width/4, 0);
+      });
+      
+      // industriesInfo[key].imgTrade = loadImage(`resources/industries_big/${val.file}`);
+      // industriesInfo[key].imgInfo = loadImage(`resources/industries_small/${val.file}`);
+      
+      // industriesInfo[key].imgs = [];
+      // for (let filename of val.files) {
+      //   industriesInfo[key].imgs.push(loadImage(`resources/industries/${filename}`));
+      // }
     }
   });
+
+
 
   // Bridges into gameData.bridgesData
   loadJSON("Src/Bridges.json", jsonData => {
@@ -494,8 +508,6 @@ function preload() {
       tileCodes[Number(key)] = val;
     }
   });
-  
-
   
   gameData.trafficLightData["green"] = loadImage("resources/TrafficLight/green.png");
   gameData.trafficLightData["red"] = loadImage("resources/TrafficLight/red.png");

@@ -239,8 +239,8 @@ class CityTradeScene {
     let x = hudCanvasDim[0] - 80;
     let y = hudCanvasDim[1] / 2;
 
-    hudCanvas.image(gameData.hudData.fuel, x, y);
-    hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
+    hudCanvas.image(gameData.hudData.coal, x, y);
+    hudCanvas.text(`${int(game.playerTrain.coal)}`, x, y);
     x-=140;
     hudCanvas.image(gameData.hudData.gold, x, y);
     hudCanvas.text(`${game.playerTrain.gold}`, x, y);

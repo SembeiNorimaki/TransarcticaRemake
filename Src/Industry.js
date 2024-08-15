@@ -19,6 +19,7 @@ class Industry {
     this.name = industryData.name;
     this.industryType = industryData.industryType;
     this.resources = industryData.resources;
+    this.wagons = industryData.wagons;
     this.resourceName = Object.keys(this.resources)[0];
     this.produces = industryData.produces;
     this.requires = industryData.requires;
@@ -30,9 +31,10 @@ class Industry {
     this.offsetTrade = industriesInfo[this.industryType].offsetTrade;
     this.offsetNav = industriesInfo[this.industryType].offsetNav;
 
+    console.log(this.resourceName)
     this.panelInfo = {
       "title": this.name,
-      "image": industriesInfo[this.resourceName].imgInfo,
+      "image": industriesInfo[this.industryType].imgInfo,
       "lines": [
         `Produces: ${this.resourceName}`, 
         "Requires: ", 

@@ -61,6 +61,10 @@
     "Fence_AD": {"filename": "resources/terrain/4102_zi2.png"      },
     "Fence_BC": {"filename": "resources/terrain/4103_zi2.png"      },
 
+    "Rock1": {"filename": "resources/rock1.png"      },
+    "Rock2": {"filename": "resources/rock2.png"      },
+    "Rock3": {"filename": "resources/rock3.png"      },
+
 
     "Road_AD":  {"filename": "resources/roads/1351.png"},
     "Road_BC":  {"filename": "resources/roads/1352.png"},
@@ -86,54 +90,23 @@
     "Building_6":  {"filename": "resources/buildings/4600_zi4.png"},
     "Village":  {"filename": "resources/Village_small.png"},
 
-    "Industry_Forest":      {"filename": "resources/industries_big/forest.png"},
-    "Industry_Chemical":    {"filename": "resources/industries_big/chemical.png"},
-    "Industry_Container":   {"filename": "resources/industries_big/container.png"},
-    "Industry_Copper":      {"filename": "resources/industries_big/copper.png"},
-    "Industry_Farm":        {"filename": "resources/industries_big/farm.png"},
-    "Industry_Grain":       {"filename": "resources/industries_big/grain.png"},
-    "Industry_Iron":        {"filename": "resources/industries_big/iron.png"},
-    "Industry_Lumber":      {"filename": "resources/industries_big/lumber.png"},
-    "Industry_Oil":         {"filename": "resources/industries_big/oil.png"},
-    "Industry_Powerplant":  {"filename": "resources/industries_big/powerplant.png"},
-    "Industry_Wood":        {"filename": "resources/industries_big/wood.png"},
-    "Industry_Workshop":    {"filename": "resources/industries_big/workshop.png"},
-    "Industry_ClayMine":    {"filename": "resources/industries_big/ClayMine.png"},
-    "Industry_BrickFactory":{"filename": "resources/industries_big/BrickFactory.png"},
+    "Industry_Forest":      {"filename": "resources/industries/Forest.png"},
+    "Industry_Chemical":    {"filename": "resources/industries/Chemical.png"},
+    "Industry_Container":   {"filename": "resources/industries/Container.png"},
+    "Industry_Copper":      {"filename": "resources/industries/Copper.png"},
+    "Industry_Farm":        {"filename": "resources/industries/Farm.png"},
+    "Industry_Grain":       {"filename": "resources/industries/Grain.png"},
+    "Industry_Iron":        {"filename": "resources/industries/Iron.png"},
+    "Industry_Lumber":      {"filename": "resources/industries/LumberMill.png"},
+    "Industry_Oil":         {"filename": "resources/industries/Oil.png"},
+    "Industry_Powerplant":  {"filename": "resources/industries/Powerplant.png"},
+    "Industry_Wood":        {"filename": "resources/industries/Wood.png"},
+    "Industry_Workshop":    {"filename": "resources/industries/Workshop.png"},
+    "Industry_ClayMine":    {"filename": "resources/industries/ClayMine.png"},
+    "Industry_BrickFactory":{"filename": "resources/industries/BrickFactory.png"},
 
-    "Mine1": {"filename": "resources/industries/mine/2284_zi4.png"},
-    "Mine2": {"filename": "resources/industries/mine/2285_zi4.png"},
-    "Mine3": {"filename": "resources/industries/mine/2286_zi4.png"},
-    "Mine4": {"filename": "resources/industries/mine/2287_zi4.png"},
-    "Mine5": {"filename": "resources/industries/mine/2288_zi4.png"},
-    "Mine6": {"filename": "resources/industries/mine/2289_zi4.png"},
-    "Mine7": {"filename": "resources/industries/mine/2290_zi4.png"},
-    "Mine8": {"filename": "resources/industries/mine/2291_zi4.png"},
-    "Mine9": {"filename": "resources/industries/mine/2292_zi4.png"},
-
-    "Mine11": {"filename": "resources/industries/mine/2215_zi4.png"},
-    "Mine12": {"filename": "resources/industries/mine/2216_zi4.png"},
-    "Mine13": {"filename": "resources/industries/mine/2217_zi4.png"},
-    "Mine14": {"filename": "resources/industries/mine/2218_zi4.png"},
-    "Mine15": {"filename": "resources/industries/mine/2219_zi4.png"},
-    "Mine16": {"filename": "resources/industries/mine/2220_zi4.png"},
-    "Mine17": {"filename": "resources/industries/mine/2221_zi4.png"},
-    "Mine18": {"filename": "resources/industries/mine/2222_zi4.png"},
-    "Mine19": {"filename": "resources/industries/mine/2223_zi4.png"},
-
-    "OilRig1": {"filename": "resources/industries/oil_rig/2174_zi4.png"},
-    "OilRig2": {"filename": "resources/industries/oil_rig/2175_zi4.png"},
-    "OilRig3": {"filename": "resources/industries/oil_rig/2176_zi4.png"},
-    "OilRig4": {"filename": "resources/industries/oil_rig/2177_zi4.png"},
-    "OilRig5": {"filename": "resources/industries/oil_rig/2178_zi4.png"},
-    "OilRig6": {"filename": "resources/industries/oil_rig/2179_zi4.png"},
-
-    "Pyramid_1": {"filename": "resources/pyramid1.png"},
-    "Pyramid_2": {"filename": "resources/pyramid2.png"},
-    "Lighthouse_1": {"filename": "resources/lighthouse1.png"},
-    "Lighthouse_2": {"filename": "resources/lighthouse2.png"},
-    "Lighthouse_3": {"filename": "resources/lighthouse3.png"},
-    
+    "Pyramid": {"filename": "resources/pyramid.png"},
+    "Lighthouse": {"filename": "resources/lighthouse.png"},    
 
     "Forest": {"filename": "resources/terrain/forest_zi2.png"},
     "Forest2": {"filename": "resources/terrain/forest_zi4.png"}
@@ -200,10 +173,8 @@
     "0x49": {"imgName": "Tunnel_B"   , "offset": [0, 0]},
     "0x4A": {"imgName": "Tunnel_C"   , "offset": [0, -16]},
     "0x4B": {"imgName": "Tunnel_D"   , "offset": [0, -16]},
-
     "0x4C": {"imgName": "Plattform_BC_R"   , "offset": [10, -40]},
-    "0x4D": {"imgName": "Plattform_BC_L"   , "offset": [25, -34]},
-    
+    "0x4D": {"imgName": "Plattform_BC_L"   , "offset": [25, -34]},    
     "0x4E": {"imgName": "Fence_AD"   , "offset": [26, 0]},
     "0x4F": {"imgName": "Fence_BC"   , "offset": [26, 5]},
 
@@ -218,6 +189,10 @@
 
     "0x5A": {"imgName": "Forest"   , "offset": [0, -42]},
     "0x5B": {"imgName": "Forest2"   , "offset": [-64, -142]},
+
+    "0x60": {"imgName": "Rock1"   , "offset": [0, 0]},
+    "0x61": {"imgName": "Rock2"   , "offset": [0, 0]},
+    "0x62": {"imgName": "Rock3"   , "offset": [0, 0]},
     
 
     "0x70": {"imgName": "Road_AD" , "offset": [0, 0]},

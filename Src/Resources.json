@@ -15,5 +15,8 @@
   "Salt": "/resources/resources/salt.png",
   "Vehicle Inspection": "/resources/resources/vehicle_inspection.png",
   "Wood": "/resources/resources/wood.png",
+  "Coal": "/resources/resources/coal.png",
+  "Clay": "/resources/resources/clay.png",
+  "Bricks": "/resources/resources/bricks.png",
   "Mamooth": "/resources/resources/mamooth.png"
 }

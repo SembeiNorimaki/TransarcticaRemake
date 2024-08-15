@@ -18,10 +18,16 @@ class TradeScene {
   constructor(locationName, board) {
     //TODO: this is a hack, fix this mess
     console.log(locationName)
-    if (locationName in gameData.citiesData) 
-      this.city = gameData.citiesData[locationName]
-    else
-      this.city = gameData.industriesData[locationName]
+    // if (locationName in gameData.citiesData) 
+    //   this.city = gameData.citiesData[locationName]
+    // else
+    //   this.city = gameData.industriesData[locationName]
+
+    if (locationName in game.cities) 
+      this.city = game.cities[locationName]
+    else if (locationName in game.industries) 
+      this.city = game.industries[locationName]
+    
      
     this.locationName = locationName;
     this.tileBoard = new TileBoard(board);
@@ -49,8 +55,8 @@ class TradeScene {
 
   initialize() {
     this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
-    this.horizontalTrain.setPosition(createVector(1400, 800));
-    this.horizontalTrain.setVelocity(0);
+    this.horizontalTrain.setPosition(createVector(0, 800));
+    this.horizontalTrain.setVelocity(20);
   }
 
   // Mission related functions

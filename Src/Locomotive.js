@@ -24,10 +24,10 @@ class Locomotive {
     this.prevTile = this.currentTile.copy();
     this.currentTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
     this.prevTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
-    this.acceleration = createVector(0.0002, 0).setHeading(radians(this.orientation));
+    this.acceleration = createVector(0.02, 0).setHeading(radians(this.orientation));
     this.velocity = createVector(0.0, 0.0);
     this.braking = createVector(0.0005, 0); 
-    this.maxVelocity = 0.1;
+    this.maxVelocity = 1;
     this.spriteIdx = 0;
     this.gear = "N";
   }
@@ -144,7 +144,7 @@ class Locomotive {
     this.currentTileFrontSensor.set(round(this.frontSensor.x), round(this.frontSensor.y));
 
     // update fuel
-    game.playerTrain.fuel -= this.velocity.mag();    
+    game.playerTrain.coal -= this.velocity.mag();    
 
     // update camera
     if (game.cameraFollowsLocomotive) {
@@ -163,7 +163,8 @@ class Locomotive {
     mainCanvas.image(gameData.locomotiveData[this.orientation.toString()].imgList[this.spriteIdx], 
     this.screenPos.x+gameData.locomotiveData[this.orientation.toString()].offset[0], 
     this.screenPos.y+gameData.locomotiveData[this.orientation.toString()].offset[1]);
-    // mainCanvas.circle(this.screenPos.x, this.screenPos.y, 10)
+    mainCanvas.fill(255)
+    mainCanvas.circle(this.screenPos.x, this.screenPos.y, 3)
     let screenPos2 = boardToScreen(this.frontSensor, game.navigationScene.camera.position);
     // mainCanvas.circle(screenPos2.x, screenPos2.y, 10)
   }

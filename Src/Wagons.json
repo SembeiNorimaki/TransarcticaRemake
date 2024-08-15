@@ -283,13 +283,13 @@
     "capacity": 1000,
     "weight": 100
   },
-  "Iron Gondola": {
+  "Gondola": {
     "files": [
       "resources/tr_wagons/iron1.png",
       "resources/tr_wagons/iron2.png",
       "resources/tr_wagons/iron3.png"
     ],
-    "name": "Iron Gondola",
+    "name": "Gondola",
     "dimensions": [116, 68],
     "offset": [[58,54], [58,60], [58,60]],
     

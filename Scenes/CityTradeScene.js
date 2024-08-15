@@ -188,9 +188,6 @@ class CityTradeScene extends TradeScene {
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {
         wagon.showHorizontal();
-        try {
-          mainCanvas.image(resources[wagon.cargo], wagon.position.x, wagon.position.y+5, 60,23)
-        } catch {}
       }
     }
 

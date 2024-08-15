@@ -22,5 +22,17 @@
     },
     "tiles": [[75,366], [76,366], [77,366]],
     "orientation": "AD" 
+  },
+  "Tunnel_Granada": {
+    "name": "Tunnel_Granada",
+    "type": "Tunnel",
+    "resources": {
+      "Salt": 5
+    },
+    "wagons": {
+      "Crane": 1
+    },
+    "tiles": [[72,360]],
+    "orientation": "C" 
   }
 }
