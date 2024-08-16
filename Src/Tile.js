@@ -589,6 +589,7 @@ class Tile {
     Tile.draw(canvas, this.tileId, screenPos.copy());
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
     // canvas.text(auxText, screenPos.x, screenPos.y); 
+    canvas.push();
 
     if (this.tileId == 0xA0) {  // if it's a City show the name
       canvas.fill(255,255,255,200);
@@ -611,7 +612,7 @@ class Tile {
     if (this.isSelected) {
       Tile.drawOutline(canvas, screenPos);
     }
-
+    canvas.pop();
   }
 
   draw3D(canvas, cameraPos, auxText) {

@@ -157,19 +157,21 @@ class NavigationScene {
       let tileString = String(this.locomotive.currentTileFrontSensor.x) + "," + String(this.locomotive.currentTileFrontSensor.y);
       if (tileString in game.events) {
         let locationName = game.events[tileString];
-        this.locomotive.inmediateStop();
         
-        this.locomotive.position = this.locomotive.prevTile.copy();
         
         if (locationName in game.cities) {
           console.log(`Arrived to city ${locationName} at ${tileString}`);
+          this.locomotive.inmediateStop();        
+          this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
           game.currentScene = new CityTradeScene(game.cities[locationName]);
         } else if (locationName in game.industries) {
           console.log(`Arrived to industry ${locationName} at ${tileString}`);
+          this.locomotive.inmediateStop();        
+          this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
           game.currentScene = new IndustryTradeScene(game.industries[locationName]);  
-        } else if (locationName in game.bridges) {
+        } else if (locationName in game.bridges && !game.bridges[locationName].completed) {
           console.log(`Arrived to bridge ${locationName} at ${tileString}`);
           game.currentScene = new BridgeScene(locationName);
         }

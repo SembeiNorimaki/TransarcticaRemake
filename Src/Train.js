@@ -64,6 +64,10 @@ class Train {
         if (wagon.usedSpace == 0) {
           wagon.setCargo(resourceName);
         }
+        if (wagon.cargo != resourceName) {
+          continue;
+        }
+
         if (wagon.availableSpace >= qty) {
           wagon.addResource(qty, unitCost);
           this.contents[resourceName] += qty;
@@ -82,10 +86,14 @@ class Train {
     return false;    
   }
 
-  // TODO: Wrong, we must pass a qty param
-  sellResource(wagonId, qty, totalPrice) {
-    this.wagons[wagonId].emptyWagon();
-    this.gold += totalPrice;
+  sellResource(wagonId, qty, unitPrice) {
+    if (qty >= this.wagons[wagonId].usedSpace) {
+      this.gold += this.wagons[wagonId].usedSpace * unitPrice;
+      this.wagons[wagonId].emptyWagon();      
+    }else {
+      this.gold += qty * unitPrice;
+      this.wagons[wagonId].removeResource(qty, unitPrice)
+    }
   }
 
   

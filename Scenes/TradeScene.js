@@ -55,8 +55,8 @@ class TradeScene {
 
   initialize() {
     this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
-    this.horizontalTrain.setPosition(createVector(0, 800));
-    this.horizontalTrain.setVelocity(20);
+    this.horizontalTrain.setPosition(createVector(1500, 800));
+    this.horizontalTrain.setVelocity(0);
   }
 
   // Mission related functions
@@ -155,12 +155,12 @@ class TradeScene {
     game.playerTrain.buyResource(resourceName, qty, this.buyableResources[this.selectedBuyableResourceIdx].purchasePrice);
   }
 
-  sellResource() {
+  sellResource(qty) {
     let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
-    game.playerTrain.sellResource(this.selectedTrainWagonIdx, this.city.resources[resourceName].Sell);
+    game.playerTrain.sellResource(this.selectedTrainWagonIdx, qty, this.city.resources[resourceName].Buy);
     let infoPanelData = game.playerTrain.wagons[this.selectedTrainWagonIdx].generatePanelInfoData();
-    infoPanelData.buttons = "Sell";
-    this.infoPanel.fillData();
+    infoPanelData.buttons = ["Sell 1", "Sell 10"];
+    this.infoPanel.fillData(infoPanelData);
   }
 
   buyWagon() {

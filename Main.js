@@ -556,9 +556,14 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  game.onMousePressed(createVector(mouseX, mouseY));
+  game.onMousePressed(createVector(mouseX, mouseY, mouseButton));
 }
 
 function mouseMoved() {
   // game.currentScene.mouseMoved();
+}
+
+
+function mouseReleased() {
+  game.onMouseReleased();
 }

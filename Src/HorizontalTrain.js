@@ -140,7 +140,7 @@ class HorizontalTrain {
 
   getClickedWagon(mousePos) {
     for (let i=0; i<this.wagons.length; i++) {
-      if (mousePos.x >= this.wagons[i].position.x) {
+      if (mousePos.x >= this.wagons[i].position.x - this.wagons[i].halfSize.x) {
         console.log(`Clicked wagon ${i}`);
         return i;
       }

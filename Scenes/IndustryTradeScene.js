@@ -272,40 +272,41 @@ class IndustryTradeScene extends TradeScene {
   //   this.populateBuyableWagons();
   // }
 
-  // sellWagon() {
-  //   let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
-  //   let resourceQty = game.playerTrain.wagons[this.selectedTrainWagonIdx].usedSpace;
 
-  //   // Add wagon to city
-  //   this.industry.resources[resourceName].Qty++;
-  //   // Add selling price to player's gold
-  //   game.playerTrain.gold += this.city.resources[resourceName].Sell;
-  //   // Remove wagon from the train (it also updates the weight)
-  //   game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
-  //   // deselect wagon
-  //   this.selectedTrainWagonIdx = null;
-  //   // hide panel
-  //   this.infoPanel.active = false;
+  sellWagon() {
+    let resourceName = game.playerTrain.wagons[this.selectedTrainWagonIdx].cargo;
+    let resourceQty = game.playerTrain.wagons[this.selectedTrainWagonIdx].usedSpace;
+
+    // Add wagon to city
+    this.industry.resources[resourceName].Qty++;
+    // Add selling price to player's gold
+    game.playerTrain.gold += this.city.resources[resourceName].Sell;
+    // Remove wagon from the train (it also updates the weight)
+    game.playerTrain.removeWagon(this.selectedTrainWagonIdx);
+    // deselect wagon
+    this.selectedTrainWagonIdx = null;
+    // hide panel
+    this.infoPanel.active = false;
     
-  //   // check if industry has enough resources to produce goods.
-  //   // TODO: This should be in a loop, in case more than 1 wagon can be produced
-  //   let canProduce = true;
-  //   for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
-  //     if (this.industry.resources[resourceName].Qty < requiredQty) {
-  //       canProduce = false;
-  //       break;
-  //     }
-  //   }
-  //   if (canProduce) {
-  //     // Add 1 wagon of the produced resource
-  //     this.industry.resources[this.industry.produces].Qty++;
-  //     // Substract the resources required to produce that wagon
-  //     for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
-  //       this.industry.resources[resourceName].Qty -= requiredQty;
-  //     }
-  //   }
-  //   this.populateBuyableWagons();
-  // }
+    // check if industry has enough resources to produce goods.
+    // TODO: This should be in a loop, in case more than 1 wagon can be produced
+    let canProduce = true;
+    for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
+      if (this.industry.resources[resourceName].Qty < requiredQty) {
+        canProduce = false;
+        break;
+      }
+    }
+    if (canProduce) {
+      // Add 1 wagon of the produced resource
+      this.industry.resources[this.industry.produces].Qty++;
+      // Substract the resources required to produce that wagon
+      for (let [resourceName, requiredQty] of Object.entries(this.industry.requires)) {
+        this.industry.resources[resourceName].Qty -= requiredQty;
+      }
+    }
+    this.populateBuyableWagons();
+  }
 
   show() {
     mainCanvas.image(this.backgroundImg, 0, 0);    

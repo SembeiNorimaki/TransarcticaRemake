@@ -38,6 +38,7 @@ class InfoPanel {
     this.image = data.image;
     this.lines = data.lines;
     let x = 60;
+    this.buttons = [];
     for (let [i, buttonText] of data.buttons.entries()) {
       this.buttons.push(new ClickableRegion(createVector(mainCanvasDim[0]-210+120*i, 500), createVector(50, 25), null, buttonText, null));
       

@@ -188,6 +188,7 @@ class Wagon {
     try {
       if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
         mainCanvas.image(resources[this.cargo], position.x-resources[this.cargo].width/2, position.y+10);
+        mainCanvas.text(this.usedSpace, position.x+resources[this.cargo].width/2, position.y+40)
       }
       // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
     }catch{}

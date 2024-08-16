@@ -33,6 +33,7 @@ class BridgeScene {
           game.bridges[this.bridgeName].build();
           game.currentScene = game.navigationScene;
           game.conversationPanel.active = false;
+          game.bridges[this.bridgeName].completed = true;
           
         break;
         case(1):  // No

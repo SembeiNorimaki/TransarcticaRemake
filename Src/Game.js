@@ -101,14 +101,15 @@ class Game {
         orientation: 180,
         wagons: [
           {"name": "Locomotive"},
-          {"name": "Tender", "content": {"resourceName": "Coal", "qty": 6}},
-          {"name": "Merchandise", "content": {"resourceName": "Salt", "qty": 6}},
-          {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
-          {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
-          {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
-          {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
-          {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 7}},
-          {"name": "Livestock",   "content": {"resourceName": "Mamooth", "qty": 3}}
+          {"name": "Tender"},
+          {"name": "Merchandise"},
+          // {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
+          // {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
+          // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
+          // {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
+          // {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 7}},
+          {"name": "Container Wagon"},
+          {"name": "Container Wagon"}
         ]
       },
       "EnemyTrain": {
@@ -151,26 +152,30 @@ class Game {
 
 
   initialize() {
+    // Apply saveData
+    this.playerTrain.initialize(this.savedData.PlayerTrain);
+    this.enemyTrain.initialize(this.savedData.EnemyTrain);
+    
     // this.navigationScene.tileBoard.board[366][75].setTileId(0x60)
     // this.navigationScene.tileBoard.board[365][75].setTileId(0x61)
     // this.navigationScene.tileBoard.board[364][76].setTileId(0x62)
 
-    this.currentScene = this.navigationScene;
+    // this.currentScene = this.navigationScene;
     // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
     // this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
-    // this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
+    this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
-    this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
+    // this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
     // this.currentScene = new MapEditor();
     // this.currentScene = new MainMenu();
     // this.currentScene = new BridgeScene(bridgeImage);
     
 
-    // Apply saveData
-    this.playerTrain.initialize(this.savedData.PlayerTrain);
-    this.enemyTrain.initialize(this.savedData.EnemyTrain);
+    // this.currentScene.initialize();
+
+    
 
     this.navigationScene.locomotive.initialize(this.savedData.PlayerTrain);
 
@@ -238,11 +243,12 @@ class Game {
 
   onMousePressed(mousePos) {
     if (mousePos.y > mainCanvasDim[1]) {
-      // click on the Hud
       this.hud.onClick(mousePos);
     } else {
-      // clicked on the mainCanvas
       this.currentScene.onClick(mousePos);  
     }    
+  }
+  onMouseReleased() {
+    this.currentScene.onMouseReleased();  
   }
 }

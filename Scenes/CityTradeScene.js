@@ -30,6 +30,10 @@ class CityTradeScene extends TradeScene {
       "buttons": ["Yes", "No"]
     });
 
+    this.draggedWagonId = null;
+
+    let binId = null;
+
     
   }
 
@@ -48,7 +52,21 @@ class CityTradeScene extends TradeScene {
     return backgroundImage;
   }
 
-  onClick(mousePos) {    
+  onMouseReleased() {
+    if (this.draggedWagonId !== null && this.binId !== null) {
+      const element = game.playerTrain.wagons.splice(this.draggedWagonId, 1)[0]
+      game.playerTrain.wagons.splice(this.binId, 0, element);
+      this.draggedWagonId = null;
+      this.binId = null;
+    }
+  }
+
+  onClick(mousePos) {   
+    if (mouseButton == "right") {
+      this.draggedWagonId = this.horizontalTrain.getClickedWagon(mousePos);
+      return
+    }
+    
     // check conversation panel
     if (this.conversationPanel.active) {
       let buttonIdx = this.conversationPanel.onClick(mousePos);
@@ -84,7 +102,7 @@ class CityTradeScene extends TradeScene {
         if(wagon.cargo in this.city.resources) {
           price = this.city.resources[wagon.cargo].Buy
           infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
-          infoPanelData.buttons = ["Sell"];
+          infoPanelData.buttons = ["Sell 1", "Sell 10"];
         } else {
           infoPanelData.buttons = [];
         }
@@ -103,14 +121,18 @@ class CityTradeScene extends TradeScene {
           this.buyWagon();
         } else if (this.selectedBuyableResourceIdx !== null) {
           console.log("buying a resource");
-          if (buttonText == "Buy 1")
+          if (buttonText == "Buy 1") {
             this.buyResource(1);
-          else if (buttonText == "Buy 10") {
+          } else if (buttonText == "Buy 10") {
             this.buyResource(10);
           }
         } else if (this.selectedTrainWagonIdx !==null) {
           console.log("selling a resource");
-          this.sellResource();          
+          if (buttonText == "Sell 1") {
+            this.sellResource(1);
+          } else if (buttonText == "Sell 10") {
+            this.sellResource(10);          
+          }
         }
       }      
     }
@@ -168,7 +190,7 @@ class CityTradeScene extends TradeScene {
 
       if (tileId == 0xFF) {
         this.conversationPanel.active = true;
-      }
+      } 
 
 
       // If we click anywhere else
@@ -224,6 +246,22 @@ class CityTradeScene extends TradeScene {
 
     game.hud.show();
     this.showConversation();
+
+    // show dragged wagon
+    if (this.draggedWagonId !== null) {
+      mainCanvas.image(this.horizontalTrain.wagons[this.draggedWagonId].img[0], mouseX - this.horizontalTrain.wagons[this.draggedWagonId].halfSize.x, mouseY)
+
+      //let positions = []
+      for (let [i, wagon] of this.horizontalTrain.wagons.entries()) {
+        //mainCanvas.line(wagon.position.x, 500, wagon.position.x, 800)
+        if (mouseX > wagon.position.x ) {
+          this.binId = i
+          // mainCanvas.rect(wagon.position.x,600,wagon.halfSize.x*2,300)
+          mainCanvas.line(wagon.position.x+wagon.halfSize.x, 700, wagon.position.x+wagon.halfSize.x, 800)
+          break;
+        }
+      }
+    }
 
     // Show City Name
     mainCanvas.push();

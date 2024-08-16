@@ -53,7 +53,7 @@ class SoldierAI {
 
   checkEnemyInAttackRange() {
     let i = 0;
-    for (let soldier of game.currentScene.playerSoldiers) {
+    for (let soldier of game.currentScene.playerUnits) {
       let inRange = this.ownerInstance.inAttackRange(soldier.position);
       if (inRange) {
         return soldier;

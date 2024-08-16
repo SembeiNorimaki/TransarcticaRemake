@@ -330,13 +330,13 @@
   },
   "Container Wagon": {
     "files": [
-      "resources/tr_wagons/13555_zi4.png",
+      "resources/tr_wagons/tank.png",
       "resources/tr_wagons/13563_zi4.png",
       "resources/tr_wagons/13571_zi4.png"
     ],
     "name": "Container Wagon",
     "dimensions": [299, 60],
-    "offset": [[150,58], [150,60], [150,52]],
+    "offset": [[150,85], [150,60], [150,52]],
     
     "cargo": "Container",
     "units": "containers",

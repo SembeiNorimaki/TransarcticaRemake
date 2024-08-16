@@ -30,7 +30,7 @@
     "resources": {
       "Bricks": {
         "Production": 2,
-        "Qty": 3,
+        "Qty": 0,
         "Sell": 30,
         "Buy": 20
       }
