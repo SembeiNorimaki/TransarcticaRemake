@@ -1,0 +1,29 @@
+{
+  "BarcelonaBase": {
+    "name": "BarcelonaBase",
+    "units": [
+      {
+        "name": "Tank",
+        "position": [10, 15]
+      },
+      {
+        "name": "Artillery",
+        "position": [8, 15]
+      },
+      {
+        "name": "Tank",
+        "position": [6, 15]
+      }
+    ],
+    "buildings": [      
+      {
+        "name": "ConstructionBay",
+        "position": [8, 11]
+      },
+      {
+        "name": "Factory",
+        "position": [13, 11]
+      }
+    ]
+  }
+}

@@ -19,14 +19,19 @@
 let mapImage = "maps/Europe.png";
 let loadFromLocalStorage = false;
 
-const TILE_WIDTH_HALF = 64;
-const TILE_HEIGHT_HALF = 32;
+// const TILE_WIDTH_HALF = 65;
+// const TILE_HEIGHT_HALF = 33;
+
+const TILE_WIDTH_HALF = 35;
+const TILE_HEIGHT_HALF = 18;
+
+
 
 // Minimap tile size
 const TILE_MINI_WIDTH = 3;
 const TILE_MINI_HEIGHT = 3;
 
-let screenDim = [TILE_WIDTH_HALF*27 , TILE_HEIGHT_HALF*27+60];
+let screenDim = [64*27 , 32*27+60];
 let mainCanvas, hudCanvas;
 
 let hudCanvasDim = [screenDim[0], 60];
@@ -43,6 +48,7 @@ let tileImgs = {};   // contains imges referenced by name: eg: Water -> img
 let gameData = {
   "mapBoard": null,       // contains the navigation map
   "cityBoard": null,      // conatins the city board template
+  "baseBoard": null,      // conatins the base board template
   "locomotiveData": null,
   "citiesData": {},       // contains info abou the cities in the map: eg: Barcelona -> info
   "hudData": {},
@@ -50,7 +56,8 @@ let gameData = {
   "bridgesData": {},   
   "trafficLightData": {},
   "cannonballData": {},
-  "unitsData": {}
+  "unitsData": {},
+  "buildingsFHData": {}
 }
 
 // TODO: Either events or industries and cities separated
@@ -58,6 +65,7 @@ let events;
 let industriesLocations = {};
 let citiesLocations = {};
 let bridgesLocations = {};
+let minesLocations = [];
 
 let charactersData = {};
 let backgroundImg;
@@ -103,6 +111,29 @@ function preload() {
     let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
     for (let [x, character] of alphabet.entries()) {
       characters[character] = img.get(16*x,0,16,19);
+    }
+  });
+
+  loadImage("resources/units/artillery.png", img => {
+    const spriteSize = createVector(70, 54);
+    gameData.unitsData.Artillery = {"idle": {}};
+    for (let [i, ori] of [0,45,90,135,180,225,270,315].entries()) {
+      gameData.unitsData.Artillery.idle[ori] = [];
+      gameData.unitsData.Artillery.idle[ori].push(img.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y));
+    }
+  });
+  loadImage("resources/units/tank.png", img => {
+    const spriteSize = createVector(70, 54);
+    gameData.unitsData.Tank = {"idle": {}};
+    for (let [i, ori] of [0,45,90,135,180,225,270,315].entries()) {
+      gameData.unitsData.Tank.idle[ori] = [];
+      gameData.unitsData.Tank.idle[ori].push(img.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y));
+    }
+  });
+
+  loadJSON("Src/MinesLocations.json", jsonData => {
+    for (let loc of Object.values(jsonData)) {
+      minesLocations.push(createVector(loc[0], loc[1]));
     }
   });
 
@@ -238,6 +269,24 @@ function preload() {
     gameData.citiesData = jsonData;
   });
 
+  // Industries into gameData.industriesData
+  loadJSON("Src/Industries.json", jsonData => {
+    gameData.industriesData = jsonData;
+  });
+
+  // Cities into gameData.citiesData
+  loadJSON("Src/Bases.json", jsonData => {
+    gameData.basesData = jsonData;
+  });
+
+  // Load buildingsFH images
+  loadJSON("Src/BuildingsFH.json", jsonData => {
+    gameData.buildingsFHData = jsonData;
+    for (let [name, data] of Object.entries(jsonData)) {
+      gameData.buildingsFHData[name].img = loadImage(data.filename)    
+    }
+  });
+
   // Load resource prices csv
   loadTable("resource_prices.csv", "csv", "header", table => {
     let resourceList = table.columns.slice(2);
@@ -272,10 +321,7 @@ function preload() {
     }
   });
   
-  // Industries into gameData.industriesData
-  loadJSON("Src/Industries.json", jsonData => {
-    gameData.industriesData = jsonData;
-  });
+
 
   // Industries into industriesInfo
   loadJSON("Src/IndustriesInfo.json", jsonData => {
@@ -298,6 +344,7 @@ function preload() {
       // }
     }
   });
+
 
 
 
@@ -365,6 +412,18 @@ function preload() {
     for (const [row, txtLine] of mapData.entries()) {
       for (const [col, elem] of split(txtLine, ',').entries()) {
         gameData.cityBoard[row][col] = Number("0x" + elem);
+      }
+    }
+  });
+
+  // Base template map into gameData.baseBoard
+  loadStrings("maps/baseTemplate.txt", mapData => {
+    let NCOLS = split(mapData[0], ',').length;
+    let NROWS = mapData.length;
+    gameData.baseBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+    for (const [row, txtLine] of mapData.entries()) {
+      for (const [col, elem] of split(txtLine, ',').entries()) {
+        gameData.baseBoard[row][col] = Number("0x" + elem);
       }
     }
   });

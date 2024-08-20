@@ -66,21 +66,23 @@
     "Rock3": {"filename": "resources/rock3.png"      },
 
 
-    "Road_AD":  {"filename": "resources/roads/1351.png"},
-    "Road_BC":  {"filename": "resources/roads/1352.png"},
-    "Road_AB":  {"filename": "resources/roads/1359.png"},
-    "Road_AC":  {"filename": "resources/roads/1358.png"},
-    "Road_BD":  {"filename": "resources/roads/1360.png"},
-    "Road_CD":  {"filename": "resources/roads/1361.png"},
-    "Road_X":   {"filename": "resources/roads/1353.png"},
-    "Road_ABC": {"filename": "resources/roads/1355.png"},
-    "Road_ABD": {"filename": "resources/roads/1354.png"},
-    "Road_ACD": {"filename": "resources/roads/1356.png"},
-    "Road_BCD": {"filename": "resources/roads/1357.png"},
-    "Road_Da":  {"filename": "resources/roads/1367.png"},
-    "Road_Ad":  {"filename": "resources/roads/1369.png"},
-    "Road_Bc":  {"filename": "resources/roads/1366.png"},
-    "Road_Cb":  {"filename": "resources/roads/1368.png"},
+
+
+    "Road_AD":  {"filename": "resources/roadsFH/Road_AD.png"},
+    "Road_BC":  {"filename": "resources/roadsFH/Road_BC.png"},
+    "Road_AB":  {"filename": "resources/roadsFH/Road_AB.png"},
+    "Road_AC":  {"filename": "resources/roadsFH/Road_AC.png"},
+    "Road_BD":  {"filename": "resources/roadsFH/Road_BD.png"},
+    "Road_CD":  {"filename": "resources/roadsFH/Road_CD.png"},
+    "Road_X":   {"filename": "resources/roadsFH/Road_ABCD.png"},
+    "Road_ABC": {"filename": "resources/roadsFH/Road_ABC.png"},
+    "Road_ABD": {"filename": "resources/roadsFH/Road_ABD.png"},
+    "Road_ACD": {"filename": "resources/roadsFH/Road_ACD.png"},
+    "Road_BCD": {"filename": "resources/roadsFH/Road_BCD.png"},
+    "Road_Da":  {"filename": "resources/roadsFH/Road_D.png"},
+    "Road_Ad":  {"filename": "resources/roadsFH/Road_A.png"},
+    "Road_Bc":  {"filename": "resources/roadsFH/Road_B.png"},
+    "Road_Cb":  {"filename": "resources/roadsFH/Road_C.png"},
 
     "Building_1":  {"filename": "resources/buildings/2256_zi4.png"},
     "Building_2":  {"filename": "resources/buildings/2259_zi4.png"},
@@ -109,7 +111,28 @@
     "Lighthouse": {"filename": "resources/lighthouse.png"},    
 
     "Forest": {"filename": "resources/terrain/forest_zi2.png"},
-    "Forest2": {"filename": "resources/terrain/forest_zi4.png"}
+    "Forest2": {"filename": "resources/terrain/forest_zi4.png"},
+
+    
+    "Wall_AB": {"filename": "resources/walls/wallAB.png"},
+    "Wall_AC": {"filename": "resources/walls/wallAC.png"},
+    "Wall_AD": {"filename": "resources/walls/wallAD.png"},
+    "Wall_BC": {"filename": "resources/walls/wallBC.png"},
+    "Wall_BD": {"filename": "resources/walls/wallBD.png"},
+    "Wall_CD": {"filename": "resources/walls/wallCD.png"},    
+    "Wall_ABC": {"filename": "resources/walls/wallABC.png"},
+    "Wall_ABD": {"filename": "resources/walls/wallABD.png"},
+    "Wall_ACD": {"filename": "resources/walls/wallACD.png"},
+    "Wall_ABCD": {"filename": "resources/walls/wallABCD.png"},
+    "Turret": {"filename": "resources/walls/turret.png"},
+    "Tank": {"filename": "resources/walls/tank.png"},
+    "Artillery": {"filename": "resources/walls/artillery.png"},
+    "Ground7035": {"filename": "resources/roadsFH/Ground.png"},
+    "Water7035": {"filename": "resources/roadsFH/Water.png"},
+    "Track_AB_FH": {"filename": "resources/roadsFH/Track_AB.png"},
+    "Track_CD_FH": {"filename": "resources/roadsFH/Track_CD.png"}
+
+
   },
 
   "TileCodes": {
@@ -190,9 +213,21 @@
     "0x5A": {"imgName": "Forest"   , "offset": [0, -42]},
     "0x5B": {"imgName": "Forest2"   , "offset": [-64, -142]},
 
-    "0x60": {"imgName": "Rock1"   , "offset": [0, 0]},
-    "0x61": {"imgName": "Rock2"   , "offset": [0, 0]},
-    "0x62": {"imgName": "Rock3"   , "offset": [0, 0]},
+    "0x60": {"imgName": "Wall_AD"     , "offset": [0, -10]},
+    "0x61": {"imgName": "Wall_BC"     , "offset": [0, -10]},
+    "0x62": {"imgName": "Wall_AB"     , "offset": [0, -10]},
+    "0x63": {"imgName": "Wall_CD"     , "offset": [0, -10]},
+    "0x64": {"imgName": "Wall_AC"     , "offset": [0, -10]},
+    "0x65": {"imgName": "Wall_BD"     , "offset": [0, -10]},
+    "0x66": {"imgName": "Wall_ABC"    , "offset": [0, -10]},
+    "0x67": {"imgName": "Wall_ABD"    , "offset": [0, -10]},
+    "0x68": {"imgName": "Wall_BCD"    , "offset": [0, -10]},
+    "0x69": {"imgName": "Wall_ABCD"   , "offset": [0, -10]},
+    "0x6A": {"imgName": "Turret"      , "offset": [0, -20]},
+    "0x6B": {"imgName": "Track_AB_FH"        , "offset": [0, 0]},
+    "0x6C": {"imgName": "Track_CD_FH"   , "offset": [0, 0]},
+    "0x6E": {"imgName": "Ground7035"  , "offset": [0, 0]},
+    "0x6F": {"imgName": "Water7035"  , "offset": [0, 0]},
     
 
     "0x70": {"imgName": "Road_AD" , "offset": [0, 0]},

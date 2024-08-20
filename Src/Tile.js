@@ -521,6 +521,8 @@ class Tile {
     this.offset = null;
     this.img = null;
     this.isEvent = false;
+    this.unitId = null;
+    this.buildingId = null;
 
     this.setTileId(tileId);
 
@@ -539,6 +541,23 @@ class Tile {
     this.tileName = Tile.tileCodes[id].imgName;
     this.offset = Tile.tileCodes[id].offset;
     this.img = tileImgs[this.tileName].img;    
+    this.isIntersection = this.tileName in Tile.tileChanges;
+  }
+
+  setUnitId(id) {
+    this.unitId = id;
+  }
+
+  setBuildingId(id) {
+    this.buildingId = id;
+  }
+
+  isUnit() {
+    return this.unitId !== null;
+  }
+
+  isBuilding() {
+    return this.buildingId !== null;
   }
 
   changeTile() {
@@ -546,10 +565,15 @@ class Tile {
       let newTileName = Tile.tileChanges[this.tileName];
       let newTileId = Tile.nameToIdx[newTileName];
       this.setTileId(newTileId);
-    }
+    }``
+  }
+  removeTile() {
+    this.buildingId = null;
+    this.unitId = null;
+    this.setTileId(0x01);
   }
 
-  show(canvas, cameraPos, auxText) {
+  show(canvas, cameraPos) {
     let screenPos = boardToScreen(this.boardPosition, cameraPos);    
 
     // Bridges  
@@ -587,6 +611,7 @@ class Tile {
     // }
 
     Tile.draw(canvas, this.tileId, screenPos.copy());
+    canvas.fill(0)
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
     // canvas.text(auxText, screenPos.x, screenPos.y); 
     canvas.push();

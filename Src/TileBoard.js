@@ -36,141 +36,167 @@ class TileBoard {
   }
 
 
-  buildCity(boardPos) {
-    this.board[boardPos.y][boardPos.x].setTileId(0xA3);
-  }
-  buildIndustry(boardPos) {
-    this.board[boardPos.y][boardPos.x].setTileId(0xFE);
-  }
 
 
-  showtilesDataCity(cameraPos) {
-    let topLeft = cameraToBoard(cameraPos).sub(createVector(14,0));
-    let row0 = topLeft.y;
-    let col0 = topLeft.x;
+  // buildCity(boardPos) {
+  //   this.board[boardPos.y][boardPos.x].setTileId(0xA3);
+  // }
+  // buildIndustry(boardPos) {
+  //   this.board[boardPos.y][boardPos.x].setTileId(0xFE);
+  // }
+
+
+  // showtilesDataCity(cameraPos) {
+  //   let topLeft = cameraToBoard(cameraPos).sub(createVector(14,0));
+  //   let row0 = topLeft.y;
+  //   let col0 = topLeft.x;
 
     
-    let n=0;
-    let startRow = row0;
-    while(n<=15) {  // increase to add more rendering in Y direction
-      let col = col0;
-      let row = startRow;
-      let nC=0;
-      while((row >= 0) && (col < this.boardDim.x) && (nC<15)) {
-        try {
-          this.board[row][col].showCity(row, col, cameraPos);
-        } catch {
-          //console.log(`exception in ${col},${row}`)
-        }
-        col++;
-        row--;
-        nC++;
-      }
-      col = col0+1;
-      row = startRow;
-      nC=0;
-      while((row >= 0) && (col < this.boardDim.x) && (nC<14)) {
-        try {
-          this.board[row][col].showCity(row, col, cameraPos);
-        } catch {
-          //console.log(`exception in ${col},${row}`)
-        }
-        col++;
-        row--;
-        nC++;
-      }
-      n+=1;
-      if (startRow < this.boardDim.y-1) 
-        startRow++;
-      col0+=1;
-    }
+  //   let n=0;
+  //   let startRow = row0;
+  //   while(n<=15) {  // increase to add more rendering in Y direction
+  //     let col = col0;
+  //     let row = startRow;
+  //     let nC=0;
+  //     while((row >= 0) && (col < this.boardDim.x) && (nC<15)) {
+  //       try {
+  //         this.board[row][col].showCity(row, col, cameraPos);
+  //       } catch {
+  //         //console.log(`exception in ${col},${row}`)
+  //       }
+  //       col++;
+  //       row--;
+  //       nC++;
+  //     }
+  //     col = col0+1;
+  //     row = startRow;
+  //     nC=0;
+  //     while((row >= 0) && (col < this.boardDim.x) && (nC<14)) {
+  //       try {
+  //         this.board[row][col].showCity(row, col, cameraPos);
+  //       } catch {
+  //         //console.log(`exception in ${col},${row}`)
+  //       }
+  //       col++;
+  //       row--;
+  //       nC++;
+  //     }
+  //     n+=1;
+  //     if (startRow < this.boardDim.y-1) 
+  //       startRow++;
+  //     col0+=1;
+  //   }
+  // }
+
+  // draw3D(canvas, cameraPos) {
+  //   let off = mainCanvasDim[0] / (2*TILE_MINI_WIDTH);
+  //   let n = off
+  //   let m = n;
+  //   let topLeft = cameraToBoardSmall(cameraPos).sub(createVector(off,0));
+  //   let row0 = topLeft.y;
+  //   let col0 = topLeft.x;
+  //   let col, row, screenPos;
+  //   let startRow = row0;
+    
+  //   let orderIdx = 0;
+  //   mainCanvas.background("gray")
+
+  //   for (let j=0; j<n;j++) {
+  //     col = col0;
+  //     row = startRow;
+  //     for (let i=0; i<m; i++) {
+  //       if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
+  //         screenPos = boardToScreenSmall(createVector(col, row), cameraPos)  
+  //         Tile.draw3D(mainCanvas, 0x00, screenPos);
+  //         //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
+  //       } else {
+  //         try {
+  //           this.board[row][col].draw3D(canvas, cameraPos, orderIdx);
+  //         } catch {}
+  //         orderIdx++;
+  //       }
+  //       col++;
+  //       row--;
+  //     }
+  //     col = col0 + 1;
+  //     row = startRow;
+  //     for (let i=0; i<m; i++) {
+  //       if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
+  //         screenPos = boardToScreenSmall(createVector(col, row), cameraPos);
+  //         Tile.draw3D(mainCanvas, 0x00, screenPos);
+  //         //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
+  //       } else {
+  //         try {
+  //         this.board[row][col].draw3D(canvas, cameraPos, orderIdx);
+  //         } catch{}
+  //         orderIdx++;
+  //       }
+  //       col++;
+  //       row--;
+  //     }
+  //     col0++;
+  //     startRow++;
+  //   }
+  // }
+
+  placeUnit(position, unit) {
+    this.board[position.y][position.x].setUnitId(unit.id);
   }
 
-  draw3D(canvas, cameraPos) {
-    let off = mainCanvasDim[0] / (2*TILE_MINI_WIDTH);
-    let n = off
-    let m = n;
-    let topLeft = cameraToBoardSmall(cameraPos).sub(createVector(off,0));
-    let row0 = topLeft.y;
-    let col0 = topLeft.x;
-    let col, row, screenPos;
-    let startRow = row0;
-    
-    let orderIdx = 0;
-    mainCanvas.background("gray")
+  placeBuilding(position, building) {
+    this.board[position.y][position.x].setBuildingId(building.id);
+  }
 
-    for (let j=0; j<n;j++) {
-      col = col0;
-      row = startRow;
-      for (let i=0; i<m; i++) {
-        if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
-          screenPos = boardToScreenSmall(createVector(col, row), cameraPos)  
-          Tile.draw3D(mainCanvas, 0x00, screenPos);
-          //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
-        } else {
-          try {
-            this.board[row][col].draw3D(canvas, cameraPos, orderIdx);
-          } catch {}
-          orderIdx++;
-        }
-        col++;
-        row--;
-      }
-      col = col0 + 1;
-      row = startRow;
-      for (let i=0; i<m; i++) {
-        if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
-          screenPos = boardToScreenSmall(createVector(col, row), cameraPos);
-          Tile.draw3D(mainCanvas, 0x00, screenPos);
-          //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
-        } else {
-          try {
-          this.board[row][col].draw3D(canvas, cameraPos, orderIdx);
-          } catch{}
-          orderIdx++;
-        }
-        col++;
-        row--;
-      }
-      col0++;
-      startRow++;
-    }
+  moveUnit(ori, dst) {
+    this.board[dst.y][dst.x].setUnitId(this.board[ori.y][ori.x].unitId);
+    this.board[ori.y][ori.x].setUnitId(null);
   }
 
   showTiles(canvas, cameraPos) {
-    let topLeft = cameraToBoard(cameraPos).sub(createVector(14,0));
+    let halfNTiles = int(screenDim[0] / (2*TILE_WIDTH_HALF)) + 2;
+
+    let topLeft = cameraToBoard(cameraPos).sub(createVector(halfNTiles,0));
     let row0 = topLeft.y;
     let col0 = topLeft.x;
     let col, row, screenPos;
     let startRow = row0;
     
-    let orderIdx = 0;
-
-    for (let j=0; j<15;j++) {
+    for (let j=0; j<halfNTiles;j++) {
       col = col0;
       row = startRow;
-      for (let i=0; i<15; i++) {
+      for (let i=0; i<halfNTiles; i++) {
         if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
           screenPos = boardToScreen(createVector(col, row), cameraPos)  
-          Tile.draw(mainCanvas, 0x00, screenPos);
-          //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
+          Tile.draw(mainCanvas, 0x6F, screenPos);
         } else {
-          this.board[row][col].show(canvas, cameraPos, orderIdx);
-          orderIdx++;
+          // Show terrain
+          this.board[row][col].show(canvas, cameraPos);
+          if (this.board[row][col].isBuilding()) {
+            // draw building
+            game.currentScene.base.buildings[this.board[row][col].buildingId].show(cameraPos)
+          } else if (this.board[row][col].isUnit()) {
+            // draw unit
+            game.currentScene.base.units[this.board[row][col].unitId].show(cameraPos)
+          }
         }
         col++;
         row--;
       }
       col = col0 + 1;
       row = startRow;
-      for (let i=0; i<14; i++) {
+      for (let i=0; i<halfNTiles; i++) {
         if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
           screenPos = boardToScreen(createVector(col, row), cameraPos);
-          Tile.draw(mainCanvas, 0x00, screenPos);
-          //canvas.text(`${col}_${row}`, screenPos.x, screenPos.y);
+          Tile.draw(mainCanvas, 0x6F, screenPos);
         } else {
-          this.board[row][col].show(canvas, cameraPos, orderIdx);
-          orderIdx++;
+          this.board[row][col].show(canvas, cameraPos);
+          if (this.board[row][col].isBuilding()) {
+            // draw building
+            game.currentScene.base.buildings[this.board[row][col].buildingId].show(cameraPos)
+          } else if (this.board[row][col].isUnit()) {
+            // draw unit
+            game.currentScene.base.units[this.board[row][col].unitId].show(cameraPos)
+          }
         }
         col++;
         row--;

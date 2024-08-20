@@ -20,6 +20,9 @@ class Game {
 
     Tile.initialize();
 
+    this.gameTime = new Date(1549312452 * 1000);
+
+    
     this.cameraFollowsLocomotive = false;
 
     this.navigationScene = new NavigationScene();
@@ -42,6 +45,11 @@ class Game {
     this.cities = {};
     for (let [cityName, cityVal] of Object.entries(gameData.citiesData)) {
       this.cities[cityName] = new City(cityVal);
+    }
+
+    this.bases = {};
+    for (let [baseName, baseVal] of Object.entries(gameData.basesData)) {
+      this.bases[baseName] = new Base(baseVal);
     }
 
     this.bridges = {};
@@ -165,7 +173,8 @@ class Game {
     // this.currentScene = new CombatWolves(this.playerTrain);
     // this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
-    this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
+    //this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
+    this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
     // this.currentScene = new MapEditor();
@@ -228,12 +237,23 @@ class Game {
     mainCanvas.text("awervcwser svtrswertve ervwervwser ewsrvwservwserv", 200, mainCanvasDim[1]-150)
   }
 
+  checkTimedEvents() {
+    if (this.gameTime.getMinutes() == 0) {
+      let mineLocation = minesLocations[Math.floor(Math.random() * minesLocations.length)];
+      game.navigationScene.tileBoard.board[mineLocation.y][mineLocation.x].setTileId(0x4A);
+    }
+  }
+
   update(){
     this.currentScene.update();    
     this.currentScene.show(); 
     if (this.objectivesVisible) 
       this.showObjectives();  
     this.conversationPanel.show();
+    this.hud.show();
+    this.gameTime.setMinutes(this.gameTime.getMinutes()+1)
+    this.checkTimedEvents();
+
     //this.showCharacter();
   }
 
