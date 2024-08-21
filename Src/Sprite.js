@@ -96,7 +96,7 @@ class Sprite {
     try {
       this.#currentImg = this.#imgs[this.#currentAction][this.#orientation][this.#spriteIdx];
     }catch{
-      let a=0;
+      console.log("aaa")
     }
   }
 

@@ -174,7 +174,8 @@ class Game {
     // this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
     //this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
-    this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
+    //this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
+    this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
     // this.currentScene = new MapEditor();

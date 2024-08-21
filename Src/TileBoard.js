@@ -38,6 +38,7 @@ class TileBoard {
 
 
 
+
   // buildCity(boardPos) {
   //   this.board[boardPos.y][boardPos.x].setTileId(0xA3);
   // }
@@ -152,57 +153,164 @@ class TileBoard {
     this.board[ori.y][ori.x].setUnitId(null);
   }
 
-  showTiles(canvas, cameraPos) {
-    let halfNTiles = int(screenDim[0] / (2*TILE_WIDTH_HALF)) + 2;
-
-    let topLeft = cameraToBoard(cameraPos).sub(createVector(halfNTiles,0));
-    let row0 = topLeft.y;
-    let col0 = topLeft.x;
-    let col, row, screenPos;
-    let startRow = row0;
-    
-    for (let j=0; j<halfNTiles;j++) {
-      col = col0;
-      row = startRow;
-      for (let i=0; i<halfNTiles; i++) {
-        if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
-          screenPos = boardToScreen(createVector(col, row), cameraPos)  
-          Tile.draw(mainCanvas, 0x6F, screenPos);
-        } else {
-          // Show terrain
-          this.board[row][col].show(canvas, cameraPos);
-          if (this.board[row][col].isBuilding()) {
-            // draw building
-            game.currentScene.base.buildings[this.board[row][col].buildingId].show(cameraPos)
-          } else if (this.board[row][col].isUnit()) {
-            // draw unit
-            game.currentScene.base.units[this.board[row][col].unitId].show(cameraPos)
-          }
-        }
-        col++;
-        row--;
+  calculatePath(ori, dst) {
+    let delta = p5.Vector.sub(dst, ori);
+    let firstPoint, secondPoint;
+    if (abs(delta.x) > abs(delta.y)) {
+      // first we move in the x direction, then diagonal, then in the x direction again
+      if (delta.x > 0) {
+        firstPoint = createVector(ori.x + (delta.x - abs(delta.y)) / 2, ori.y);
+        secondPoint = createVector(ori.x + (delta.x + abs(delta.y)) / 2, dst.y);
+      } else {
+        firstPoint = createVector(ori.x + (delta.x + abs(delta.y)) / 2, ori.y);
+        secondPoint = createVector(ori.x + (delta.x - abs(delta.y)) / 2, dst.y);
       }
-      col = col0 + 1;
-      row = startRow;
-      for (let i=0; i<halfNTiles; i++) {
-        if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
-          screenPos = boardToScreen(createVector(col, row), cameraPos);
-          Tile.draw(mainCanvas, 0x6F, screenPos);
-        } else {
-          this.board[row][col].show(canvas, cameraPos);
-          if (this.board[row][col].isBuilding()) {
-            // draw building
-            game.currentScene.base.buildings[this.board[row][col].buildingId].show(cameraPos)
-          } else if (this.board[row][col].isUnit()) {
-            // draw unit
-            game.currentScene.base.units[this.board[row][col].unitId].show(cameraPos)
-          }
-        }
+    } else {
+      if (delta.y > 0) {
+        firstPoint = createVector(ori.x, ori.y + (delta.y - abs(delta.x)) / 2);
+        secondPoint = createVector(dst.x, ori.y + (delta.y + abs(delta.x)) / 2);
+      } else {
+        firstPoint = createVector(ori.x, ori.y + (delta.y + abs(delta.x)) / 2);
+        secondPoint = createVector(dst.x, ori.y + (delta.y - abs(delta.x)) / 2);
+      }
+    }
+    return [firstPoint, secondPoint, dst.copy()];
+  }
+
+  *TileGenerator(tL) {
+    let topLeft = tL;
+    let col0 = topLeft.x;
+    let row0 = topLeft.y;
+    let col, row;
+    let nX = 26;
+    let nY = 26;
+  
+    for (let y=0; y<nY; y++) {
+      col = col0;
+      row = row0;
+      for (let x=0; x<nX; x++) {
+        yield (createVector(col, row))
         col++;
         row--;
       }
       col0++;
-      startRow++;
+      row0++;
+    }
+    yield null;
+  }
+
+
+  showTiles(canvas, cameraPos) {
+    let topLeft = cameraToBoard(cameraPos).sub(createVector(25,0));
+    let generator = this.TileGenerator(topLeft);
+    let tilePos, screenPos;
+    tilePos = generator.next();
+    while(tilePos.value !== null) {
+      if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
+        screenPos = boardToScreen(tilePos.value, cameraPos);
+        Tile.draw(canvas, 0x6F, screenPos);
+      } else {
+        this.board[tilePos.value.y][tilePos.value.x].show(canvas, cameraPos);
+      }
+      
+      tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
+      if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+        screenPos = boardToScreen(tilePos, cameraPos);
+        Tile.draw(canvas, 0x6F, screenPos);
+      } else {
+        this.board[tilePos.y][tilePos.x].show(canvas, cameraPos);
+      }
+
+      tilePos = generator.next();
     }
   }
+
+  showUnits(canvas, cameraPos) {
+    let topLeft = cameraToBoard(cameraPos).sub(createVector(23,0));
+    let generator = this.TileGenerator(topLeft);
+    let tilePos, screenPos;
+    tilePos = generator.next();
+    while(tilePos.value !== null) {
+      if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
+      } else {
+        if (this.board[tilePos.value.y][tilePos.value.x].isUnit()) {
+          game.currentScene.base.units[this.board[tilePos.value.y][tilePos.value.x].unitId].show(cameraPos)
+        } else if (this.board[tilePos.value.y][tilePos.value.x].isBuilding()) {
+          game.currentScene.base.buildings[this.board[tilePos.value.y][tilePos.value.x].buildingId].show(cameraPos)
+        }
+      }
+
+      tilePos = createVector(tilePos.value.x+1, tilePos.value.y);
+      if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+      } else {
+        if (this.board[tilePos.y][tilePos.x].isUnit()) {
+          game.currentScene.base.units[this.board[tilePos.y][tilePos.x].unitId].show(cameraPos)
+        } else if (this.board[tilePos.y][tilePos.x].isBuilding()) {
+          game.currentScene.base.buildings[this.board[tilePos.y][tilePos.x].buildingId].show(cameraPos)
+        }
+      }
+
+      tilePos = generator.next();
+
+    }
+  }
+
+
+
+  // showTiles2(canvas, cameraPos) {
+  //   let halfNTiles = int(screenDim[0] / (2*TILE_WIDTH_HALF)) + 2;
+
+  //   let topLeft = cameraToBoard(cameraPos).sub(createVector(halfNTiles,0));
+  //   let row0 = topLeft.y;
+  //   let col0 = topLeft.x;
+  //   let col, row, screenPos;
+  //   let startRow = row0;
+    
+  //   for (let j=0; j<halfNTiles;j++) {
+  //     col = col0;
+  //     row = startRow;
+  //     for (let i=0; i<halfNTiles; i++) {
+  //       if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
+  //         screenPos = boardToScreen(createVector(col, row), cameraPos)  
+  //         Tile.draw(mainCanvas, 0x6F, screenPos);
+  //       } else {
+  //         // Show terrain
+  //         this.board[row][col].show(canvas, cameraPos);
+  //         if (this.board[row][col].isBuilding()) {
+  //           // draw building
+  //           game.currentScene.base.buildings[this.board[row][col].buildingId].show(cameraPos)
+  //         } else if (this.board[row][col].isUnit()) {
+  //           // draw unit
+  //           game.currentScene.base.units[this.board[row][col].unitId].show(cameraPos)
+  //         } else {
+  //         }
+
+  //       }
+
+  //       col++;
+  //       row--;
+  //     }      
+  //     col = col0 + 1;
+  //     row = startRow;
+  //     for (let i=0; i<halfNTiles; i++) {
+  //       if (col < 0 || row < 0 || col >= this.boardDim.x || row >= this.boardDim.y) {
+  //         screenPos = boardToScreen(createVector(col, row), cameraPos);
+  //         Tile.draw(mainCanvas, 0x6F, screenPos);
+  //       } else {
+  //         this.board[row][col].show(canvas, cameraPos);
+  //         if (this.board[row][col].isBuilding()) {
+  //           // draw building
+  //           game.currentScene.base.buildings[this.board[row][col].buildingId].show(cameraPos)
+  //         } else if (this.board[row][col].isUnit()) {
+  //           // draw unit
+  //           game.currentScene.base.units[this.board[row][col].unitId].show(cameraPos)
+  //         }
+  //       }
+  //       col++;
+  //       row--;
+  //     }
+  //     col0++;
+  //     startRow++;
+  //   }
+  // }
 }

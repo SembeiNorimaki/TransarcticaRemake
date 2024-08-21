@@ -117,7 +117,7 @@ function preload() {
   loadImage("resources/units/artillery.png", img => {
     const spriteSize = createVector(70, 54);
     gameData.unitsData.Artillery = {"idle": {}};
-    for (let [i, ori] of [0,45,90,135,180,225,270,315].entries()) {
+    for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
       gameData.unitsData.Artillery.idle[ori] = [];
       gameData.unitsData.Artillery.idle[ori].push(img.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y));
     }
@@ -125,7 +125,7 @@ function preload() {
   loadImage("resources/units/tank.png", img => {
     const spriteSize = createVector(70, 54);
     gameData.unitsData.Tank = {"idle": {}};
-    for (let [i, ori] of [0,45,90,135,180,225,270,315].entries()) {
+    for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
       gameData.unitsData.Tank.idle[ori] = [];
       gameData.unitsData.Tank.idle[ori].push(img.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y));
     }
@@ -498,27 +498,27 @@ function preload() {
     });
   });
 
-  loadImage("resources/units/soldierRed.png", soldierAtlas => {
-    loadJSON("Src/Units/Soldier.json", jsonData => {
-      const spriteSize = jsonData.spriteSize;
-      const offset = jsonData.offset;
-      // gameData.unitsData.soldier = [];
-      for (let soldierId=1; soldierId<2; soldierId++) {
-        gameData.unitsData.soldier.push({});
-        for (const [action, value] of Object.entries(jsonData.actions)) {
-          gameData.unitsData.soldier[soldierId][action] = {};
-          for (const [j, ori] of Object.entries(jsonData.orientations)) {
-            gameData.unitsData.soldier[soldierId][action][ori] = [];
-            for (let i of value) {
-              let x = spriteSize[0] * i + offset[0];
-              let y = spriteSize[1] * j + offset[1];
-              gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
-            }
-          }
-        }  
-      }
-    });
-  });
+  // loadImage("resources/units/soldierRed.png", soldierAtlas => {
+  //   loadJSON("Src/Units/Soldier.json", jsonData => {
+  //     const spriteSize = jsonData.spriteSize;
+  //     const offset = jsonData.offset;
+  //     // gameData.unitsData.soldier = [];
+  //     for (let soldierId=1; soldierId<2; soldierId++) {
+  //       gameData.unitsData.soldier.push({});
+  //       for (const [action, value] of Object.entries(jsonData.actions)) {
+  //         gameData.unitsData.soldier[soldierId][action] = {};
+  //         for (const [j, ori] of Object.entries(jsonData.orientations)) {
+  //           gameData.unitsData.soldier[soldierId][action][ori] = [];
+  //           for (let i of value) {
+  //             let x = spriteSize[0] * i + offset[0];
+  //             let y = spriteSize[1] * j + offset[1];
+  //             gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+  //           }
+  //         }
+  //       }  
+  //     }
+  //   });
+  // });
 
   // Hud data into gameData.hudData
   loadJSON("Src/Hud.json", jsonData => {
@@ -615,7 +615,7 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  game.onMousePressed(createVector(mouseX, mouseY, mouseButton));
+  game.onMousePressed(createVector(mouseX, mouseY));
 }
 
 function mouseMoved() {

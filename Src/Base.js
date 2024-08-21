@@ -31,5 +31,6 @@ class Base {
 
   show(cameraPosition) {
     this.tileBoard.showTiles(mainCanvas, cameraPosition);
+    this.tileBoard.showUnits(mainCanvas, cameraPosition);
   }
 }

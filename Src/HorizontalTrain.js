@@ -27,8 +27,8 @@ class HorizontalTrain {
     }
     this.velocity = 0.0;
     this.acceleration = 0;
-    this.accelerationStrenght = 0.01;
-    this.brakingStrenght = 0.1;
+    this.accelerationStrenght = 0.1;
+    this.brakingStrenght = 0.2;
     this.maxVelocity = 12.0;
     this.minVelocity = -12.0;
     this.gear = "N";    

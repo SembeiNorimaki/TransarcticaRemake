@@ -17,11 +17,21 @@
 class Camera {
   constructor(position) {
     this.position = position.copy();
-    
+    this.destination = this.position.copy();
+    this.speed = 10;
   }
 
   setPos(position) {
     this.position.set(position.x, position.y);
+  }
+  setDestination(dst) {
+    this.destination = dst;
+  }
+
+  update() {
+    // if (p5.Vector.dist(this.position, this.destination) > 10) {
+    //   this.move(p5.Vector.sub(this.destination, this.position).normalize().mult(this.speed));
+    // }
   }
 
   move(delta) {

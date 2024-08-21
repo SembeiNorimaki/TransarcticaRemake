@@ -16,6 +16,8 @@ class BaseScene {
     this.horizontalTrain.setPosition(createVector(1400, 200));
     this.horizontalTrain.setVelocity(0);
 
+
+    // build walls and rails
     let middleY = 99
     let y;
     for (let x=0; x<middleY; x++) {
@@ -35,12 +37,6 @@ class BaseScene {
       this.base.tileBoard.board[y][x].setTileId(0x62)
       this.base.tileBoard.board[y-1][x].setTileId(0x63)
     }
-
-    // for (let x=25; x<middleY; x++) {
-    //   y = middleY+25-x;
-    //   this.base.tileBoard.board[y][x].setTileId(0x62)
-    //   this.base.tileBoard.board[y-1][x].setTileId(0x63)
-    // }
 
     for (let y=49; y<75; y++) {
       this.base.tileBoard.board[y][20].setTileId(0x61)
@@ -113,7 +109,7 @@ class BaseScene {
   }
 
   show() {
-    mainCanvas.background(0)
+    //mainCanvas.background(0)
     this.base.show(this.camera.position);
 
     //this.tileBoard.showTiles(mainCanvas, this.camera.position);
