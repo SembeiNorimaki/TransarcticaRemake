@@ -255,6 +255,15 @@ class TileBoard {
     }
   }
 
+  showMinimap(canvas) {
+    for (let x=0; x<this.boardDim.x; x++) {
+      for (let y=0; y<this.boardDim.y; y++) {
+        this.board[y][x].showTilePixel(canvas);
+      
+      }
+    }
+  }
+
 
 
   // showTiles2(canvas, cameraPos) {

@@ -640,6 +640,18 @@ class Tile {
     canvas.pop();
   }
 
+  showTilePixel(canvas) {
+    let screenPos = this.boardPosition;
+    let color = "blue";
+    if (this.tileId == 0x6E) {
+      color = "white"
+    }
+    //canvas.fill(color)
+    canvas.set(screenPos.x, screenPos.y, (255,0,0));
+
+
+  }
+
   draw3D(canvas, cameraPos, auxText) {
     let screenPos = boardToScreenSmall(this.boardPosition, cameraPos);    
     Tile.draw3D(canvas, this.tileId, screenPos, this.isEvent);

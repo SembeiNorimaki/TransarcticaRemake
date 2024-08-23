@@ -15,55 +15,6 @@ class BaseScene {
     this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
     this.horizontalTrain.setPosition(createVector(1400, 200));
     this.horizontalTrain.setVelocity(0);
-
-
-    // build walls and rails
-    let middleY = 99
-    let y;
-    for (let x=0; x<middleY; x++) {
-      y = middleY-x;
-      this.base.tileBoard.board[y][x].setTileId(0x6B)
-      this.base.tileBoard.board[y-1][x].setTileId(0x6C)
-    }
-
-    for (let x=20; x<49; x++) {
-      y = middleY-30-x;
-      this.base.tileBoard.board[y][x].setTileId(0x62)
-      this.base.tileBoard.board[y-1][x].setTileId(0x63)
-    }
-
-    for (let x=51; x<80; x++) {
-      y = 80+50-x;
-      this.base.tileBoard.board[y][x].setTileId(0x62)
-      this.base.tileBoard.board[y-1][x].setTileId(0x63)
-    }
-
-    for (let y=49; y<75; y++) {
-      this.base.tileBoard.board[y][20].setTileId(0x61)
-    }
-    for (let x=49; x<75; x++) {
-      this.base.tileBoard.board[20][x].setTileId(0x60)
-    }
-    
-    for (let y=25; y<51; y++) {
-      this.base.tileBoard.board[y][middleY-20].setTileId(0x61)
-    }
-    for (let x=25; x<51; x++) {
-      this.base.tileBoard.board[middleY-20][x].setTileId(0x60)
-    }
-
-    for (let x=74; x<99; x++) {
-      y = 99+74-x;
-      this.base.tileBoard.board[y][x].setTileId(0x6B)
-      this.base.tileBoard.board[y-1][x].setTileId(0x6C)
-    }
-
-
-    // for (let x=50; x<50+15; x++) {
-    //   y = middleY-80-50+x;
-    //   this.base.tileBoard.board[y][x].setTileId(0x65)
-    //   this.base.tileBoard.board[y-1][x].setTileId(0x64)
-    // }
   }
 
   update() {

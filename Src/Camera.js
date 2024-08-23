@@ -21,7 +21,7 @@ class Camera {
     this.speed = 10;
   }
 
-  setPos(position) {
+  setPosition(position) {
     this.position.set(position.x, position.y);
   }
   setDestination(dst) {
@@ -35,6 +35,6 @@ class Camera {
   }
 
   move(delta) {
-    this.setPos(p5.Vector.add(this.position, delta));
+    this.setPosition(p5.Vector.add(this.position, delta));
   }
 }

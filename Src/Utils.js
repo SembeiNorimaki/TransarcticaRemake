@@ -53,6 +53,11 @@ idToTileCode = {
   0b11111: 0x11  // WXYZ Ground
 }
 
+function manhattanDistance(pos1, pos2) {
+  return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y);
+}
+
+
 function textToImage(text) {
   let img = createGraphics(text.length * 16, 19)
 

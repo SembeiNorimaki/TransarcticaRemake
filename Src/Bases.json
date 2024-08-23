@@ -2,10 +2,13 @@
   "BarcelonaBase": {
     "name": "BarcelonaBase",
     "units": [
-      
       {
         "name": "Artillery",
-        "position": [9, 5]
+        "position": [78, 83]
+      },
+      {
+        "name": "Tank",
+        "position": [80, 83]
       }
     ],
     "buildings": [      
