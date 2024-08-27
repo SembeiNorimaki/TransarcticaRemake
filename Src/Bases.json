@@ -4,12 +4,13 @@
     "units": [
       {
         "name": "Artillery",
-        "position": [78, 83]
+        "position": [83, 80]
       },
       {
         "name": "Tank",
-        "position": [80, 83]
+        "position": [85, 80]
       }
+      
     ],
     "buildings": [      
       {

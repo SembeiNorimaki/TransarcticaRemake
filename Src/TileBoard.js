@@ -153,7 +153,7 @@ class TileBoard {
     this.board[ori.y][ori.x].setUnitId(null);
   }
 
-  calculatePath(ori, dst) {
+  calculatePath2(ori, dst) {
     let delta = p5.Vector.sub(dst, ori);
     let firstPoint, secondPoint;
     if (abs(delta.x) > abs(delta.y)) {
@@ -176,6 +176,61 @@ class TileBoard {
     }
     return [firstPoint, secondPoint, dst.copy()];
   }
+
+  calculatePath(ori, dst) {
+    let path = [];
+    let delta = p5.Vector.sub(dst, ori);
+    let deltaxy = abs(delta.x) - abs(delta.y);
+    let currentPos = ori.copy();
+
+    if (deltaxy >= 0) {  // deltaX is bigger than deltaY
+      let firstDeltaX = round(deltaxy/2);
+      let secondDeltaX = deltaxy - firstDeltaX;
+      for (let i=0; i<firstDeltaX; i++) {
+        currentPos.add(createVector(Math.sign(delta.x), 0));
+        path.push(currentPos.copy());
+      }
+      for (let i=0; i<abs(delta.y); i++) {
+        currentPos.add(createVector(Math.sign(delta.x), Math.sign(delta.y)));
+        path.push(currentPos.copy());
+      }
+      for (let i=0; i<secondDeltaX; i++) {
+        currentPos.add(createVector(Math.sign(delta.x), 0));
+        path.push(currentPos.copy());
+      }
+    } else {  // deltaY is bigger than deltaX
+      let firstDeltaY = round(abs(deltaxy/2));
+      let secondDeltaY = abs(deltaxy) - firstDeltaY;
+      for (let i=0; i<firstDeltaY; i++) {
+        currentPos.add(createVector(0, Math.sign(delta.y)));
+        path.push(currentPos.copy());
+      }
+      for (let i=0; i<abs(delta.x); i++) {
+        currentPos.add(createVector(Math.sign(delta.x), Math.sign(delta.y)));
+        path.push(currentPos.copy());
+      }
+      for (let i=0; i<secondDeltaY; i++) {
+        currentPos.add(createVector(0, Math.sign(delta.y)));
+        path.push(currentPos.copy());
+      }
+    }
+
+
+    // let path = [];
+    // let delta = p5.Vector.sub(dst, ori);
+    // let currentPos = ori.copy();
+    // for (let i=0;i<abs(delta.x);i++) {
+    //   currentPos.add(createVector(Math.sign(delta.x), 0));
+    //   path.push(currentPos.copy());
+    // }
+    // for (let i=0;i<abs(delta.y);i++) {
+    //   currentPos.add(createVector(0, Math.sign(delta.y)));
+    //   path.push(currentPos.copy());
+    // }
+
+    return path;
+  }
+
 
   *TileGenerator(tL) {
     let topLeft = tL;

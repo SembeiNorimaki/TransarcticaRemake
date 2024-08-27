@@ -251,7 +251,7 @@ class Game {
     if (this.objectivesVisible) 
       this.showObjectives();  
     this.conversationPanel.show();
-    this.hud.show();
+    // this.hud.show();
     this.gameTime.setMinutes(this.gameTime.getMinutes()+1)
     this.checkTimedEvents();
 

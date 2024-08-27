@@ -7,11 +7,13 @@ class BaseCombat {
     this.action = UnitFH.Actions.Move;
     this.selectedUnitId = null;
     this.selectedBuildingId = null;
-    this.enterSequence = false;
+    this.enterSequence = true;
     this.exitSequence = false;
 
     this.currentEnemyIdx = 0;
     this.currentEnemyUnit = this.base.units[0];
+    sounds.battle.setVolume(0.5)
+    sounds.battle.play()
 
     // this.camera.setDestination(createVector(100,300));
   }
@@ -19,10 +21,10 @@ class BaseCombat {
   initialize() {
     this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
     this.horizontalTrain.setPosition(createVector(0, 245));
-    this.horizontalTrain.setVelocity(0);
+    this.horizontalTrain.setVelocity(20);
     
-    this.unloadUnits();
-    this.endTurn();
+    // this.unloadUnits();
+    // this.endTurn();
   }
 
   unloadUnits() {
@@ -30,9 +32,16 @@ class BaseCombat {
       new UnitFH("Tank", createVector(83,92), "Player"),
       new UnitFH("Artillery", createVector(84,91), "Player"),
       new UnitFH("Tank", createVector(85,90), "Player"),
-      new UnitFH("Tank", createVector(86,89), "Player")
+      new UnitFH("Tank", createVector(86,89), "Player"),
+
+      new UnitFH("Tank", createVector(89,86), "Player"),
+      new UnitFH("Artillery", createVector(90,85), "Player"),
+      new UnitFH("Tank", createVector(91,84), "Player"),
+      new UnitFH("Tank", createVector(92,83), "Player")
     ]);
   }
+
+  
 
 
   setAction(action) {
@@ -139,6 +148,7 @@ class BaseCombat {
         // );        
         //console.log(this.city.elements[this.selectedElementId])
         this.base.units[this.selectedUnitId].shoot(tilePosition)
+        //this.base.units[this.selectedUnitId].calculateHitProbability(tilePosition);
       }        
     }
 
@@ -169,7 +179,7 @@ class BaseCombat {
 
   closestTarget(refUnit) {
     let closestDistance = 10000;
-    let closestUnitId = null;
+    let closestUnit = null;
     console.log(`Ref Unit Pos: ${refUnit.position.array()}`)
     for (const unit of this.base.units) {
       if (unit.isEnemy()) {
@@ -180,54 +190,61 @@ class BaseCombat {
       console.log(`Distance to U${unit.id}: ${distance}`)
       if (distance < closestDistance) {
         closestDistance = distance;
-        closestUnitId = unit.id;
+        closestUnit = unit;
       }
     }
-    console.log(`Closest unit is: U${closestUnitId}`)
-    return closestUnitId;
+    console.log(`Closest unit is: U${closestUnit}`)
+    return closestUnit;
   }
 
-  decideAction() {
-    let closestUnitId = this.closestTarget(this.currentEnemyUnit);
-    // console.log(this.currentEnemyUnit.tilePos.array())
-    // console.log(this.city.units[closestUnitId].tilePos.array())
+  // decideAction() {
+  //   let closestUnitId = this.closestTarget(this.currentEnemyUnit);
+  //   // console.log(this.currentEnemyUnit.tilePos.array())
+  //   // console.log(this.city.units[closestUnitId].tilePos.array())
 
-    let path = this.base.tileBoard.calculatePath(this.currentEnemyUnit.tilePosition,
-      p5.Vector.add(this.base.units[closestUnitId].tilePosition, createVector(0,-1)));
+  //   let path = this.base.tileBoard.calculatePath(this.currentEnemyUnit.tilePosition,
+  //     p5.Vector.add(this.base.units[closestUnitId].tilePosition, createVector(0,-2)));
     
-    console.log(`Moving enemy unit ${this.currentEnemyIdx}`);
+  //   // let path = this.base.tileBoard.calculatePath(
+  //   //   this.currentEnemyUnit.tilePosition,
+  //   //   this.base.units[closestUnitId].tilePosition
+  //   // );
+      
 
-    // let path = this.calculatePath(
-    //   this.currentEnemyUnit.pos, 
-    //   p5.Vector.add(this.currentEnemyUnit.pos, 
-    //     createVector(2,0)));
-    // console.log(path)
-    this.currentEnemyUnit.setPath(path);
+  //   console.log(`Moving enemy unit ${this.currentEnemyIdx}`);
+
+  //   // let path = this.calculatePath(
+  //   //   this.currentEnemyUnit.pos, 
+  //   //   p5.Vector.add(this.currentEnemyUnit.pos, 
+  //   //     createVector(2,0)));
+  //   // console.log(path)
+  //   this.currentEnemyUnit.setPath(path);
     
-    this.currentEnemyUnit.setAction(UnitFH.Actions.Move);
-    // console.log(this.enemyTurnUnitIdx)
-    // let candidates = this.enemyForces[this.enemyTurnUnitIdx].unitsInShootingRange();
+  //   this.currentEnemyUnit.setAction(UnitFH.Actions.Move);
+  //   // console.log(this.enemyTurnUnitIdx)
+  //   // let candidates = this.enemyForces[this.enemyTurnUnitIdx].unitsInShootingRange();
     
-    // this.enemyForces[this.enemyTurnUnitIdx].shoot(this.city.elements[candidates[0]].pos)
-    // console.log(`${this.enemyTurnUnitIdx} shhots ${this.city.elements[candidates[0]].id}`)
-    //this.enemyForces[this.enemyTurnUnitIdx].shoot(this.city.elements[candidates[0].pos])
-    // this.enemyForces[this.enemyTurnUnitIdx].path = [
-    //   p5.Vector.add(this.enemyForces[this.enemyTurnUnitIdx].pos,
-    //   createVector(0,-2))];
-  }
+  //   // this.enemyForces[this.enemyTurnUnitIdx].shoot(this.city.elements[candidates[0]].pos)
+  //   // console.log(`${this.enemyTurnUnitIdx} shhots ${this.city.elements[candidates[0]].id}`)
+  //   //this.enemyForces[this.enemyTurnUnitIdx].shoot(this.city.elements[candidates[0].pos])
+  //   // this.enemyForces[this.enemyTurnUnitIdx].path = [
+  //   //   p5.Vector.add(this.enemyForces[this.enemyTurnUnitIdx].pos,
+  //   //   createVector(0,-2))];
+  // }
 
   enemyTurn() {
     this.currentEnemyUnit.update();
-    if (this.currentEnemyUnit.action === UnitFH.Actions.Idle) {
-      if (!this.selectNextEnemyUnit()) {
-        console.log("Enemy turn completed");
+    if (this.currentEnemyUnit.action === UnitFH.Actions.Finished) {
+      if (this.selectNextEnemyUnit()) {
+        // If we succesfully selected the next enemy unit, decide an action
+        this.currentEnemyUnit.unitAI.decideAction();
+      } else {
+        // otherwise it means that there are no more enemy units, finish the turn
+        console.log("Enemy turn completed");        
+        this.currentPlayer = "Player";
         // for (const unit of this.base.units) {
         //   //unit.replenishAp();
         // }
-        this.currentPlayer = "Player";
-      } else {
-        //this.currentEnemyUnit = this.base.units[this.currentEnemyIdx];
-        this.decideAction();      
       }
     }
   }
@@ -251,8 +268,8 @@ class BaseCombat {
     this.currentEnemyIdx = 0
     this.currentEnemyUnit = this.base.units[0];
     this.camera.setPosition(boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
-    this.decideAction();
     this.currentPlayer = "CPU";
+    this.currentEnemyUnit.unitAI.decideAction();
   }
 
   
@@ -286,10 +303,12 @@ class BaseCombat {
     // }
 
     for (let unit of this.base.units) {
-      //this.base.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(null);
-      unit.update();
-      //this.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(unit.id);
-      //this.idxBoard.showSmall();
+      if (unit.owner == this.currentPlayer) {
+        //this.base.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(null);
+        unit.update();
+        //this.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(unit.id);
+        //this.idxBoard.showSmall();
+      }
     }    
     this.camera.update();
     this.horizontalTrain.update();
@@ -298,8 +317,11 @@ class BaseCombat {
   show() {
     mainCanvas.background(0)
     this.base.show(this.camera.position);
+    if (this.action === UnitFH.Actions.Attack && this.selectedUnitId !== null) {
+      mainCanvas.text(this.base.units[this.selectedUnitId].calculateHitProbability(screenToBoard(createVector(mouseX, mouseY), this.camera.position)), mouseX, mouseY-20)
+    }
     // this.base.tileBoard.showMinimap(mainCanvas);
-    // this.horizontalTrain.show(createVector(0,0));
+    this.horizontalTrain.show(createVector(0,0));
     // mainCanvas.rect(mainCanvasDim[0]-300,mainCanvasDim[1]-300,300,300)
   }
 }

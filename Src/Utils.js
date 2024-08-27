@@ -53,8 +53,85 @@ idToTileCode = {
   0b11111: 0x11  // WXYZ Ground
 }
 
+
+function astar(start, end) {
+  const openSet = [];
+  const closedSet = [];
+  openSet.push(start);
+  while (openSet.length > 0) {
+    let currentNode = openSet[0];
+    // Find the node with the lowest total cost in the open set
+    for (let i = 1; i < openSet.length; i++) {
+      if (openSet[i].f < currentNode.f || (openSet[i].f === currentNode.f && openSet[i].h < currentNode.h)) {
+        currentNode = openSet[i];
+      }
+    }
+    openSet.splice(openSet.indexOf(currentNode), 1);
+    closedSet.push(currentNode);
+
+    if (currentNode.row === end.row && currentNode.col === end.col) {
+      // Reconstruct the path if the goal is reached
+      let path = [];
+      let temp = currentNode;
+      while (temp) {
+        path.push(temp);
+        temp = temp.parent;
+      }
+      return path.reverse();      
+    }
+
+    const neighbors = [];
+    const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
+    for (let dir of directions) {
+      const neighborRow = currentNode.row + dir[0];
+      const neighborCol = currentNode.col + dir[1];
+
+      if (isValidCell(neighborRow, neighborCol)) {
+        const neighbor = {
+          row: neighborRow,
+          col: neighborCol,
+          g: currentNode.g + 1,
+          h: heuristic({ row: neighborRow, col: neighborCol }, end),
+          f: 0,
+          parent: currentNode,
+        };
+
+        neighbor.f = neighbor.g + neighbor.h;
+
+        if (closedSet.some((node) => node.row === neighbor.row && node.col === neighbor.col)) {
+          continue;
+        }
+
+        const openSetNode = openSet.find((node) => node.row === neighbor.row && node.col === neighbor.col);
+        if (!openSetNode || neighbor.g < openSetNode.g) {
+          openSet.push(neighbor);
+        }
+      }
+    }
+  }
+  // No path found
+  return null;
+}
+
 function manhattanDistance(pos1, pos2) {
   return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y);
+}
+
+function populateBackgroundFH() {
+  let img = createGraphics(mainCanvasDim[0]+TILE_WIDTH_HALF*2, mainCanvasDim[1]+TILE_HEIGHT_HALF*6);
+  let nCols = 27;
+  let nRows = 28;
+  let x, y
+  for (let row=0;row<nRows; row++) {
+    y = row * TILE_HEIGHT_HALF*2;
+    for (let col=0;col<nCols; col++) {
+      x = col * TILE_WIDTH_HALF*2;
+      Tile.draw(img, 0x6E, createVector(x,y))
+      Tile.draw(img, 0x6E, createVector(x+TILE_WIDTH_HALF,y+TILE_HEIGHT_HALF))
+    }
+  }
+  return img;
 }
 
 

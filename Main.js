@@ -73,6 +73,7 @@ let resources = {};
 
 let wolfImg;
 
+
 let i=0;
 
 let savedGames = [];
@@ -103,10 +104,14 @@ let sounds = {};
 let table;
 let bridgeImage;
 
+let imgBkg;
+
 let characters = {};
 
 function preload() {
-
+  sounds.artilleryShoot = loadSound("music/artilleryShoot.mp3");
+  sounds.battle = loadSound("music/battle.mp3");
+  sounds.moveTrack = loadSound("music/MOVETRK.WAV");
   loadImage("resources/font.png", img => {
     let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
     for (let [x, character] of alphabet.entries()) {
@@ -588,11 +593,12 @@ function setupCanvas() {
 }
 
 function setup() {
-  //sounds.travelling.play();
+  createCanvas(screenDim[0], screenDim[1]);
+
   frameRate(50);
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-  createCanvas(screenDim[0], screenDim[1]);
+  
   mainCanvas = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
   hudCanvas = createGraphics(hudCanvasDim[0], hudCanvasDim[1]);
   
@@ -601,9 +607,18 @@ function setup() {
   // TODO: Check if theres a game saved, if so, load it instead of starting a new one
   game = new Game();   
   game.initialize(); 
+
+
+  //imgBkg = populateBackgroundFH();
+
 }
 
-function draw() {  
+function draw() { 
+ 
+  // background(0);
+  // image(imgBkg,-mouseX%TILE_WIDTH_HALF*2,-mouseY%TILE_HEIGHT_HALF*2)
+
+  
   game.update();
 
   image(mainCanvas, 0, 0);

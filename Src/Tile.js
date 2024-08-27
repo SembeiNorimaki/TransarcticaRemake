@@ -523,6 +523,7 @@ class Tile {
     this.isEvent = false;
     this.unitId = null;
     this.buildingId = null;
+    this.isOccupied = false;
 
     this.setTileId(tileId);
 
@@ -560,12 +561,20 @@ class Tile {
     return this.buildingId !== null;
   }
 
+  isRoad() {
+    return false;
+  }
+  isWall() {
+    return false;
+  }
+  
+
   changeTile() {
     if (this.isIntersection) {
       let newTileName = Tile.tileChanges[this.tileName];
       let newTileId = Tile.nameToIdx[newTileName];
       this.setTileId(newTileId);
-    }``
+    }
   }
   removeTile() {
     this.buildingId = null;
