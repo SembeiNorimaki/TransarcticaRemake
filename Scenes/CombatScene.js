@@ -30,14 +30,14 @@ class CombatScene {
     this.camera = new Camera(createVector(0,0));
 
     
-    this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
+    this.playerHTrain = new HorizontalTrain(Game.Players.Human);
     this.playerHTrain.setPosition(createVector(1400, 845));
     this.playerHTrain.update();
 
     // Maybe there's no enemy train
     this.enemyHTrain = null;
     if (enemyTrain !== null) {
-      this.enemyHTrain = new HorizontalTrain("Cpu", enemyTrain.wagons);
+      this.enemyHTrain = new HorizontalTrain(Game.Players.Cpu);
       this.enemyHTrain.setPosition(createVector(1400, 80));
       this.enemyHTrain.update();
     }
@@ -54,8 +54,8 @@ class CombatScene {
     this.playerUnits = [];
     this.enemyUnits = [];
     
-    this.playerUnits.push(new Rifleman(1, createVector(500,650), 0, "player"));
-    this.enemyUnits.push(new Wolf(0, createVector(500,-100), "cpu"));
+    this.playerUnits.push(new Rifleman(1, createVector(500,650), 0, Game.Players.Human));
+    this.enemyUnits.push(new Wolf(0, createVector(500,-100), Game.Players.Cpu));
     
     this.enemyUnits[0].setRole({
       "role": "patrol",
@@ -191,7 +191,7 @@ class CombatScene {
 
   deploySoldier(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 760);
-    this.playerUnits.push(new Rifleman(9,spawnPosition,0,"player"));
+    this.playerUnits.push(new Rifleman(9,spawnPosition,0,Game.Players.Human));
   }
   
   findEnemyBarracks() {
@@ -207,12 +207,12 @@ class CombatScene {
     // find a barracks wagon
     let i = this.findEnemyBarracks();
     let spawnPosition = createVector(this.enemyHTrain.wagons[i].position.x + this.enemyHTrain.wagons[i].halfSize.x + spot*20, 100);
-    this.enemyUnits.push(new Rifleman(12,spawnPosition, 0, "cpu"));
+    this.enemyUnits.push(new Rifleman(12,spawnPosition, 0, Game.Players.Cpu));
   }
 
   deployMamooth(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 700);
-    this.playerMamooths.push(new Mamooth(15,spawnPosition,"player"));
+    this.playerMamooths.push(new Mamooth(15,spawnPosition,Game.Players.Human));
   }
 
   // fireCannon(i) {   

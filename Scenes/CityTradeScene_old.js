@@ -70,7 +70,7 @@ class CityTradeScene {
   }
 
   initialize() {
-    this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
     this.horizontalTrain.setPosition(createVector(1400, 800+20));
     this.horizontalTrain.setVelocity(0);
   }

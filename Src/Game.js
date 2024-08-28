@@ -15,6 +15,11 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Game {
+  static Players = {
+    "Human": 0,
+    "Cpu": 1
+  };
+
   constructor() {
     //this.saveData = saveData;
 
@@ -28,10 +33,10 @@ class Game {
     this.navigationScene = new NavigationScene();
     //this.navigationScene.initialize();
 
-    this.playerTrain = new Train("Player");
+    this.playerTrain = new Train(Game.Players.Human);
     
     // TODO: The game has a list of enemy trains
-    this.enemyTrain = new Train("CPU");
+    this.enemyTrain = new Train(Game.Players.Cpu);
 
     this.hud = new Hud();
     this.conversationPanel = new ConversationPanel();
@@ -116,8 +121,8 @@ class Game {
           // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
           // {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 7}},
-          {"name": "Container Wagon"},
-          {"name": "Container Wagon"}
+          //{"name": "Vehicle Wagon"},
+          {"name": "Vehicle Wagon", "vehicles": ["Tank", "Tank", "Artillery"]}
         ]
       },
       "EnemyTrain": {

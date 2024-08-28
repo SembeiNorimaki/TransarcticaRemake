@@ -1,9 +1,10 @@
 class UnitFH {
   static Actions = { 
-    Idle: 0,
-    Move: 1,
-    Attack: 2,
-    Finished: 3
+    Idle: 0,       // Idle means the unit has no orders, but is not yet finished, so it should request orders
+    Move: 1,       // Unit is currently moving
+    Attack: 2,     // Unit is currently attacking (Bullet on the way)
+    Overwatch: 3,  // Unit in overwatch, will trigger reaction fire on player turn
+    Finished: 4    // Finished indicates the CPU IA that the unit has finished for this turn
   };
   static Orientations = {
     N: 90,
@@ -25,15 +26,17 @@ class UnitFH {
     this.isDead = false;
 
     this.unitAI = null;
-    if (this.owner == "CPU") {
+    if (this.owner == Game.Players.Cpu) {
       this.unitAI = new UnitFHAI(this);
     }
 
     // this.pos is a floating point position, contains decimal values
     this.position = position;
     // tilePos contains the integer coordinates of the tile
-    this.tilePosition = position.copy();
-    this.prevTilePosition = position.copy();
+    if (this.position !== null) {
+      this.tilePosition = position.copy();
+      this.prevTilePosition = position.copy();
+    }
 
     this.orientation = UnitFH.Orientations.N;
     this.destination = null;
@@ -70,8 +73,8 @@ class UnitFH {
   }
 
   setPosition(position) {
-    this.position.set(position.x, position.y);
-    this.tilePosition.set(round(position.x), round(position.y));    
+    this.position = createVector(position.x, position.y);
+    this.tilePosition = createVector(round(position.x), round(position.y));    
   }
   getPosition() {
     return this.position;
@@ -100,7 +103,7 @@ class UnitFH {
   }
 
   isEnemy() {
-    return this.owner == "CPU";
+    return this.owner == Game.Players.Cpu;
   }
 
   replenishAp() {
@@ -110,6 +113,7 @@ class UnitFH {
   move(delta) {
     this.setPosition(p5.Vector.add(this.position, delta));
     this.currentAp -= this.speed*10;
+    game.currentScene.camera.setPosition(boardToCamera(this.position, createVector(-mainCanvasDim[0]/2, -mainCanvasDim[1]/2)))
   }
 
   calculateHitProbability(targetPos) {
@@ -225,11 +229,11 @@ class UnitFH {
         this.move(this.direction);
         this.tilePosition = createVector(round(this.position.x), round(this.position.y));
         // // Check if we entered a new tile
-        // if (!this.tilePosition.equals(this.prevTilePosition)) {
-        //   game.currentScene.base.tileBoard.board[this.prevTilePosition.y][this.prevTilePosition.x].setUnitId(null);
-        //   game.currentScene.base.tileBoard.board[this.tilePosition.y][this.tilePosition.x].setUnitId(this.id);
-        //   this.prevTilePosition = this.tilePosition.copy();
-        // }
+        if (!this.tilePosition.equals(this.prevTilePosition)) {
+          game.currentScene.base.tileBoard.board[this.prevTilePosition.y][this.prevTilePosition.x].setUnitId(null);
+          game.currentScene.base.tileBoard.board[this.tilePosition.y][this.tilePosition.x].setUnitId(this.id);
+          this.prevTilePosition = this.tilePosition.copy();
+        }
       } 
     }
     // We should never have destination null and be in move action
@@ -261,7 +265,7 @@ class UnitFH {
 
 
   update() {
-    if (this.owner == "CPU") {
+    if (this.owner == Game.Players.Cpu) {
       this.unitAI.update();
     }
 
@@ -282,7 +286,7 @@ class UnitFH {
 
 
 
-  //   // if (this.owner == "cpu") {
+  //   // if (this.owner == Game.Players.Cpu) {
   //   //   let order = this.soldierAI.requestOrders();
   //   //   this.processOrder(order);
   //   // }
@@ -301,7 +305,7 @@ class UnitFH {
   //         // remove first waypoint from path
   //         this.path.shift();
 
-  //         if (this.owner == "CPU") {
+  //         if (this.owner == Game.Players.Cpu) {
   //           let order = this.unitAI.requestOrders();
   //           if (order !== null) {
   //             this.unitAI.processOrder(order)
@@ -442,5 +446,17 @@ class UnitFH {
     if (this.bullet !== null) {
       this.bullet.show(cameraPosition);
     }
+  }
+}
+
+class Artillery {
+  constructor() {
+
+  }
+}
+
+class Tank {
+  constructor() {
+
   }
 }

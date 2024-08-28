@@ -118,22 +118,6 @@ function manhattanDistance(pos1, pos2) {
   return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y);
 }
 
-function populateBackgroundFH() {
-  let img = createGraphics(mainCanvasDim[0]+TILE_WIDTH_HALF*2, mainCanvasDim[1]+TILE_HEIGHT_HALF*6);
-  let nCols = 27;
-  let nRows = 28;
-  let x, y
-  for (let row=0;row<nRows; row++) {
-    y = row * TILE_HEIGHT_HALF*2;
-    for (let col=0;col<nCols; col++) {
-      x = col * TILE_WIDTH_HALF*2;
-      Tile.draw(img, 0x6E, createVector(x,y))
-      Tile.draw(img, 0x6E, createVector(x+TILE_WIDTH_HALF,y+TILE_HEIGHT_HALF))
-    }
-  }
-  return img;
-}
-
 
 function textToImage(text) {
   let img = createGraphics(text.length * 16, 19)

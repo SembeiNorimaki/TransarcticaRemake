@@ -7,7 +7,7 @@ class Base {
     this.tileBoard = new TileBoard(gameData.baseBoard);
 
     for (let unitData of baseData.units) {
-      let unit = new UnitFH(unitData.name, createVector(unitData.position[0], unitData.position[1]), "CPU")
+      let unit = new UnitFH(unitData.name, createVector(unitData.position[0], unitData.position[1]), Game.Players.Cpu)
       this.addUnit(unit);
     }
     for (let buildingData of baseData.buildings) {
@@ -15,7 +15,25 @@ class Base {
       this.addBuilding(building);
 
     }
+    this.backgroundImg = this.populateBackgroundImg();
     this.initialize();
+  }
+
+
+  populateBackgroundImg() {
+    let img = createGraphics(mainCanvasDim[0]+TILE_WIDTH_HALF*2, mainCanvasDim[1]+TILE_HEIGHT_HALF*6);
+    let nCols = 27;
+    let nRows = 28;
+    let x, y;
+    for (let row=0; row<nRows; row++) {
+      y = row * TILE_HEIGHT_HALF*2;
+      for (let col=0;col<nCols; col++) {
+        x = col * TILE_WIDTH_HALF*2;
+        Tile.draw(img, 0x6E, createVector(x,y))
+        Tile.draw(img, 0x6E, createVector(x+TILE_WIDTH_HALF,y+TILE_HEIGHT_HALF))
+      }
+    }
+    return img;
   }
 
   initialize() {
@@ -83,7 +101,15 @@ class Base {
   }
 
   show(cameraPosition) {
-    this.tileBoard.showTiles(mainCanvas, cameraPosition);
+    //let start = performance.now()
+    mainCanvas.background(0);
+    mainCanvas.image(this.backgroundImg, -cameraPosition.x % (TILE_WIDTH_HALF*2), -cameraPosition.y % (TILE_HEIGHT_HALF*2));
+    //this.tileBoard.showTiles(mainCanvas, cameraPosition);
+    this.tileBoard.showTiles2(mainCanvas, cameraPosition);
     this.tileBoard.showUnits(mainCanvas, cameraPosition);
+    //let end = performance.now()
+    //console.log(end-start)
+    // hudCanvas.background(0)
+    // hudCanvas.text(cameraPosition.y%TILE_HEIGHT_HALF,100,30)
   }
 }

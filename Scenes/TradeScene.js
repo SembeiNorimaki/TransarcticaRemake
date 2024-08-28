@@ -54,7 +54,7 @@ class TradeScene {
   }
 
   initialize() {
-    this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
     this.horizontalTrain.setPosition(createVector(1500, 800));
     this.horizontalTrain.setVelocity(0);
   }

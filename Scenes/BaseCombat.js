@@ -2,7 +2,7 @@ class BaseCombat {
   constructor(base) {
     this.base = base;
     this.camera = new Camera(createVector(0, 94*35));
-    this.currentPlayer = "Player"
+    this.currentPlayer = Game.Players.Human
 
     this.action = UnitFH.Actions.Move;
     this.selectedUnitId = null;
@@ -12,37 +12,37 @@ class BaseCombat {
 
     this.currentEnemyIdx = 0;
     this.currentEnemyUnit = this.base.units[0];
-    sounds.battle.setVolume(0.5)
-    sounds.battle.play()
+
+
+    
+    // sounds.battle.setVolume(0.5)
+    // sounds.battle.play()
 
     // this.camera.setDestination(createVector(100,300));
   }
 
+
+
   initialize() {
-    this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
-    this.horizontalTrain.setPosition(createVector(0, 245));
-    this.horizontalTrain.setVelocity(20);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
+    this.horizontalTrain.setPosition(createVector(81, 83));
+    this.horizontalTrain.setVelocity(0.01);
     
     // this.unloadUnits();
     // this.endTurn();
   }
 
   unloadUnits() {
-    this.base.addUnits([
-      new UnitFH("Tank", createVector(83,92), "Player"),
-      new UnitFH("Artillery", createVector(84,91), "Player"),
-      new UnitFH("Tank", createVector(85,90), "Player"),
-      new UnitFH("Tank", createVector(86,89), "Player"),
-
-      new UnitFH("Tank", createVector(89,86), "Player"),
-      new UnitFH("Artillery", createVector(90,85), "Player"),
-      new UnitFH("Tank", createVector(91,84), "Player"),
-      new UnitFH("Tank", createVector(92,83), "Player")
-    ]);
+    let units = game.playerTrain.wagons[3].unloadAll();
+    let x = 86;
+    let y = 89;
+    for (let unit of units) {
+      unit.setPosition(createVector(x,y))
+      x++;
+      y--;
+    }
+    this.base.addUnits(units);
   }
-
-  
-
 
   setAction(action) {
     if (action === UnitFH.Actions.Attack) {
@@ -165,9 +165,9 @@ class BaseCombat {
     } else if (key == "ArrowRight") {
       this.camera.move(createVector(200,0))
     } else if (key == "ArrowUp") {
-      this.camera.move(createVector(0,-50))
+      this.camera.move(createVector(0,-100))
     } else if (key == "ArrowDown") {
-      this.camera.move(createVector(0,50))
+      this.camera.move(createVector(0,100))
     } else if (key == "a") {
       this.setAction(UnitFH.Actions.Attack);
     } else if (key == "m") {
@@ -241,7 +241,7 @@ class BaseCombat {
       } else {
         // otherwise it means that there are no more enemy units, finish the turn
         console.log("Enemy turn completed");        
-        this.currentPlayer = "Player";
+        this.currentPlayer = Game.Players.Human;
         // for (const unit of this.base.units) {
         //   //unit.replenishAp();
         // }
@@ -268,7 +268,7 @@ class BaseCombat {
     this.currentEnemyIdx = 0
     this.currentEnemyUnit = this.base.units[0];
     this.camera.setPosition(boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
-    this.currentPlayer = "CPU";
+    this.currentPlayer = Game.Players.Cpu;
     this.currentEnemyUnit.unitAI.decideAction();
   }
 
@@ -276,7 +276,7 @@ class BaseCombat {
   
 
   update() {
-    if (this.currentPlayer === "CPU") {
+    if (this.currentPlayer === Game.Players.Cpu) {
       this.enemyTurn();
       return;
     }
@@ -315,13 +315,12 @@ class BaseCombat {
   }
 
   show() {
-    mainCanvas.background(0)
     this.base.show(this.camera.position);
+    this.horizontalTrain.show(this.camera.position);
+    return;
     if (this.action === UnitFH.Actions.Attack && this.selectedUnitId !== null) {
       mainCanvas.text(this.base.units[this.selectedUnitId].calculateHitProbability(screenToBoard(createVector(mouseX, mouseY), this.camera.position)), mouseX, mouseY-20)
     }
-    // this.base.tileBoard.showMinimap(mainCanvas);
-    this.horizontalTrain.show(createVector(0,0));
-    // mainCanvas.rect(mainCanvasDim[0]-300,mainCanvasDim[1]-300,300,300)
+    
   }
 }

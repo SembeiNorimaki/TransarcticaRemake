@@ -1,0 +1,5 @@
+class AStar {
+  constructor() {
+    
+  }
+}

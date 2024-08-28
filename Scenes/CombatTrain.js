@@ -31,8 +31,8 @@ class CombatTrain {
     this.camera = new Camera(createVector(0,0));
 
     this.backgroundImg = this.generateCombatBackground();
-    this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
-    this.enemyHTrain = new HorizontalTrain("Cpu", enemyTrain.wagons);
+    this.playerHTrain = new HorizontalTrain(Game.Players.Human);
+    this.enemyHTrain = new HorizontalTrain(Game.Players.Cpu);
 
     this.playerHTrain.setPosition(createVector(1400, 845));
     this.enemyHTrain.setPosition(createVector(1400, 80));
@@ -55,16 +55,16 @@ class CombatTrain {
     this.playerWolves = [];
 
 
-    this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, "player"));
+    this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, Game.Players.Human));
     
-    this.playerSoldiers.push(new Wolf(0, createVector(700,650), "player"));
+    this.playerSoldiers.push(new Wolf(0, createVector(700,650), Game.Players.Human));
     
-    // this.playerMamooths.push(new Mamooth(0, createVector(700,650), "player"));
+    // this.playerMamooths.push(new Mamooth(0, createVector(700,650), Game.Players.Human));
 
 
-    this.enemySoldiers.push(new Rifleman(1, createVector(300,120), 0, "cpu"));
-    this.enemySoldiers.push(new Rifleman(2, createVector(650,120), 0, "cpu"));
-    this.enemySoldiers.push(new Sniper(3, createVector(500,400), 0, "cpu"));
+    this.enemySoldiers.push(new Rifleman(1, createVector(300,120), 0, Game.Players.Cpu));
+    this.enemySoldiers.push(new Rifleman(2, createVector(650,120), 0, Game.Players.Cpu));
+    this.enemySoldiers.push(new Sniper(3, createVector(500,400), 0, Game.Players.Cpu));
 
     this.enemySoldiers[0].setRole({
       "role": "patrol",
@@ -212,7 +212,7 @@ class CombatTrain {
 
   deploySoldier(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 760);
-    this.playerSoldiers.push(new Rifleman(9,spawnPosition,0,"player"));
+    this.playerSoldiers.push(new Rifleman(9,spawnPosition,0,Game.Players.Human));
   }
   
   findEnemyBarracks() {
@@ -228,12 +228,12 @@ class CombatTrain {
     // find a barracks wagon
     let i = this.findEnemyBarracks();
     let spawnPosition = createVector(this.enemyHTrain.wagons[i].position.x + this.enemyHTrain.wagons[i].halfSize.x + spot*20, 100);
-    this.enemySoldiers.push(new Rifleman(12,spawnPosition, 0, "cpu"));
+    this.enemySoldiers.push(new Rifleman(12,spawnPosition, 0, Game.Players.Cpu));
   }
 
   deployMamooth(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 700);
-    this.playerMamooths.push(new Mamooth(15,spawnPosition,"player"));
+    this.playerMamooths.push(new Mamooth(15,spawnPosition,Game.Players.Human));
   }
 
   // fireCannon(i) {   

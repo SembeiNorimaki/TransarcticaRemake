@@ -19,7 +19,7 @@ class Unit {
     this.id = id;
     this.owner = owner;
     this.position = position.copy();
-    if (this.owner == "player") {
+    if (this.owner == Game.Players.Human) {
       this.defaultOrientation = 90;
     } else {
       this.defaultOrientation = 270;

@@ -25,13 +25,13 @@ class Soldier extends Unit {
     super(id, position, owner);
     this.role = "";
     
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       this.soldierAI = new SoldierAI(this.role, this);
     }
     this.halfSize = createVector(20, 20);
     
     let soldierTypeId = 0;
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       soldierTypeId = 1;
     }
     let spriteData = {
@@ -48,7 +48,7 @@ class Soldier extends Unit {
 
     this.targetUnit = null;
 
-    if (this.owner == "player") {
+    if (this.owner == Game.Players.Human) {
       this.setAction(Soldier.Action.Idle);
     } else {
       this.setAction(Soldier.Action.Idle);
@@ -163,7 +163,7 @@ class Soldier extends Unit {
     // update sprite
     this.sprite.update();
 
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       let order = this.soldierAI.requestOrders();
       this.processOrder(order);
     }
@@ -298,7 +298,7 @@ class Soldier extends Unit {
 
     
     //mainCanvas.fill(0,0,0,100);
-    //if (this.owner == "cpu") {
+    //if (this.owner == Game.Players.Cpu) {
       // mainCanvas.push();
       // mainCanvas.noFill();
       // mainCanvas.stroke("red");

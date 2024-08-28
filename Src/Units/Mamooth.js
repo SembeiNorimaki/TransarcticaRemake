@@ -139,7 +139,7 @@ class Mamooth {
     // update sprite
     this.sprite.update();
 
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       let order = this.soldierAI.requestOrders();
       this.processOrder(order);
     }

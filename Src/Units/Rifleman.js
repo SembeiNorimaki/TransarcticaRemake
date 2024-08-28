@@ -19,7 +19,7 @@ class Rifleman extends Soldier {
     super(id, position, soldierType, owner);
     
     let soldierTypeId = 0;
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       soldierTypeId = 1;
     }
     let spriteData = {

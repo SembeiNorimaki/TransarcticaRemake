@@ -20,7 +20,7 @@ class CombatWolves {
     this.camera = new Camera(createVector(0,0));
 
     this.backgroundImg = this.generateCombatBackground();
-    this.playerHTrain = new HorizontalTrain("Player", playerTrain.wagons);
+    this.playerHTrain = new HorizontalTrain(Game.Players.Human);
     this.playerHTrain.setPosition(createVector(1400, 845));
     this.playerHTrain.update();
 
@@ -35,9 +35,9 @@ class CombatWolves {
     this.playerMamooths = [];
     this.enemyWolves = [];
 
-    this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, "player"));
+    this.playerSoldiers.push(new Rifleman(0, createVector(500,650), 0, Game.Players.Human));
     
-    this.enemyWolves.push(new Wolf(1, createVector(300,120), "cpu"));
+    this.enemyWolves.push(new Wolf(1, createVector(300,120), Game.Players.Cpu));
     
     this.enemyWolves[0].setRole({
       "role": "patrol",
@@ -154,13 +154,13 @@ class CombatWolves {
 
   deploySoldier(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 760);
-    this.playerSoldiers.push(new Rifleman(9,spawnPosition,0,"player"));
+    this.playerSoldiers.push(new Rifleman(9,spawnPosition,0,Game.Players.Human));
   }
   
 
   deployMamooth(i) {
     let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 700);
-    this.playerMamooths.push(new Mamooth(15,spawnPosition,"player"));
+    this.playerMamooths.push(new Mamooth(15,spawnPosition,Game.Players.Human));
   }
 
 

@@ -20,13 +20,13 @@ class CombatIntro {
     this.backgroundImg = this.generateCombatBackground();
     this.camera = new Camera(createVector(0,0));
     
-    this.train1 = new Train("CPU");
+    this.train1 = new Train(Game.Players.Cpu);
     this.train1.initialize(
       {wagons: [
         {"name": "Locomotive"},
         {"name": "Tender"}
       ]});
-    this.train2 = new Train("CPU");
+    this.train2 = new Train(Game.Players.Cpu);
     this.train2.initialize(
       {wagons: [
       {"name": "Locomotive_vu"},
@@ -41,7 +41,7 @@ class CombatIntro {
       {"name": "Livestock_vu"}      
        
     ]});
-    this.train3 = new Train("CPU");
+    this.train3 = new Train(Game.Players.Cpu);
     this.train3.initialize(
       {wagons: [
         {"name": "Locomotive_vu"},
@@ -53,7 +53,7 @@ class CombatIntro {
         {"name": "Merchandise_vu"},
         {"name": "Merchandise_vu"}        
       ]});
-    this.train4 = new Train("CPU");
+    this.train4 = new Train(Game.Players.Cpu);
     this.train4.initialize(  {wagons: [
       {"name": "Locomotive_vu"},
       {"name": "Tender_vu"},
@@ -68,7 +68,7 @@ class CombatIntro {
       {"name": "Merchandise_vu"},
 
     ]});
-    this.train5 = new Train("CPU");
+    this.train5 = new Train(Game.Players.Cpu);
     this.train5.initialize(
       {wagons: [
         {"name": "Locomotive_vu"},
@@ -77,7 +77,7 @@ class CombatIntro {
         {"name": "Livestock_vu"},
         {"name": "Cannon_vu"}
       ]});
-    this.train6 = new Train("CPU");
+    this.train6 = new Train(Game.Players.Cpu);
     this.train6.initialize(
       {wagons: [
         {"name": "Locomotive_vu"},
@@ -89,7 +89,7 @@ class CombatIntro {
         {"name": "Livestock_vu"},
         {"name": "Merchandise_vu"},      
       ]});
-    this.train7 = new Train("CPU");
+    this.train7 = new Train(Game.Players.Cpu);
     this.train7.initialize(
       {wagons: [
         {"name": "Locomotive_vu"},
@@ -102,13 +102,13 @@ class CombatIntro {
         {"name": "Livestock_vu"}      
       ]});
 
-    this.trainH1 = new HorizontalTrain("CPU", this.train1.wagons);
-    this.trainH2 = new HorizontalTrain("CPU", this.train2.wagons);
-    this.trainH3 = new HorizontalTrain("CPU", this.train3.wagons);
-    this.trainH4 = new HorizontalTrain("CPU", this.train4.wagons);
-    this.trainH5 = new HorizontalTrain("CPU", this.train5.wagons);
-    this.trainH6 = new HorizontalTrain("CPU", this.train6.wagons);
-    this.trainH7 = new HorizontalTrain("CPU", this.train7.wagons);
+    this.trainH1 = new HorizontalTrain(Game.Players.Cpu);
+    this.trainH2 = new HorizontalTrain(Game.Players.Cpu);
+    this.trainH3 = new HorizontalTrain(Game.Players.Cpu);
+    this.trainH4 = new HorizontalTrain(Game.Players.Cpu);
+    this.trainH5 = new HorizontalTrain(Game.Players.Cpu);
+    this.trainH6 = new HorizontalTrain(Game.Players.Cpu);
+    this.trainH7 = new HorizontalTrain(Game.Players.Cpu);
 
     this.combatAI = new CombatAI();
 
@@ -131,13 +131,13 @@ class CombatIntro {
     this.playerSoldiers = [];
     this.enemySoldiers = [];
 
-    this.playerSoldiers.push(new Rifleman(0, createVector(50,800), 0, "player"));
+    this.playerSoldiers.push(new Rifleman(0, createVector(50,800), 0, Game.Players.Player));
 
-    this.enemySoldiers.push(new Rifleman(0, createVector(1300,800), 0, "cpu"));
-    this.enemySoldiers.push(new Rifleman(0, createVector(500,500), 0, "cpu"));
-    this.enemySoldiers.push(new Rifleman(0, createVector(1200,300), 0, "cpu"));
-    this.enemySoldiers.push(new Rifleman(0, createVector(1000,100), 0, "cpu"));
-    this.enemySoldiers.push(new Rifleman(0, createVector(500,600), 0, "cpu"));
+    this.enemySoldiers.push(new Rifleman(0, createVector(1300,800), 0, Game.Players.Cpu));
+    this.enemySoldiers.push(new Rifleman(0, createVector(500,500), 0, Game.Players.Cpu));
+    this.enemySoldiers.push(new Rifleman(0, createVector(1200,300), 0, Game.Players.Cpu));
+    this.enemySoldiers.push(new Rifleman(0, createVector(1000,100), 0, Game.Players.Cpu));
+    this.enemySoldiers.push(new Rifleman(0, createVector(500,600), 0, Game.Players.Cpu));
 
     
     this.enemySoldiers[0].setRole({

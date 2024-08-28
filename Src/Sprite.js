@@ -67,7 +67,9 @@ class Sprite {
   getHudImg() {
     return this.#imgs["idle"][270][0]
   }
-
+  getHorizontalImg() {
+    return this.#imgs["idle"][45][0]
+  }
   setAction(action) {
     if (action == this.#currentAction) {
       return;

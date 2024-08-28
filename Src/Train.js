@@ -43,7 +43,21 @@ class Train {
         this.wagons.at(-1).setCargo(wagonSaveData.content.resourceName);
         this.wagons.at(-1).addResource(wagonSaveData.content.qty, 0);
       }
+      if ("vehicles" in wagonSaveData) {
+        for (let vehicleName of wagonSaveData.vehicles) {
+          this.wagons.at(-1).loadVehicle(new UnitFH(vehicleName, null, Game.Players.Human));
+        }
+      }
     }
+
+
+    let units = [];
+    units.push(new UnitFH("Tank", null, Game.Players.Human));
+    units.push(new UnitFH("Artillery", null, Game.Players.Human));
+    units.push(new UnitFH("Artillery", null, Game.Players.Human));
+    units.push(new UnitFH("Tank", null, Game.Players.Human));
+    units.push(new UnitFH("Tank", null, Game.Players.Human));
+
   }
 
   buyResource(resourceName, qty, unitCost) {
@@ -118,6 +132,8 @@ class Train {
       newWagon = new BarracksWagon(1, wagonType, wagonsData[wagonType]);
     } else if (wagonType == "Livestock") {
       newWagon = new LivestockWagon(1, wagonType, wagonsData[wagonType]);
+    } else if (wagonType == "Vehicle Wagon") {
+      newWagon = new VehicleWagon(1, wagonType, wagonsData[wagonType]);
     } else {
       newWagon = new Wagon(1, wagonType, wagonsData[wagonType]);
     }

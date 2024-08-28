@@ -52,7 +52,10 @@ class Wagon {
     "Wolf Meat":           "Merchandise",
 
     "Mamooth":             "Livestock",
-    "Wolf":                "Livestock"
+    "Wolf":                "Livestock",
+
+    "Tank":                "Vehicle Wagon",
+    "Artillery":           "Vehicle Wagon"
 
   };
   
@@ -175,39 +178,70 @@ class Wagon {
     mainCanvas.pop();
   }
 
+
+
   showHorizontal(cameraPosition) {
+    // This position is now a tilePosition, not a screenPosition
     let position = this.position.copy();
-    if (cameraPosition) {
-      position.sub(cameraPosition);
-    }
+    let screenPosition = boardToScreen(position, cameraPosition)
+    // if (cameraPosition) {
+    //   position.sub(cameraPosition);
+    // }
     mainCanvas.image(
       this.img[this.spriteId], 
-      position.x - this.offset[this.spriteId][0], 
-      position.y - this.offset[this.spriteId][1]
+      screenPosition.x - this.offset[this.spriteId][0], 
+      screenPosition.y - this.offset[this.spriteId][1]
     );
-    try {
-      if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
-        mainCanvas.image(resources[this.cargo], position.x-resources[this.cargo].width/2, position.y+10);
-        mainCanvas.text(this.usedSpace, position.x+resources[this.cargo].width/2, position.y+40)
-      }
-      // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
-    }catch{}
+    
+    // try {
+    //   if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
+    //     mainCanvas.image(resources[this.cargo], position.x-resources[this.cargo].width/2, position.y+10);
+    //     mainCanvas.text(this.usedSpace, position.x+resources[this.cargo].width/2, position.y+40)
+    //   }
+    //   // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
+    // } catch {
 
-    mainCanvas.noFill();
-    // mainCanvas.stroke("red")
-    // mainCanvas.rect(
-    //   this.position.x - this.offset[this.spriteId][0], 
-    //   this.position.y - this.offset[this.spriteId][1], 
-    //   this.halfSize.x*2, this.halfSize.y*2);
-    // //mainCanvas.noStroke();
-    // mainCanvas.stroke("black")
+    // }
 
-    //mainCanvas.line(this.position.x, this.position.y-200, this.position.x,this.position.y+100)
+    
 
-
-    //mainCanvas.line(this.position.x, this.position.y, this.position.x, this.position.y-100);
-    //this.showHealthBar(); 
   }
+
+
+  // showHorizontal(cameraPosition) {
+  //   // This position is now a tilePosition, not a screenPosition
+  //   let position = this.position.copy();
+  //   if (cameraPosition) {
+  //     position.sub(cameraPosition);
+  //   }
+  //   mainCanvas.image(
+  //     this.img[this.spriteId], 
+  //     position.x - this.offset[this.spriteId][0], 
+  //     position.y - this.offset[this.spriteId][1]
+  //   );
+  //   try {
+  //     if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
+  //       mainCanvas.image(resources[this.cargo], position.x-resources[this.cargo].width/2, position.y+10);
+  //       mainCanvas.text(this.usedSpace, position.x+resources[this.cargo].width/2, position.y+40)
+  //     }
+  //     // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
+  //   }catch{}
+
+  //   mainCanvas.noFill();
+  //   // mainCanvas.stroke("red")
+  //   // mainCanvas.rect(
+  //   //   this.position.x - this.offset[this.spriteId][0], 
+  //   //   this.position.y - this.offset[this.spriteId][1], 
+  //   //   this.halfSize.x*2, this.halfSize.y*2);
+  //   // //mainCanvas.noStroke();
+  //   // mainCanvas.stroke("black")
+
+  //   //mainCanvas.line(this.position.x, this.position.y-200, this.position.x,this.position.y+100)
+
+
+  //   //mainCanvas.line(this.position.x, this.position.y, this.position.x, this.position.y-100);
+  //   //this.showHealthBar(); 
+  // }
 
   showHud() {
     hudCanvas.background(100);

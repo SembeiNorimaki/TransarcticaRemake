@@ -12,7 +12,7 @@ class BaseScene {
   }
 
   initialize() {
-    this.horizontalTrain = new HorizontalTrain("Player", game.playerTrain.wagons);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
     this.horizontalTrain.setPosition(createVector(1400, 200));
     this.horizontalTrain.setVelocity(0);
   }

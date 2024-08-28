@@ -19,14 +19,12 @@ class HorizontalTrain {
     this.owner = owner;
     // game.playerTrain.wagons = wagons;
 
-    this.position = createVector(81, 93);
-
-    // if (this.owner == Game.Players.Human) {
-    //   this.position = createVector(1400, 800+8);
-    // } else {
-    //   this.position = createVector(1400, 50-32);
-    //   this.horizontalTrainAI = new HorizontalTrainAI(this);
-    // }
+    if (this.owner == Game.Players.Human) {
+      this.position = createVector(1400, 800+8);
+    } else {
+      this.position = createVector(1400, 50-32);
+      this.horizontalTrainAI = new HorizontalTrainAI(this);
+    }
     
     this.velocity = 0.0;
     this.acceleration = 0;
@@ -116,7 +114,7 @@ class HorizontalTrain {
       this.acceleration = 0;
     }
 
-    this.position.add(this.velocity, -this.velocity);
+    this.position.x += this.velocity;
 
     this.currentPosition = this.position.copy();
 
@@ -178,6 +176,13 @@ class HorizontalTrain {
   show(cameraPosition) {
     for (let [i, wagon] of game.playerTrain.wagons.entries()) {
       wagon.showHorizontal(cameraPosition);
+      //if (["Cannon", "Machinegun", "Cannon_vu", "Machinegun_vu"].includes(wagon.name)) {
+        // TODO: gives error for cityTradeScene, 
+        //game.playerTrain.wagons[i].showReloadBar(cameraPosition);
+      //}
+      
+      //mainCanvas.strokeWeight(5)
+      
     }
   }
 }

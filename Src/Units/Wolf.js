@@ -18,7 +18,7 @@ class Wolf extends Unit {
   constructor(id, position, owner) {
     super(id, position, owner);
     this.role = "";
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       this.soldierAI = new SoldierAI(this.role, this);
     }
 
@@ -137,7 +137,7 @@ class Wolf extends Unit {
     // update sprite
     this.sprite.update();
 
-    if (this.owner == "cpu") {
+    if (this.owner == Game.Players.Cpu) {
       let order = this.soldierAI.requestOrders();
       this.processOrder(order);
     }
@@ -261,7 +261,7 @@ class Wolf extends Unit {
 
     
     //mainCanvas.fill(0,0,0,100);
-    //if (this.owner == "cpu") {
+    //if (this.owner == Game.Players.Cpu) {
       mainCanvas.push();
       mainCanvas.noFill();
       mainCanvas.stroke("red");

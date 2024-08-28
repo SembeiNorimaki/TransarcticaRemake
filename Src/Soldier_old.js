@@ -19,7 +19,7 @@ class Unit {
   constructor(position, owner) {
     this.owner = owner;
     this.position = position.copy();
-    if (this.owner == "player") {
+    if (this.owner == Game.Players.Human) {
       this.defaultOrientation = 90;
     } else {
       this.defaultOrientation = 270;
@@ -44,7 +44,7 @@ class Soldier {
     this.position = position.copy();
     this.orientation = 90;
 
-    if (this.owner == "player") {
+    if (this.owner == Game.Players.Human) {
       this.defaultOrientation = 90;
       this.path = [];
     } else {
@@ -81,7 +81,7 @@ class Soldier {
 
     this.targetUnit = null;
 
-    if (this.owner == "player") {
+    if (this.owner == Game.Players.Human) {
       this.setAction(Soldier.Action.Idle);
     } else {
       this.setAction(Soldier.Action.Idle);
@@ -184,7 +184,7 @@ class Soldier {
     this.sprite.update();
 
     if (this.action === Soldier.Action.Idle) {
-      if (this.owner == "cpu") {
+      if (this.owner == Game.Players.Cpu) {
         let orders = this.soldierAI.requestOrders();
         
         if (orders.order == "move") {
@@ -226,7 +226,7 @@ class Soldier {
 
           } else {
             // no more waypoints to go...
-            if (this.owner == "player") {
+            if (this.owner == Game.Players.Human) {
               // if we are the player, set soldier status to Idle
               this.setAction(Soldier.Action.Idle);
             } else {
@@ -333,7 +333,7 @@ class Soldier {
 
     
     //mainCanvas.fill(0,0,0,100);
-    //if (this.owner == "cpu") {
+    //if (this.owner == Game.Players.Cpu) {
       mainCanvas.push();
       mainCanvas.noFill();
       mainCanvas.stroke("red");

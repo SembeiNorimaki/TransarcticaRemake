@@ -280,6 +280,36 @@ class TileBoard {
     }
   }
 
+  // Discards ground tiles (0x6E) making rendering bases more efficient
+  showTiles2(canvas, cameraPos) {
+    let topLeft = cameraToBoard(cameraPos).sub(createVector(25,0));
+    let generator = this.TileGenerator(topLeft);
+    let tilePos, screenPos;
+    tilePos = generator.next();
+    while(tilePos.value !== null) {
+      // If the tilee is outside the board
+      if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
+        // screenPos = boardToScreen(tilePos.value, cameraPos);
+        // Tile.draw(canvas, 0x6F, screenPos);
+      } else {
+        if (this.board[tilePos.value.y][tilePos.value.x].tileId != 0x6E) {
+          this.board[tilePos.value.y][tilePos.value.x].show(canvas, cameraPos);
+        }
+      }
+      
+      tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
+      if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+        // screenPos = boardToScreen(tilePos, cameraPos);
+        // Tile.draw(canvas, 0x6F, screenPos);
+      } else {
+        if (this.board[tilePos.y][tilePos.x].tileId != 0x6E) {
+          this.board[tilePos.y][tilePos.x].show(canvas, cameraPos);
+        }
+      }
+      tilePos = generator.next();
+    }
+  }
+
   showUnits(canvas, cameraPos) {
     let topLeft = cameraToBoard(cameraPos).sub(createVector(23,0));
     let generator = this.TileGenerator(topLeft);
