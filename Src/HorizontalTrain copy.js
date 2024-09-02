@@ -118,13 +118,13 @@ class HorizontalTrain {
 
     this.currentPosition = this.position.copy();
 
-    game.playerTrain.wagons[0].setPos(this.currentPosition);  
+    game.playerTrain.wagons[0].setPosition(this.currentPosition);  
     this.currentPosition.sub(game.playerTrain.wagons[0].halfSize.x+2, 0);
 
     for (let [i, wagon] of game.playerTrain.wagons.entries()) {
       if (i==0) continue;
       this.currentPosition.sub(wagon.halfSize.x+2, 0);
-      wagon.setPos(this.currentPosition.copy());  
+      wagon.setPosition(this.currentPosition.copy());  
       this.currentPosition.sub(wagon.halfSize.x+2, 0);
     }
 
@@ -139,15 +139,15 @@ class HorizontalTrain {
     // }
   }
 
-  getClickedWagon(mousePos) {
-    for (let i=0; i<game.playerTrain.wagons.length; i++) {
-      if (mousePos.x >= game.playerTrain.wagons[i].position.x - game.playerTrain.wagons[i].halfSize.x) {
-        console.log(`Clicked wagon ${i}`);
-        return i;
-      }
-    } 
-    return null;
-  }
+  // getClickedWagon(mousePos) {
+  //   for (let i=0; i<game.playerTrain.wagons.length; i++) {
+  //     if (mousePos.x >= game.playerTrain.wagons[i].position.x - game.playerTrain.wagons[i].halfSize.x) {
+  //       console.log(`Clicked wagon ${i}`);
+  //       return i;
+  //     }
+  //   } 
+  //   return null;
+  // }
 
   onClick(mousePos) {
     for (const [i, wagon] of game.playerTrain.wagons.entries()) {

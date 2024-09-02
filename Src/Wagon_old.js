@@ -32,7 +32,7 @@ class Wagon {
 
   }
 
-  setPos(newPos) {
+  setPosition(newPos) {
     this.position.set(newPos);
   }
 

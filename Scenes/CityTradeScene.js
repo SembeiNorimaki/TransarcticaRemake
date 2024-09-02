@@ -39,7 +39,17 @@ class CityTradeScene extends TradeScene {
 
   generateBackgroundImage() {
     let backgroundImage = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
-    this.tileBoard.showTiles(backgroundImage, this.cameraPos);
+
+    let showOptions = { 
+      "outOfBoardTile": 0x6F,
+      "baseTile": 0x6E,
+      "showTerrain": true,
+      "showBuildings": false,
+      "showUnits": false,
+      "showWalls": false,
+      "showMinimap": false
+    }
+    this.tileBoard.show(backgroundImage, this.camera.position, showOptions);
 
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
@@ -63,7 +73,7 @@ class CityTradeScene extends TradeScene {
 
   onClick(mousePos) {   
     if (mouseButton == "right") {
-      this.draggedWagonId = this.horizontalTrain.getClickedWagon(mousePos);
+      this.draggedWagonId = this.horizontalTrain.onClick(mousePos, this.camera.position);
       return
     }
     
@@ -86,7 +96,7 @@ class CityTradeScene extends TradeScene {
     
     // Horizontal train
     else if (mousePos.y > 750) {
-      let wagonIdx = this.horizontalTrain.onClick(mousePos);
+      let wagonIdx = this.horizontalTrain.onClick(mousePos, this.camera.position);
       console.log(`Clicked wagon ${wagonIdx}`)
       if (wagonIdx !== null) {
         //let wagon = this.horizontalTrain.wagons[wagonIdx]; 
@@ -151,7 +161,7 @@ class CityTradeScene extends TradeScene {
         if (wagon === null) {
           continue;
         }
-        if (wagon.checkClick(mousePos)) {
+        if (wagon.checkClick(mousePos, this.camera.position)) {
           console.log(`Clicked wagon ${wagon.position.array()}`);
           this.selectedBuyableWagonIdx = i;
 
@@ -184,7 +194,7 @@ class CityTradeScene extends TradeScene {
 
     
       // check if we clicked a house
-      let boardPos = screenToBoard(mousePos, this.cameraPos);
+      let boardPos = screenToBoard(mousePos, this.camera.position);
       let tileId = this.tileBoard.board[boardPos.y][boardPos.x].tileId;
       console.log(`Tile clicked: ${boardPos.array()} with tileId ${tileId}`);
 
@@ -220,11 +230,11 @@ class CityTradeScene extends TradeScene {
   show() {
     mainCanvas.image(this.backgroundImg, 0, 0);    
     this.trafficLight.show();
-    this.horizontalTrain.show(createVector(0,0));
+    this.horizontalTrain.show(this.camera.position);
 
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {
-        wagon.showHorizontal();
+        wagon.showHorizontal(createVector(0,0));
       }
     }
 

@@ -30,11 +30,13 @@ class HorizontalTrain {
     
     this.velocity = 0.0;
     this.acceleration = 0;
-    this.accelerationStrenght = 0.1;
-    this.brakingStrenght = 0.2;
+    this.accelerationStrenght = 0.01;
+    this.brakingStrenght = 0.002;
     this.maxVelocity = 12.0;
     this.minVelocity = -12.0;
     this.gear = "N";    
+
+    
   }
 
   findWagonIdxByName(name) {
@@ -92,8 +94,7 @@ class HorizontalTrain {
       this.setGear("R");
   }
 
-  update() {
-    
+  update() {    
     this.velocity += this.acceleration;
 
     if (this.gear == "N") {
@@ -120,40 +121,44 @@ class HorizontalTrain {
 
     this.currentPosition = this.position.copy();
 
-    game.playerTrain.wagons[0].setPos(this.currentPosition);  
-    this.currentPosition.sub(game.playerTrain.wagons[0].halfSize.x+2, 0);
+    game.playerTrain.wagons[0].setPosition(this.currentPosition);  
+    let offset = createVector(
+      (((game.playerTrain.wagons[0].halfSize.x) / TILE_WIDTH_HALF) ) / 2 , 
+      (-((game.playerTrain.wagons[0].halfSize.x ) / TILE_WIDTH_HALF) ) / 2
+    );
+    this.currentPosition.sub(offset);
 
     for (let [i, wagon] of game.playerTrain.wagons.entries()) {
       if (i==0) continue;
-      this.currentPosition.sub(wagon.halfSize.x+2, 0);
-      wagon.setPos(this.currentPosition.copy());  
-      this.currentPosition.sub(wagon.halfSize.x+2, 0);
+      offset = createVector(
+        (((wagon.halfSize.x) / TILE_WIDTH_HALF) ) / 2 , 
+        (-((wagon.halfSize.x ) / TILE_WIDTH_HALF) ) / 2
+      );
+      this.currentPosition.sub(offset);
+      
+      wagon.setPosition(this.currentPosition.copy());  
+      offset = createVector(
+        (((wagon.halfSize.x) / TILE_WIDTH_HALF) ) / 2 , 
+        (-((wagon.halfSize.x ) / TILE_WIDTH_HALF) ) / 2
+      );
+      this.currentPosition.sub(offset);
+      
     }
-
-    // let auxPos = this.position.copy();
-    // game.playerTrain.wagons[0].update();
-    // game.playerTrain.wagons[0].setPos(this.position);
-
-    // for (let i=1; i<game.playerTrain.wagons.length; i++) {
-    //   game.playerTrain.wagons[i].update();
-    //   auxPos.x -= game.playerTrain.wagons[i].halfSize.x*2;
-    //   game.playerTrain.wagons[i].setPos(auxPos);
-    // }
   }
 
-  getClickedWagon(mousePos) {
-    for (let i=0; i<game.playerTrain.wagons.length; i++) {
-      if (mousePos.x >= game.playerTrain.wagons[i].position.x - game.playerTrain.wagons[i].halfSize.x) {
-        console.log(`Clicked wagon ${i}`);
-        return i;
-      }
-    } 
-    return null;
-  }
+  // getClickedWagon(mousePos) {
+  //   for (let i=0; i<game.playerTrain.wagons.length; i++) {
+  //     if (mousePos.x >= game.playerTrain.wagons[i].position.x - game.playerTrain.wagons[i].halfSize.x) {
+  //       console.log(`Clicked wagon ${i}`);
+  //       return i;
+  //     }
+  //   } 
+  //   return null;
+  // }
 
-  onClick(mousePos) {
+  onClick(mousePos, cameraPosition) {
     for (const [i, wagon] of game.playerTrain.wagons.entries()) {
-      if (wagon.checkClick(mousePos)) {
+      if (wagon.checkClick(mousePos, cameraPosition)) {
         return i;
       }
     }

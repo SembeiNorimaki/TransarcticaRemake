@@ -9,18 +9,27 @@
       {
         "name": "Tank",
         "position": [85, 80]
+      },
+      {
+        "name": "Artillery",
+        "position": [65, 54]
       }
       
     ],
     "buildings": [      
       {
         "name": "ConstructionBay",
-        "position": [5, 11]
+        "position": [70, 50]
       },
       {
         "name": "Factory",
-        "position": [10, 15]
+        "position": [75, 45]
       }
+    ],
+    "wagons": [
+      {"name": "Merchandise"},
+      {"name": "Merchandise"},
+      {"name": "Merchandise"}
     ]
   }
 }

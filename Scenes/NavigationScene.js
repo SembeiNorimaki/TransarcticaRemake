@@ -196,7 +196,18 @@ class NavigationScene {
 
   show() {
 
-    this.tileBoard.showTiles(mainCanvas, this.camera.position); 
+    let showOptions = { 
+      "outOfBoardTile": 0x6F,
+      "baseTile": 0x6E,
+      "showTerrain": true,
+      "showBuildings": false,
+      "showUnits": false,
+      "showWalls": false,
+      "showMinimap": false
+    }
+
+    // this.tileBoard.showTiles(mainCanvas, this.camera.position); 
+    this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
     this.locomotive.show();
     
     

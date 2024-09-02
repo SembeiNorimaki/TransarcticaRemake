@@ -147,7 +147,7 @@ class CombatTrain {
     mousePos.add(this.camera.position);
     // Click on own train
     if (mousePos.y > 750) {
-      let i = this.playerHTrain.getClickedWagon(mousePos);
+      let i = this.playerHTrain.onClick(mousePos, this.camera.position);
       this.selectedWagon = this.playerHTrain.wagons[i];
       if (this.selectedWagon.name == "Cannon") {
         this.selectedWagon.fire();
@@ -163,7 +163,7 @@ class CombatTrain {
     }
     // Click on enemy train
     else if (mousePos.y < 120) {
-      let i = this.enemyHTrain.getClickedWagon(mousePos);
+      let i = this.enemyHTrain.onClick(mousePos, this.camera.position);
       let wagonName = this.enemyHTrain.wagons[i].name;
       console.log(`Clicked enemy wagon ${i}: ${wagonName}`);
     }
@@ -249,7 +249,7 @@ class CombatTrain {
   cannonHitEnemy(pos) {
     console.log(pos)
     console.log(this.enemyHTrain)
-    let i = this.enemyHTrain.getClickedWagon(pos);
+    let i = this.enemyHTrain.onClick(pos, this.camera.position);
     if (i === null) 
       return;
     let wagonName = this.enemyHTrain.wagons[i].name;

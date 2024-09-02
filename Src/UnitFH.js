@@ -60,10 +60,15 @@ class UnitFH {
     this.action = UnitFH.Actions.Idle;
     
     let spriteData = {
-      "imgs": gameData.unitsData[this.name],
+      "imgs": null,
       "actions": ["idle"],
       "nSprites": {"idle": 1},
       "spriteDuration": {"idle": 100}
+    }
+    if (this.owner == Game.Players.Human) {
+      spriteData.imgs = gameData.unitsData[this.name].Human;
+    } else {
+      spriteData.imgs = gameData.unitsData[this.name].Cpu;
     }
 
     this.sprite = new Sprite("idle", this.orientation, spriteData);
@@ -75,6 +80,7 @@ class UnitFH {
   setPosition(position) {
     this.position = createVector(position.x, position.y);
     this.tilePosition = createVector(round(position.x), round(position.y));    
+    this.prevTilePosition = this.tilePosition.copy();
   }
   getPosition() {
     return this.position;
@@ -88,7 +94,7 @@ class UnitFH {
   setAction(action) {
     this.action = action;
     if (action == UnitFH.Actions.Move) {
-      sounds.moveTrack.play()
+      sounds.MoveTrack.play()
     }
   }
   
@@ -110,8 +116,8 @@ class UnitFH {
     this.currentAp = this.maxAp;
   }
 
-  move(delta) {
-    this.setPosition(p5.Vector.add(this.position, delta));
+  move(delta) {    
+    this.position.add(delta);
     this.currentAp -= this.speed*10;
     game.currentScene.camera.setPosition(boardToCamera(this.position, createVector(-mainCanvasDim[0]/2, -mainCanvasDim[1]/2)))
   }
@@ -159,7 +165,7 @@ class UnitFH {
       this.attackValue);
     this.setAction(UnitFH.Actions.Attack);
     this.currentAp -= this.attackCost;
-    sounds.artilleryShoot.play();
+    sounds.ArtilleryShoot.play();
     return true;
   }
 
@@ -218,23 +224,32 @@ class UnitFH {
   }
 
   updateMove() {
+    // If we don't have enough AP to move 1 tile, flag the unit as finished
+    if (this.currentAp < 10) {
+      this.setPath([]);
+      this.setDestination(null);
+      this.setAction(UnitFH.Actions.Finished);
+      return;
+    }
+
     // If we have a destination
     if (this.destination !== null) {
       // if we have arrived to the destination
       if (this.hasReachedDestination()) {
         this.assignNextPathLocation();
+        return;
       }
-      else {
-        // Update position
-        this.move(this.direction);
-        this.tilePosition = createVector(round(this.position.x), round(this.position.y));
-        // // Check if we entered a new tile
-        if (!this.tilePosition.equals(this.prevTilePosition)) {
-          game.currentScene.base.tileBoard.board[this.prevTilePosition.y][this.prevTilePosition.x].setUnitId(null);
-          game.currentScene.base.tileBoard.board[this.tilePosition.y][this.tilePosition.x].setUnitId(this.id);
-          this.prevTilePosition = this.tilePosition.copy();
-        }
-      } 
+      
+      // Update position
+      this.move(this.direction);
+      this.tilePosition = createVector(round(this.position.x), round(this.position.y));
+      // Check if we entered a new tile
+      if (!this.tilePosition.equals(this.prevTilePosition)) {
+        game.currentScene.base.tileBoard.board[this.prevTilePosition.y][this.prevTilePosition.x].setUnitId(null);
+        game.currentScene.base.tileBoard.board[this.tilePosition.y][this.tilePosition.x].setUnitId(this.id);
+        this.prevTilePosition.set(this.tilePosition);
+      }
+       
     }
     // We should never have destination null and be in move action
     else {
@@ -449,14 +464,15 @@ class UnitFH {
   }
 }
 
-class Artillery {
-  constructor() {
+class Artillery extends UnitFH {
+  constructor(name, position, owner) {
+    super(name, position, owner);
 
   }
 }
 
-class Tank {
-  constructor() {
-
+class Tank extends UnitFH {
+  constructor(name, position, owner) {
+    super(name, position, owner);
   }
 }

@@ -149,7 +149,7 @@ class Locomotive {
     // update camera
     if (game.cameraFollowsLocomotive) {
       let aux = boardToCamera(this.position);
-      game.navigationScene.camera.setPos(aux);
+      game.navigationScene.camera.setPosition(aux);
     }
   }
 

@@ -106,16 +106,17 @@ class Wagon {
     return data;
   }
 
-  checkClick(mousePos) {
+  checkClick(mousePos, cameraPosition) {
+    let screenPosition = boardToScreen(this.position, cameraPosition);
     return (
-      mousePos.x > this.position.x - this.offset[this.spriteId][0] &&
-      mousePos.x < this.position.x - this.offset[this.spriteId][0] + 2 * this.halfSize.x &&
-      mousePos.y > this.position.y - this.offset[this.spriteId][1]&&
-      mousePos.y < this.position.y - this.offset[this.spriteId][1] + 2 * this.halfSize.y
+      mousePos.x > screenPosition.x - this.halfSize.x &&
+      mousePos.x < screenPosition.x + this.halfSize.x &&
+      mousePos.y > screenPosition.y - 2*this.halfSize.y &&
+      mousePos.y < screenPosition.y
     );
   }
 
-  setPos(newPos) {
+  setPosition(newPos) {
     this.position.set(newPos);
   }
 
@@ -178,6 +179,12 @@ class Wagon {
     mainCanvas.pop();
   }
 
+  showBoundingBox(screenPosition) {
+    mainCanvas.push();
+    mainCanvas.noFill();
+    mainCanvas.rect(screenPosition.x-this.halfSize.x, screenPosition.y-2*this.halfSize.y, 2*this.halfSize.x, 2*this.halfSize.y);
+    mainCanvas.pop();
+  }
 
 
   showHorizontal(cameraPosition) {
@@ -192,6 +199,15 @@ class Wagon {
       screenPosition.x - this.offset[this.spriteId][0], 
       screenPosition.y - this.offset[this.spriteId][1]
     );
+
+    this.showBoundingBox(screenPosition)
+    
+    // mainCanvas.line(
+    //   screenPosition.x-50, screenPosition.y-50,screenPosition.x+50, screenPosition.y+50,
+    // )
+    // mainCanvas.line(
+    //   screenPosition.x+50, screenPosition.y-50,screenPosition.x-50, screenPosition.y+50,
+    // )
     
     // try {
     //   if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {

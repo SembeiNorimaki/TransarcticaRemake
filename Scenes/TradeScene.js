@@ -36,7 +36,7 @@ class TradeScene {
 
     this.enterSequence = true;
     this.exitSequence = false;
-    this.cameraPos = boardToCamera(createVector(15,15));
+    this.camera = new Camera(boardToCamera(createVector(15,15)));
     this.trafficLight = new TrafficLight(
       createVector(mainCanvasDim[0]-60, mainCanvasDim[1]-180), 
       [gameData.trafficLightData.green, gameData.trafficLightData.red], 
@@ -55,8 +55,8 @@ class TradeScene {
 
   initialize() {
     this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
-    this.horizontalTrain.setPosition(createVector(1500, 800));
-    this.horizontalTrain.setVelocity(0);
+    this.horizontalTrain.setPosition(createVector(5, 5));
+    this.horizontalTrain.setVelocity(0.01);
   }
 
   // Mission related functions
@@ -82,7 +82,7 @@ class TradeScene {
         } else {
           wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
         }
-        wagon.setPos(createVector(
+        wagon.setPosition(createVector(
           1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
           352 + row*TILE_HEIGHT_HALF*3
         ));
@@ -112,7 +112,7 @@ class TradeScene {
       } else {
         wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
       }
-      wagon.setPos(createVector(
+      wagon.setPosition(createVector(
         1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
         352 + row*TILE_HEIGHT_HALF*3
       ));
@@ -134,7 +134,7 @@ class TradeScene {
         continue;
       }
       let resource = new Resource(resourceName);
-      resource.setPos(createVector(
+      resource.setPosition(createVector(
         1100 + col * 60*2.4 - 150*row + 60, 
         352 + row*TILE_HEIGHT_HALF*3
       ));
@@ -206,8 +206,10 @@ class TradeScene {
   processKey(key) {
     if (key == "ArrowLeft") {
       this.horizontalTrain.gearDown();
+      this.camera.move(createVector(-200,0))
     } else if (key == "ArrowRight") {
       this.horizontalTrain.gearUp();
+      this.camera.move(createVector(200,0))
     }
   }
 

@@ -58,7 +58,7 @@ class CityTradeScene {
       for (let i=0; i<val.Qty; i++) {
         let wagonName = resourceToWagon[resourceName];
         let wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
-        wagon.setPos(createVector(
+        wagon.setPosition(createVector(
           1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
           386 + row*TILE_HEIGHT_HALF*2
         ));

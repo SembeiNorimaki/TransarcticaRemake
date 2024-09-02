@@ -122,7 +122,8 @@ class Game {
           // {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
           // {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 7}},
           //{"name": "Vehicle Wagon"},
-          {"name": "Vehicle Wagon", "vehicles": ["Tank", "Tank", "Artillery"]}
+          {"name": "Vehicle Wagon", "vehicles": ["Tank", "Tank", "Artillery", "Tank", "Artillery"]},
+          {"name": "Merchandise"}
         ]
       },
       "EnemyTrain": {
@@ -179,8 +180,10 @@ class Game {
     // this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
     //this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
-    //this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
-    this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
+    
+    this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
+    // this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
+    
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
     // this.currentScene = new MapEditor();
@@ -188,7 +191,7 @@ class Game {
     // this.currentScene = new BridgeScene(bridgeImage);
     
 
-    // this.currentScene.initialize();
+    this.currentScene.initialize();
 
     
 
@@ -256,7 +259,7 @@ class Game {
     if (this.objectivesVisible) 
       this.showObjectives();  
     this.conversationPanel.show();
-    // this.hud.show();
+    this.hud.show();
     this.gameTime.setMinutes(this.gameTime.getMinutes()+1)
     this.checkTimedEvents();
 

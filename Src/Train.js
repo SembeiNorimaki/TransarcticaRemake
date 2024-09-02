@@ -45,18 +45,22 @@ class Train {
       }
       if ("vehicles" in wagonSaveData) {
         for (let vehicleName of wagonSaveData.vehicles) {
-          this.wagons.at(-1).loadVehicle(new UnitFH(vehicleName, null, Game.Players.Human));
+          if (vehicleName == "Artillery") {
+            this.wagons.at(-1).loadVehicle(new Artillery(vehicleName, null, Game.Players.Human));
+          } else if (vehicleName == "Tank") {
+            this.wagons.at(-1).loadVehicle(new Tank(vehicleName, null, Game.Players.Human));
+          }
         }
       }
     }
 
 
-    let units = [];
-    units.push(new UnitFH("Tank", null, Game.Players.Human));
-    units.push(new UnitFH("Artillery", null, Game.Players.Human));
-    units.push(new UnitFH("Artillery", null, Game.Players.Human));
-    units.push(new UnitFH("Tank", null, Game.Players.Human));
-    units.push(new UnitFH("Tank", null, Game.Players.Human));
+    // let units = [];
+    // units.push(new UnitFH("Tank", null, Game.Players.Human));
+    // units.push(new UnitFH("Artillery", null, Game.Players.Human));
+    // units.push(new UnitFH("Artillery", null, Game.Players.Human));
+    // units.push(new UnitFH("Tank", null, Game.Players.Human));
+    // units.push(new UnitFH("Tank", null, Game.Players.Human));
 
   }
 

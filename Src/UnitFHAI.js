@@ -109,7 +109,7 @@ class UnitFHAI {
       this.decideAction();
     }
     else if (this.ownerInstance.action == UnitFH.Actions.Attack) {
-      console.log("idle")
+      console.log("attacking")
     }
     else if (this.ownerInstance.action == UnitFH.Actions.Move) {
       // If we are moving towards the target unit, check if we came in range to shoot it

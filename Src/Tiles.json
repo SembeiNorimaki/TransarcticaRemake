@@ -127,10 +127,15 @@
     "Turret": {"filename": "resources/walls/turret.png"},
     "Tank": {"filename": "resources/walls/tank.png"},
     "Artillery": {"filename": "resources/walls/artillery.png"},
-    "Ground7035": {"filename": "resources/roadsFH/Ground.png"},
+    "Ground7035": {"filename": "resources/terrain/Ground_small.png"},
     "Water7035": {"filename": "resources/roadsFH/Water.png"},
-    "Track_AB_FH": {"filename": "resources/roadsFH/Track_AB.png"},
-    "Track_CD_FH": {"filename": "resources/roadsFH/Track_CD.png"}
+
+    "Track_AD_small": {"filename": "resources/tracks/AD_small.png"},
+    "Track_BC_small": {"filename": "resources/tracks/BC_small.png"},
+    "Track_AB_small": {"filename": "resources/tracks/AB_small.png"},
+    "Track_CD_small": {"filename": "resources/tracks/CD_small.png"},
+    "Track_AC_small": {"filename": "resources/tracks/AC_small.png"},
+    "Track_BD_small": {"filename": "resources/tracks/BD_small.png"}
 
 
   },
@@ -224,11 +229,13 @@
     "0x68": {"imgName": "Wall_BCD"    , "offset": [0, -10]},
     "0x69": {"imgName": "Wall_ABCD"   , "offset": [0, -10]},
     "0x6A": {"imgName": "Turret"      , "offset": [0, -20]},
-    "0x6B": {"imgName": "Track_AB_FH"        , "offset": [0, 0]},
-    "0x6C": {"imgName": "Track_CD_FH"   , "offset": [0, 0]},
+    
+
     "0x6E": {"imgName": "Ground7035"  , "offset": [0, 0]},
     "0x6F": {"imgName": "Water7035"  , "offset": [0, 0]},
     
+
+
 
     "0x70": {"imgName": "Road_AD" , "offset": [0, 0]},
     "0x71": {"imgName": "Road_BC" , "offset": [0, 0]},
@@ -245,6 +252,13 @@
     "0x7C": {"imgName": "Road_Ad" , "offset": [0, 0]},
     "0x7D": {"imgName": "Road_Bc" , "offset": [0, 0]},
     "0x7E": {"imgName": "Road_Cb" , "offset": [0, 0]},
+
+    "0x80": {"imgName": "Track_AD_small"   , "offset": [0, 0]},
+    "0x81": {"imgName": "Track_BC_small"   , "offset": [0, 0]},
+    "0x82": {"imgName": "Track_AB_small"   , "offset": [0, 0]},
+    "0x83": {"imgName": "Track_CD_small"   , "offset": [0, 0]},
+    "0x84": {"imgName": "Track_AC_small"   , "offset": [0, 0]},
+    "0x85": {"imgName": "Track_DB_small"   , "offset": [0, 0]},
 
     "0xA0": {"imgName": "Village" , "offset": [-116, -130]},
     "0xA6": {"imgName": "Building_1" , "offset": [-64, -236]},

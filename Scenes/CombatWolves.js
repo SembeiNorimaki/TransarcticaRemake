@@ -102,7 +102,7 @@ class CombatWolves {
     mousePos.add(this.camera.position);
     // Click on own train
     if (mousePos.y > 750) {
-      let i = this.playerHTrain.getClickedWagon(mousePos);
+      let i = this.playerHTrain.onClick(mousePos, this.camera.position);
       this.selectedWagon = this.playerHTrain.wagons[i];
       if (this.selectedWagon.name == "Cannon") {
         this.selectedWagon.fire();

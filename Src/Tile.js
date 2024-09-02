@@ -539,6 +539,7 @@ class Tile {
     let id = tileId & 0xFF;
     this.isEvent = Boolean(tileId & 0x100);
     this.tileId = id;
+    
     this.tileName = Tile.tileCodes[id].imgName;
     this.offset = Tile.tileCodes[id].offset;
     this.img = tileImgs[this.tileName].img;    
@@ -565,7 +566,7 @@ class Tile {
     return false;
   }
   isWall() {
-    return false;
+    return this.tileId >= 0x60 && this.tileId <= 0x69;
   }
   
 
@@ -621,7 +622,7 @@ class Tile {
 
     Tile.draw(canvas, this.tileId, screenPos.copy());
     canvas.fill(0)
-    // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
+    canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
     // canvas.text(auxText, screenPos.x, screenPos.y); 
     canvas.push();
 
@@ -649,16 +650,42 @@ class Tile {
     canvas.pop();
   }
 
-  showTilePixel(canvas) {
-    let screenPos = this.boardPosition;
-    let color = "blue";
-    if (this.tileId == 0x6E) {
-      color = "white"
+  showTerrain(canvas, cameraPos) {
+    let screenPos = boardToScreen(this.boardPosition, cameraPos);    
+    Tile.draw(canvas, this.tileId, screenPos.copy());
+    
+  }
+
+
+  showBuilding(canvas, cameraPos) {
+    let screenPos = boardToScreen(this.boardPosition, cameraPos); 
+    game.currentScene.base.buildings[this.buildingId].show(cameraPos);
+  }
+
+  showUnit(canvas, cameraPos) {
+    game.currentScene.base.units[this.unitId].show(cameraPos);
+  }
+
+  showWall(canvas, cameraPos) {
+    let screenPos = boardToScreen(this.boardPosition, cameraPos); 
+    canvas.circle(screenPos.x, screenPos.y, 20)
+  }
+
+  showMinimap(canvas, minimapLoc) {
+    canvas.push();
+    let screenPos = boardToMinimap(this.boardPosition);
+    screenPos.add(minimapLoc)
+    let color = "yellow";
+    if (this.isUnit()) {
+      canvas.fill(255,0,0)
+      canvas.noStroke()
+      canvas.rect(screenPos.x, screenPos.y, 3,3);
+    } else if(this.isBuilding()) {
+      canvas.fill(0,0,255)
+      canvas.noStroke()
+      canvas.rect(screenPos.x, screenPos.y, 3,3);
     }
-    //canvas.fill(color)
-    canvas.set(screenPos.x, screenPos.y, (255,0,0));
-
-
+    canvas.pop();
   }
 
   draw3D(canvas, cameraPos, auxText) {

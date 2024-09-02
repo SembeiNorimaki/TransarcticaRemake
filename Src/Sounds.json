@@ -1,0 +1,5 @@
+{
+  "ArtilleryShoot": {"filename": "resources/sounds/artilleryShoot.mp3"},
+  "BattleMusic": {"filename": "resources/sounds/battle.mp3"},
+  "MoveTrack": {"filename": "resources/sounds/MOVETRK.WAV"}
+}

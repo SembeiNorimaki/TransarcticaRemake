@@ -2,12 +2,13 @@ class BaseCombat {
   constructor(base) {
     this.base = base;
     this.camera = new Camera(createVector(0, 94*35));
+    // this.camera = new Camera(createVector(0, 0));
     this.currentPlayer = Game.Players.Human
 
     this.action = UnitFH.Actions.Move;
     this.selectedUnitId = null;
     this.selectedBuildingId = null;
-    this.enterSequence = true;
+    this.enterSequence = false;
     this.exitSequence = false;
 
     this.currentEnemyIdx = 0;
@@ -25,10 +26,10 @@ class BaseCombat {
 
   initialize() {
     this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
-    this.horizontalTrain.setPosition(createVector(81, 83));
-    this.horizontalTrain.setVelocity(0.01);
+    this.horizontalTrain.setPosition(createVector(74, 98));
+    this.horizontalTrain.setVelocity(-200);
     
-    // this.unloadUnits();
+    this.unloadUnits();
     // this.endTurn();
   }
 
@@ -38,6 +39,7 @@ class BaseCombat {
     let y = 89;
     for (let unit of units) {
       unit.setPosition(createVector(x,y))
+      
       x++;
       y--;
     }
@@ -66,6 +68,7 @@ class BaseCombat {
       this.setAction(UnitFH.Actions.Move);
       return;
     }
+
     // mouse pressed in the hud
     if (mousePos.y > mainCanvasDim[1]) {  
       console.log("Hud pressed");
@@ -83,13 +86,15 @@ class BaseCombat {
     // if we don't have anything selected
     if (this.selectedUnitId === null && this.selectedBuildingId === null) {      
       //this.base.tileBoard.selectedTile = tile;
-      // If we clicked a unit
+      // If we clicked one of our units
       if (this.base.tileBoard.board[tilePosition.y][tilePosition.x].isUnit()) {
-        console.log("Selecting unit");
-        this.selectedUnitId = this.base.tileBoard.board[tilePosition.y][tilePosition.x].unitId;
-        this.camera.setDestination(boardToScreen(tilePosition, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
-        this.base.units[this.selectedUnitId].isSelected = true;
-        //this.city.tileBoard.flood(tile, 10);
+        let unitId = this.base.tileBoard.board[tilePosition.y][tilePosition.x].unitId;
+        if (this.base.units[unitId].isEnemy() == false) {
+          console.log(`Selecting unit ${unitId}`);
+          this.selectedUnitId = unitId;
+          this.camera.setDestination(boardToScreen(tilePosition, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
+          this.base.units[this.selectedUnitId].isSelected = true;
+        }
       } 
       // If we clicked a building
       else if (this.base.tileBoard.board[tilePosition.y][tilePosition.x].isBuilding()) {

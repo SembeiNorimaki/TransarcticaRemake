@@ -22,10 +22,8 @@ let loadFromLocalStorage = false;
 // const TILE_WIDTH_HALF = 65;
 // const TILE_HEIGHT_HALF = 33;
 
-const TILE_WIDTH_HALF = 35;
-const TILE_HEIGHT_HALF = 18;
-
-
+const TILE_WIDTH_HALF = 32;
+const TILE_HEIGHT_HALF = 16;
 
 // Minimap tile size
 const TILE_MINI_WIDTH = 3;
@@ -108,10 +106,18 @@ let imgBkg;
 
 let characters = {};
 
+
+let atlasPlayer, atlasCpu;
 function preload() {
-  sounds.artilleryShoot = loadSound("music/artilleryShoot.mp3");
-  sounds.battle = loadSound("music/battle.mp3");
-  sounds.moveTrack = loadSound("music/MOVETRK.WAV");
+
+  // Sounds
+  loadJSON("Src/Sounds.json", jsonData => {
+    for (let [name, val] of Object.entries(jsonData)) {
+      sounds[name] = loadSound(val.filename);
+    }
+  });
+
+  // Transarctica pixel font
   loadImage("resources/font.png", img => {
     let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
     for (let [x, character] of alphabet.entries()) {
@@ -119,32 +125,37 @@ function preload() {
     }
   });
 
-  loadImage("resources/units/artillery.png", img => {
-    const spriteSize = createVector(70, 54);
-    gameData.unitsData.Artillery = {"idle": {}};
-    for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
-      gameData.unitsData.Artillery.idle[ori] = [];
-      gameData.unitsData.Artillery.idle[ori].push(img.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y));
-    }
-  });
-  loadImage("resources/units/tank.png", img => {
-    const spriteSize = createVector(70, 54);
-    gameData.unitsData.Tank = {"idle": {}};
-    for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
-      gameData.unitsData.Tank.idle[ori] = [];
-      gameData.unitsData.Tank.idle[ori].push(img.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y));
-    }
-  });
+  // UnitsFH
+  loadJSON("Src/UnitsFH.json", jsonData => {
+    for (let [name, val] of Object.entries(jsonData)) {
+      const spriteSize = createVector(70, 54);
+      gameData.unitsData[name] = {"Human": {"idle": {}}, "Cpu": {"idle": {}}};
 
+      loadImage(val.Human, atlas => {
+        for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
+          gameData.unitsData[name].Human.idle[ori] = [
+            atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
+          ];
+        }
+      });
+      loadImage(val.Cpu, atlas => {
+        for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
+          gameData.unitsData[name].Cpu.idle[ori] = [
+            atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
+          ];
+        }
+      });
+    }
+  });  
+
+  // Mines Locations
   loadJSON("Src/MinesLocations.json", jsonData => {
     for (let loc of Object.values(jsonData)) {
       minesLocations.push(createVector(loc[0], loc[1]));
     }
   });
-
-  bridgeImage = loadImage("resources/bridgeScene.png")
-
-  // Load worldmap image into board
+  
+  // Load worldmap image, processHeightmap, tilecodes, rails and other into board
   loadImage(mapImage, img => {
     let NCOLS = img.width;
     let NROWS = img.height;
@@ -155,12 +166,8 @@ function preload() {
     gameData.mapBoard = processHeightmap(gameData.mapBoard);
     gameData.mapBoard = convertTileCodes(gameData.mapBoard);
     gameData.mapBoard = processRails(gameData.mapBoard);
-    gameData.mapBoard = processOther(gameData.mapBoard);
-    
-
+    gameData.mapBoard = processOther(gameData.mapBoard);   
   });
-
-  //sounds.travelling = loadSound('/music/travelling.mp3');
 
   // Load resource images
   loadJSON("Src/Resources.json", jsonData => {
@@ -169,8 +176,7 @@ function preload() {
     }
   });
 
-
-  // load wolf
+  // load Wolf
   loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
     let spriteSize = [70, 70];
     let x = 101
@@ -264,11 +270,6 @@ function preload() {
 
   });
   
-  backgroundImg = loadImage('resources/misc/Transarctica.jpg');
-  charactersData.Yuri = loadImage('resources/misc/comrad.png');
-  charactersData.Trader = loadImage('resources/misc/trader2.png');
-
-
   // Cities into gameData.citiesData
   loadJSON("Src/Cities.json", jsonData => {
     gameData.citiesData = jsonData;
@@ -325,8 +326,6 @@ function preload() {
       }
     }
   });
-  
-
 
   // Industries into industriesInfo
   loadJSON("Src/IndustriesInfo.json", jsonData => {
@@ -339,25 +338,13 @@ function preload() {
         industriesInfo[key].imgNav.resize(img.width/2, 0);
         industriesInfo[key].imgInfo.resize(img.width/4, 0);
       });
-      
-      // industriesInfo[key].imgTrade = loadImage(`resources/industries_big/${val.file}`);
-      // industriesInfo[key].imgInfo = loadImage(`resources/industries_small/${val.file}`);
-      
-      // industriesInfo[key].imgs = [];
-      // for (let filename of val.files) {
-      //   industriesInfo[key].imgs.push(loadImage(`resources/industries/${filename}`));
-      // }
     }
   });
-
-
-
 
   // Bridges into gameData.bridgesData
   loadJSON("Src/Bridges.json", jsonData => {
     gameData.bridgesData = jsonData;
   });
-
 
   // Industry Locations
   loadJSON("Src/IndustriesLocations.json", jsonData => {
@@ -380,35 +367,6 @@ function preload() {
     }
   });
   
-
-
-  // NavigationMap into gameData.mapBoard
-  // let mapData = getItem("SavedMap");
-  // if (mapData !== null && loadFromLocalStorage) {
-  //   // aux is an array of arrays of strings [["00", "01"],["00", "0A"]]
-  //   let NCOLS = mapData[0].length;
-  //   let NROWS = mapData.length;
-  //   gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-  //   for (const [rowId, rowData] of mapData.entries()) {
-  //     for (const [colId, elem] of rowData.entries()) {
-  //       gameData.mapBoard[rowId][colId] = Number("0x" + elem);
-  //     }
-  //   }
-  // } else {
-  //   loadStrings("maps/Europe.txt", mapData => {
-      
-    
-  //     let NCOLS = split(mapData[0], ',').length;
-  //     let NROWS = mapData.length;
-  //     gameData.mapBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-  //     for (const [rowId, rowData] of mapData.entries()) {
-  //       for (const [colId, elem] of split(rowData, ',').entries()) {
-  //         gameData.mapBoard[rowId][colId] = Number("0x" + elem);
-  //       }
-  //     }
-  //   });
-  // }
-
   // City template map into gameData.cityBoard
   loadStrings("maps/cityTemplate.txt", mapData => {
     let NCOLS = split(mapData[0], ',').length;
@@ -557,8 +515,6 @@ function preload() {
       }
     }
   });
-  
-  
 
   // Tiles into tileData and tileImgs
   // TileImgs contains images identified by a name. eg: { "Ground": image }
@@ -576,6 +532,10 @@ function preload() {
   gameData.trafficLightData["green"] = loadImage("resources/TrafficLight/green.png");
   gameData.trafficLightData["red"] = loadImage("resources/TrafficLight/red.png");
 
+  bridgeImage = loadImage("resources/bridgeScene.png")
+  backgroundImg = loadImage('resources/misc/Transarctica.jpg');
+  charactersData.Yuri = loadImage('resources/misc/comrad.png');
+  charactersData.Trader = loadImage('resources/misc/trader2.png');
 
   // Events
   //events = loadJSON("Src/Events.json");
@@ -598,29 +558,18 @@ function setup() {
   frameRate(50);
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-  
   mainCanvas = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
   hudCanvas = createGraphics(hudCanvasDim[0], hudCanvasDim[1]);
   
   setupCanvas();
   
-  // TODO: Check if theres a game saved, if so, load it instead of starting a new one
   game = new Game();   
   game.initialize(); 
-
-
-  //imgBkg = populateBackgroundFH();
 
 }
 
 function draw() { 
- 
-  // background(0);
-  // image(imgBkg,-mouseX%TILE_WIDTH_HALF*2,-mouseY%TILE_HEIGHT_HALF*2)
-
-  
   game.update();
-
   image(mainCanvas, 0, 0);
   image(hudCanvas, 0, mainCanvasDim[1]);
 }
@@ -636,7 +585,6 @@ function mousePressed() {
 function mouseMoved() {
   // game.currentScene.mouseMoved();
 }
-
 
 function mouseReleased() {
   game.onMouseReleased();

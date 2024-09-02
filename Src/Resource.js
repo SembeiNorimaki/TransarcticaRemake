@@ -45,7 +45,7 @@ class Resource {
     return data;
   }
 
-  setPos(position) {
+  setPosition(position) {
     this.position = position;
   }
 

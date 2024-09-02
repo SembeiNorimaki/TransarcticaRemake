@@ -451,6 +451,12 @@ function cameraToBoardSmall(pos) {
   );
 }
 
+function boardToMinimap(pos) {
+  return createVector(
+    (pos.x - pos.y) * 2,
+    (pos.x + pos.y) * 1
+  );
+}
 function boardToScreen(pos, cameraPos) {
   return createVector(
     (pos.x - pos.y) * TILE_WIDTH_HALF + mainCanvasDim[0] / 2 - cameraPos.x,

@@ -43,10 +43,19 @@ class IndustryTradeScene extends TradeScene {
 
   generateBackgroundImage() {
     let backgroundImage = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
-    this.tileBoard.showTiles(backgroundImage, this.cameraPos);
+    let showOptions = { 
+      "outOfBoardTile": 0x6F,
+      "baseTile": 0x6E,
+      "showTerrain": true,
+      "showBuildings": false,
+      "showUnits": false,
+      "showWalls": false,
+      "showMinimap": false
+    }
+    this.tileBoard.show(backgroundImage, this.camera.position, showOptions);
 
     // show industry
-    let aux = boardToScreen(createVector(14,21),this.cameraPos)
+    let aux = boardToScreen(createVector(14,21),this.camera.position)
     
     backgroundImage.image(
       this.industry.imgTrade,
@@ -81,7 +90,7 @@ class IndustryTradeScene extends TradeScene {
       } else {
         wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
       }
-      wagon.setPos(createVector(
+      wagon.setPosition(createVector(
         1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
         352 + row*TILE_HEIGHT_HALF*3
       ));
@@ -227,7 +236,7 @@ class IndustryTradeScene extends TradeScene {
       }
     
       // check if we clicked the industry
-      let boardPos = screenToBoard(mousePos, this.cameraPos);
+      let boardPos = screenToBoard(mousePos, this.camera.position);
       let tileId = this.tileBoard.board[boardPos.y][boardPos.x].tileId;
       console.log(`Tile clicked: ${boardPos.array()} with tileId ${tileId}`);
 

@@ -42,20 +42,18 @@ class VehicleWagon extends Wagon {
 
   showHorizontal(cameraPosition) {
     let position = this.position.copy();
-    if (cameraPosition) {
-      position.sub(cameraPosition);
-    }
+    let screenPosition = boardToScreen(position, cameraPosition)
     mainCanvas.image(
       this.img[0], 
-      position.x - this.offset[this.spriteId][0], 
-      position.y - this.offset[this.spriteId][1]
+      screenPosition.x - this.offset[0][0], 
+      screenPosition.y - this.offset[0][1]
     );
     for (let [i, unit] of this.loadPositions.entries()) {
       if (unit !== null) {
         mainCanvas.image(
           unit.sprite.getHorizontalImg(),
-          10+position.x - this.offset[this.spriteId][0] + i*55, 
-          position.y - this.offset[this.spriteId][1] - 25
+          10+screenPosition.x - this.offset[this.spriteId][0] + i*55, 
+          screenPosition.y - this.offset[this.spriteId][1] - 25
         );
       }
     }

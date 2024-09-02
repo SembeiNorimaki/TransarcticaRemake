@@ -23,6 +23,7 @@ class TileBoard {
   constructor(mapData) {
     this.boardDim = createVector(mapData[0].length, mapData.length);
     this.board = Array.from(Array(this.boardDim.y), () => new Array(this.boardDim.x));
+    
     // populate board
     for (let row=0; row<this.boardDim.y; row++) {
       for (let col=0; col<this.boardDim.x; col++) {  
@@ -148,12 +149,16 @@ class TileBoard {
     this.board[position.y][position.x].setBuildingId(building.id);
   }
 
+  placeWall(position, tileId) {
+    this.board[position.y][position.x].setTileId(tileId);
+  }
+
   moveUnit(ori, dst) {
     this.board[dst.y][dst.x].setUnitId(this.board[ori.y][ori.x].unitId);
     this.board[ori.y][ori.x].setUnitId(null);
   }
 
-  calculatePath2(ori, dst) {
+  calculatePathOLD(ori, dst) {
     let delta = p5.Vector.sub(dst, ori);
     let firstPoint, secondPoint;
     if (abs(delta.x) > abs(delta.y)) {
@@ -177,7 +182,7 @@ class TileBoard {
     return [firstPoint, secondPoint, dst.copy()];
   }
 
-  calculatePath(ori, dst) {
+  calculatePath2(ori, dst) {
     let path = [];
     let delta = p5.Vector.sub(dst, ori);
     let deltaxy = abs(delta.x) - abs(delta.y);
@@ -231,14 +236,21 @@ class TileBoard {
     return path;
   }
 
+  calculatePath(ori, dst) {
+    this.astar = new AStar();
+    let result = this.astar.search(ori, dst);
+    return result;
+    // console.log(result)
+  }
+
 
   *TileGenerator(tL) {
     let topLeft = tL;
     let col0 = topLeft.x;
     let row0 = topLeft.y;
     let col, row;
-    let nX = 26;
-    let nY = 26;
+    let nX = 28;
+    let nY = 28;
   
     for (let y=0; y<nY; y++) {
       col = col0;
@@ -255,96 +267,156 @@ class TileBoard {
   }
 
 
-  showTiles(canvas, cameraPos) {
-    let topLeft = cameraToBoard(cameraPos).sub(createVector(25,0));
-    let generator = this.TileGenerator(topLeft);
-    let tilePos, screenPos;
-    tilePos = generator.next();
-    while(tilePos.value !== null) {
-      if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
-        screenPos = boardToScreen(tilePos.value, cameraPos);
-        Tile.draw(canvas, 0x6F, screenPos);
-      } else {
-        this.board[tilePos.value.y][tilePos.value.x].show(canvas, cameraPos);
-      }
+  // showTiles(canvas, cameraPos) {
+  //   let topLeft = cameraToBoard(cameraPos).sub(createVector(25,0));
+  //   let generator = this.TileGenerator(topLeft);
+  //   let tilePos, screenPos;
+  //   tilePos = generator.next();
+  //   while(tilePos.value !== null) {
+  //     if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
+  //       screenPos = boardToScreen(tilePos.value, cameraPos);
+  //       Tile.draw(canvas, 0x6F, screenPos);
+  //     } else {
+  //       this.board[tilePos.value.y][tilePos.value.x].show(canvas, cameraPos);
+  //     }
       
-      tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
-      if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
-        screenPos = boardToScreen(tilePos, cameraPos);
-        Tile.draw(canvas, 0x6F, screenPos);
-      } else {
-        this.board[tilePos.y][tilePos.x].show(canvas, cameraPos);
-      }
+  //     tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
+  //     if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+  //       screenPos = boardToScreen(tilePos, cameraPos);
+  //       Tile.draw(canvas, 0x6F, screenPos);
+  //     } else {
+  //       this.board[tilePos.y][tilePos.x].show(canvas, cameraPos);
+  //     }
 
-      tilePos = generator.next();
-    }
-  }
+  //     tilePos = generator.next();
+  //   }
+  // }
 
   // Discards ground tiles (0x6E) making rendering bases more efficient
-  showTiles2(canvas, cameraPos) {
-    let topLeft = cameraToBoard(cameraPos).sub(createVector(25,0));
+  // showTiles2(canvas, cameraPos) {
+  //   let topLeft = cameraToBoard(cameraPos).sub(createVector(25,0));
+  //   let generator = this.TileGenerator(topLeft);
+  //   let tilePos, screenPos;
+  //   tilePos = generator.next();
+  //   while(tilePos.value !== null) {
+  //     // If the tilee is outside the board
+  //     if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
+  //       screenPos = boardToScreen(tilePos.value, cameraPos);
+  //       Tile.draw(canvas, 0x6F, screenPos);
+  //     } else {
+  //       if (this.board[tilePos.value.y][tilePos.value.x].tileId != 0x6E) {
+  //         this.board[tilePos.value.y][tilePos.value.x].show(canvas, cameraPos);
+  //       }
+  //     }
+      
+  //     tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
+  //     if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+  //       screenPos = boardToScreen(tilePos, cameraPos);
+  //       Tile.draw(canvas, 0x6F, screenPos);
+  //     } else {
+  //       if (this.board[tilePos.y][tilePos.x].tileId != 0x6E) {
+  //         this.board[tilePos.y][tilePos.x].show(canvas, cameraPos);
+  //       }
+  //     }
+  //     tilePos = generator.next();
+  //   }
+  // }
+
+
+
+
+  show(canvas, cameraPos, showOptions) {
+    let topLeft = cameraToBoard(cameraPos).sub(createVector(27,0));
     let generator = this.TileGenerator(topLeft);
-    let tilePos, screenPos;
+    let tilePos, screenPos, tile;
     tilePos = generator.next();
     while(tilePos.value !== null) {
       // If the tilee is outside the board
       if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
-        // screenPos = boardToScreen(tilePos.value, cameraPos);
-        // Tile.draw(canvas, 0x6F, screenPos);
-      } else {
-        if (this.board[tilePos.value.y][tilePos.value.x].tileId != 0x6E) {
-          this.board[tilePos.value.y][tilePos.value.x].show(canvas, cameraPos);
+        if (showOptions.showTerrain) {
+          screenPos = boardToScreen(tilePos.value, cameraPos);
+          Tile.draw(canvas, showOptions.outOfBoardTile, screenPos);
         }
-      }
-      
+      } 
+      else {
+        tile = this.board[tilePos.value.y][tilePos.value.x];        
+        if (showOptions.showTerrain && tile.tileId != showOptions.baseTile) {
+          tile.showTerrain(canvas, cameraPos);
+        }
+        if (showOptions.showBuildings && tile.isBuilding()) {
+          tile.showBuilding(canvas, cameraPos);
+        }
+        if (showOptions.showUnits && tile.isUnit()) {
+          tile.showUnit(canvas, cameraPos);
+        }
+        if (showOptions.showWalls && tile.isWall()) {
+          tile.showWall(canvas, cameraPos);
+        }    
+        
+      }      
       tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
       if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
-        // screenPos = boardToScreen(tilePos, cameraPos);
-        // Tile.draw(canvas, 0x6F, screenPos);
-      } else {
-        if (this.board[tilePos.y][tilePos.x].tileId != 0x6E) {
-          this.board[tilePos.y][tilePos.x].show(canvas, cameraPos);
+        if (showOptions.showTerrain) {
+          screenPos = boardToScreen(tilePos, cameraPos);
+          Tile.draw(canvas, 0x6F, screenPos);
         }
+      } else {
+        tile = this.board[tilePos.y][tilePos.x];        
+        if (showOptions.showTerrain && tile.tileId != showOptions.baseTile) {
+          tile.showTerrain(canvas, cameraPos);
+        }
+        if (showOptions.showBuildings && tile.isBuilding()) {
+          tile.showBuilding(canvas, cameraPos);
+        }
+        if (showOptions.showUnits && tile.isUnit()) {
+          tile.showUnit(canvas, cameraPos);
+        }
+        if (showOptions.showWalls && tile.isWall()) {
+          tile.showWall(canvas, cameraPos);
+        }       
       }
       tilePos = generator.next();
     }
   }
 
-  showUnits(canvas, cameraPos) {
-    let topLeft = cameraToBoard(cameraPos).sub(createVector(23,0));
-    let generator = this.TileGenerator(topLeft);
-    let tilePos, screenPos;
-    tilePos = generator.next();
-    while(tilePos.value !== null) {
-      if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
-      } else {
-        if (this.board[tilePos.value.y][tilePos.value.x].isUnit()) {
-          game.currentScene.base.units[this.board[tilePos.value.y][tilePos.value.x].unitId].show(cameraPos)
-        } else if (this.board[tilePos.value.y][tilePos.value.x].isBuilding()) {
-          game.currentScene.base.buildings[this.board[tilePos.value.y][tilePos.value.x].buildingId].show(cameraPos)
-        }
-      }
+  // showUnits(canvas, cameraPos) {
+  //   let topLeft = cameraToBoard(cameraPos).sub(createVector(23,0));
+  //   let generator = this.TileGenerator(topLeft);
+  //   let tilePos, screenPos;
+  //   tilePos = generator.next();
+  //   while(tilePos.value !== null) {
+  //     if (tilePos.value.x < 0 || tilePos.value.y < 0 || tilePos.value.x >= this.boardDim.x || tilePos.value.y >= this.boardDim.y) {
+  //     } else {
+  //       if (this.board[tilePos.value.y][tilePos.value.x].isUnit()) {
+  //         game.currentScene.base.units[this.board[tilePos.value.y][tilePos.value.x].unitId].show(cameraPos)
+  //       } else if (this.board[tilePos.value.y][tilePos.value.x].isBuilding()) {
+  //         game.currentScene.base.buildings[this.board[tilePos.value.y][tilePos.value.x].buildingId].show(cameraPos)
+  //       }
+  //     }
 
-      tilePos = createVector(tilePos.value.x+1, tilePos.value.y);
-      if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
-      } else {
-        if (this.board[tilePos.y][tilePos.x].isUnit()) {
-          game.currentScene.base.units[this.board[tilePos.y][tilePos.x].unitId].show(cameraPos)
-        } else if (this.board[tilePos.y][tilePos.x].isBuilding()) {
-          game.currentScene.base.buildings[this.board[tilePos.y][tilePos.x].buildingId].show(cameraPos)
-        }
-      }
+  //     tilePos = createVector(tilePos.value.x+1, tilePos.value.y);
+  //     if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+  //     } else {
+  //       if (this.board[tilePos.y][tilePos.x].isUnit()) {
+  //         game.currentScene.base.units[this.board[tilePos.y][tilePos.x].unitId].show(cameraPos)
+  //       } else if (this.board[tilePos.y][tilePos.x].isBuilding()) {
+  //         game.currentScene.base.buildings[this.board[tilePos.y][tilePos.x].buildingId].show(cameraPos)
+  //       }
+  //     }
 
-      tilePos = generator.next();
+  //     tilePos = generator.next();
 
-    }
-  }
+  //   }
+  // }
 
   showMinimap(canvas) {
+    let minimapLoc = createVector(mainCanvasDim[0] - 99*2, mainCanvasDim[1] - 99*2)
+    canvas.fill(20)
+
+    canvas.rect(minimapLoc.x-99*2, minimapLoc.y, 99*4,99*2)
     for (let x=0; x<this.boardDim.x; x++) {
       for (let y=0; y<this.boardDim.y; y++) {
-        this.board[y][x].showTilePixel(canvas);
-      
+        this.board[y][x].showMinimap(canvas, minimapLoc)      
       }
     }
   }

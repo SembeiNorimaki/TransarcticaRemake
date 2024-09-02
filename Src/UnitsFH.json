@@ -1,0 +1,10 @@
+{
+  "Tank": { 
+    "Human": "resources/units/tank.png",
+    "Cpu": "resources/units/tankBlue.png"  
+  },
+  "Artillery": {
+    "Human": "resources/units/artillery.png",
+    "Cpu": "resources/units/artilleryBlue.png"  
+  }
+}
