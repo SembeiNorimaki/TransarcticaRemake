@@ -19,11 +19,10 @@
 let mapImage = "maps/Europe.png";
 let loadFromLocalStorage = false;
 
-// const TILE_WIDTH_HALF = 65;
-// const TILE_HEIGHT_HALF = 33;
-
-const TILE_WIDTH_HALF = 32;
-const TILE_HEIGHT_HALF = 16;
+const TILE_WIDTH_HALF_Z1 = 33;
+const TILE_HEIGHT_HALF_Z1 = 17;
+const TILE_WIDTH_HALF_Z2 = 65;
+const TILE_HEIGHT_HALF_Z2 = 33;
 
 // Minimap tile size
 const TILE_MINI_WIDTH = 3;
@@ -37,6 +36,8 @@ let mainCanvasDim = [screenDim[0], screenDim[1]-hudCanvasDim[1]];
 
 
 let game;
+
+let tileHalfSizes = {};
 
 let tileCodes = {};  // contains tile Codes eg: 00: -> water
 let tileImgs = {};   // contains imges referenced by name: eg: Water -> img
@@ -62,6 +63,7 @@ let gameData = {
 let events;
 let industriesLocations = {};
 let citiesLocations = {};
+let basesLocations = {};
 let bridgesLocations = {};
 let minesLocations = [];
 
@@ -70,7 +72,7 @@ let backgroundImg;
 let resources = {};
 
 let wolfImg;
-
+let wagonsData;
 
 let i=0;
 
@@ -99,6 +101,7 @@ savedGames.push(
 
 let ori = 7;
 let sounds = {};
+let explosionAnim = [];
 let table;
 let bridgeImage;
 
@@ -147,6 +150,14 @@ function preload() {
       });
     }
   });  
+
+  // Explosion
+  loadImage("resources/units/x1s.png", atlas => {
+    let spriteSize = [170, 150]
+    for (let i=0; i<16; i++) {
+      explosionAnim.push(atlas.get(0, i*spriteSize[1], spriteSize[0], spriteSize[1]));
+    }
+  });
 
   // Mines Locations
   loadJSON("Src/MinesLocations.json", jsonData => {
@@ -360,6 +371,13 @@ function preload() {
     }
   });
 
+  // Bases Locations
+  loadJSON("Src/BasesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      basesLocations[key] = val;
+    }
+  });
+
   // Bridges Locations
   loadJSON("Src/BridgesLocations.json", jsonData => {
     for (const [key, val] of Object.entries(jsonData)) {
@@ -554,6 +572,9 @@ function setupCanvas() {
 
 function setup() {
   createCanvas(screenDim[0], screenDim[1]);
+
+  tileHalfSizes.Z1 = createVector(TILE_WIDTH_HALF_Z1, TILE_HEIGHT_HALF_Z1); 
+  tileHalfSizes.Z2 = createVector(TILE_WIDTH_HALF_Z2, TILE_HEIGHT_HALF_Z2);
 
   frameRate(50);
   document.addEventListener('contextmenu', event => event.preventDefault());

@@ -57,7 +57,7 @@ class Industry {
   // show(cameraPos) {
   //   mainCanvas.noFill();
 
-  //   let screenPos = boardToScreen(this.position, cameraPos);
+  //   let screenPos = Geometry.boardToScreen(this.position, cameraPos);
   //   mainCanvas.image(
   //     industriesInfo[this.name].img2, 
   //     screenPos.x-industriesInfo[this.name].offset[0]*2, 
@@ -69,7 +69,7 @@ class Industry {
 
   //   // show wagons
   //   for (let i=0; i<this.industryAvailableQty; i++) {
-  //     screenPos = boardToScreen(this.wagonPositions[i], cameraPos);
+  //     screenPos = Geometry.boardToScreen(this.wagonPositions[i], cameraPos);
   //     mainCanvas.image(
   //       wagonsData[this.wagonType].img[2], 
   //       screenPos.x, 

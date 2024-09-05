@@ -28,7 +28,7 @@ class CityTradeScene {
 
     this.enterSequence = true;
     this.exitSequence = false;
-    this.cameraPos = boardToCamera(createVector(15,15));
+    this.cameraPos = Geometry.boardToCamera(createVector(15,15), tileHalfSizes.Z1);
 
     // todo: industry type passed as parameter
     this.industry = new Industry(createVector(14, 21));
@@ -60,7 +60,7 @@ class CityTradeScene {
         let wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
         wagon.setPosition(createVector(
           1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
-          386 + row*TILE_HEIGHT_HALF*2
+          386 + row*tileHalfSizes.Z1.y*2
         ));
         wagon.fillWagon(resourceName);
         this.buyableWagons.push(wagon);
@@ -81,10 +81,10 @@ class CityTradeScene {
 
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
-        Tile.draw(backgroundImage, 0x33, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-2.5*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImage, 0x33, createVector(i*tileHalfSizes.Z1.x, mainCanvasDim[1]-2.5*tileHalfSizes.Z1.y));
       }
       else {
-        Tile.draw(backgroundImage, 0x32, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-1.5*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImage, 0x32, createVector(i*tileHalfSizes.Z1.x, mainCanvasDim[1]-1.5*tileHalfSizes.Z1.y));
       }
     }
     return backgroundImage;
@@ -197,7 +197,7 @@ class CityTradeScene {
       this.selectedTrainWagonIdx = null;
       this.infoPanel.active = false;
 
-      // let boardPos = screenToBoard(mousePos, this.cameraPos);
+      // let boardPos = Geometry.screenToBoard(mousePos, this.cameraPos);
       // console.log(`Tile clicked: ${boardPos.array()} with tileId ${this.tileBoard.board[boardPos.y][boardPos.x].tileId}`);
 
       // this.infoPanel.fillData(
@@ -264,8 +264,8 @@ class CityTradeScene {
     for (let [resourceName, val] of Object.entries(gameData.citiesData[this.cityName].resources)) {
       mainCanvas.textSize(20)
       mainCanvas.text(resourceName, 
-        1100 - i*2*TILE_WIDTH_HALF, 
-        394 + i*TILE_HEIGHT_HALF*2 -25)
+        1100 - i*2*tileHalfSizes.Z1.x, 
+        394 + i*tileHalfSizes.Z1.y*2 -25)
       i++;
     }
     this.infoPanel.show();

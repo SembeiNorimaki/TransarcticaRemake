@@ -259,7 +259,7 @@ class Soldier {
       } else {
         ori = 360 - ori;
       }
-      this.setOrientation(angleToOri(ori%360));
+      this.setOrientation(Geometry.angleToOri(ori%360));
 
       if (this.sprite.getSpriteIdx() == 1 && this.sprite.getFrameCount() == 0) {
         this.fireWeapon();

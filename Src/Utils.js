@@ -17,6 +17,20 @@
 
 // USEFUL FUNCTIONS
 
+
+function sceneToTileHalfSize (sceneName) {
+  let a = {
+  "NavigationScene": tileHalfSizes.Z2,
+  "BaseCombat": tileHalfSizes.Z1,
+  "BaseScene": tileHalfSizes.Z2,
+  "CityTradeScene": tileHalfSizes.Z1,
+  "IndustryTradeScene": tileHalfSizes.Z1,
+  "TradeScene": tileHalfSizes.Z1
+  }
+  return(a[sceneName]);
+}
+
+
 idToTileCode = {
   0b0000: 0x00, // wxyz Water
   0b0001: 0x06, // wxyZ Water N
@@ -117,7 +131,6 @@ function astar(start, end) {
 function manhattanDistance(pos1, pos2) {
   return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y);
 }
-
 
 function textToImage(text) {
   let img = createGraphics(text.length * 16, 19)
@@ -404,10 +417,6 @@ function convertTileCodes(board) {
   return board;
 }
 
-
-
-
-
 function downloadText(content, filename) {
   var blob = new Blob([content], {
     type: "text/plain"
@@ -415,20 +424,9 @@ function downloadText(content, filename) {
   saveAs(blob, filename);
 }
 
-function angleToOri(angle) {
-  // angle must be positive, in degrees [0..360)
-  let idx = floor((angle + 22.5) / 45);
-  let ori = idx * 45;
-  return(ori % 360);
-}
 
 
-function screenToBoard(pos, cameraPos) {
-  return createVector(
-    round((((pos.x + cameraPos.x - mainCanvasDim[0]/2) / TILE_WIDTH_HALF)  + ((pos.y + cameraPos.y - mainCanvasDim[1]/2) / TILE_HEIGHT_HALF) ) / 2) , 
-    round((((pos.y + cameraPos.y - mainCanvasDim[1]/2) / TILE_HEIGHT_HALF)  - ((pos.x + cameraPos.x - mainCanvasDim[0]/2) / TILE_WIDTH_HALF) ) / 2) 
-  );
-}
+
 
 function screenToBoardSmall(pos, cameraPos) {
   return createVector(
@@ -437,12 +435,7 @@ function screenToBoardSmall(pos, cameraPos) {
   );
 }
 
-function cameraToBoard(pos) {
-  return createVector(
-    round((((pos.x) / TILE_WIDTH_HALF)  + ((pos.y ) / TILE_HEIGHT_HALF) ) / 2) , 
-    round((((pos.y) / TILE_HEIGHT_HALF)  - ((pos.x ) / TILE_WIDTH_HALF) ) / 2) 
-  );
-}
+
 
 function cameraToBoardSmall(pos) {
   return createVector(
@@ -457,12 +450,7 @@ function boardToMinimap(pos) {
     (pos.x + pos.y) * 1
   );
 }
-function boardToScreen(pos, cameraPos) {
-  return createVector(
-    (pos.x - pos.y) * TILE_WIDTH_HALF + mainCanvasDim[0] / 2 - cameraPos.x,
-    (pos.x + pos.y) * TILE_HEIGHT_HALF  + mainCanvasDim[1] / 2 - cameraPos.y
-  );
-}
+
 function boardToScreenSmall(pos, cameraPos) {
   return createVector(
     (pos.x - pos.y) * TILE_MINI_WIDTH + mainCanvasDim[0] / 2 - cameraPos.x,
@@ -477,12 +465,7 @@ function boardToMinimapScreen(pos) {
   );
 }
 
-function boardToCamera(pos) {
-  return createVector(
-    int((pos.x - pos.y) * TILE_WIDTH_HALF),
-    int((pos.x + pos.y) * TILE_HEIGHT_HALF)
-  );
-}
+
 
 function boardToCameraSmall(pos) {
   return createVector(
@@ -493,14 +476,14 @@ function boardToCameraSmall(pos) {
 
 function cameraToScreen(pos) {
   return createVector(
-    (pos.x - pos.y) * TILE_WIDTH_HALF,
-    (pos.x + pos.y) * TILE_HEIGHT_HALF 
+    (pos.x - pos.y) * tileHalfSizes.Z1.x,
+    (pos.x + pos.y) * tileHalfSizes.Z1.y 
   );
 }
 function screenToCamera(pos) {
   return createVector(
-    round(((pos.x / TILE_WIDTH_HALF)  + (pos.y / TILE_HEIGHT_HALF) ) / 2), 
-    round(((pos.y / TILE_HEIGHT_HALF)  - (pos.x / TILE_WIDTH_HALF) ) / 2) 
+    round(((pos.x / tileHalfSizes.Z1.x)  + (pos.y / tileHalfSizes.Z1.y) ) / 2), 
+    round(((pos.y / tileHalfSizes.Z1.y)  - (pos.x / tileHalfSizes.Z1.x) ) / 2) 
   );
 }
 
@@ -582,51 +565,51 @@ function showTrainSummary() {
 function assembleBuilding() {
   mainCanvas.background(0,0,0,255)
   
-  // Tile.draw(mainCanvas, 0xC0, boardToScreen(createVector(0,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC1, boardToScreen(createVector(1,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC2, boardToScreen(createVector(3,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC0, Geometry.boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC1, Geometry.boardToScreen(createVector(1,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC2, Geometry.boardToScreen(createVector(3,0), createVector(0,0)))
 
-  // Tile.draw(mainCanvas, 0xC3, boardToScreen(createVector(0,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC4, boardToScreen(createVector(1,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC5, boardToScreen(createVector(3,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC3, Geometry.boardToScreen(createVector(0,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC4, Geometry.boardToScreen(createVector(1,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC5, Geometry.boardToScreen(createVector(3,1), createVector(0,0)))
   
-  // Tile.draw(mainCanvas, 0xC6, boardToScreen(createVector(0,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC7, boardToScreen(createVector(1,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xC8, boardToScreen(createVector(3,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC6, Geometry.boardToScreen(createVector(0,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC7, Geometry.boardToScreen(createVector(1,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xC8, Geometry.boardToScreen(createVector(3,3), createVector(0,0)))
 
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(1,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(2,0), createVector(0,0)))
   
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,1), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(0,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(1,1), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(2,1), createVector(0,0)))
   
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,2), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,2), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(0,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(1,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(2,2), createVector(0,0)))
 
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(0,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(1,3), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0x5A, boardToScreen(createVector(2,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(0,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(1,3), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0x5A, Geometry.boardToScreen(createVector(2,3), createVector(0,0)))
   
-  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,0), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,0), createVector(0,0)))
-  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,0), createVector(0,0)))
+  //Tile.draw(mainCanvas, 0xCA, Geometry.boardToScreen(createVector(0,0), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xCA, Geometry.boardToScreen(createVector(1,0), createVector(0,0)))
+  //Tile.draw(mainCanvas, 0xCA, Geometry.boardToScreen(createVector(2,0), createVector(0,0)))
   
-  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(0,2), createVector(0,0)))
-  // Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(1,2), createVector(0,0)))
-  //Tile.draw(mainCanvas, 0xCA, boardToScreen(createVector(2,2), createVector(0,0)))
+  //Tile.draw(mainCanvas, 0xCA, Geometry.boardToScreen(createVector(0,2), createVector(0,0)))
+  // Tile.draw(mainCanvas, 0xCA, Geometry.boardToScreen(createVector(1,2), createVector(0,0)))
+  //Tile.draw(mainCanvas, 0xCA, Geometry.boardToScreen(createVector(2,2), createVector(0,0)))
   
-  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(0,0), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA3, boardToScreen(createVector(0,2), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(0,4), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA5, boardToScreen(createVector(2,0), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA5, boardToScreen(createVector(2,2), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(2,4), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA2, boardToScreen(createVector(4,0), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA4, boardToScreen(createVector(4,2), createVector(0,0)))
-  Tile.draw(mainCanvas, 0xA3, boardToScreen(createVector(4,4), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, Geometry.boardToScreen(createVector(0,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA3, Geometry.boardToScreen(createVector(0,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, Geometry.boardToScreen(createVector(0,4), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA5, Geometry.boardToScreen(createVector(2,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA5, Geometry.boardToScreen(createVector(2,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, Geometry.boardToScreen(createVector(2,4), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA2, Geometry.boardToScreen(createVector(4,0), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA4, Geometry.boardToScreen(createVector(4,2), createVector(0,0)))
+  Tile.draw(mainCanvas, 0xA3, Geometry.boardToScreen(createVector(4,4), createVector(0,0)))
   
   mainCanvas.save("Village")
 

@@ -1,14 +1,16 @@
 class BaseCombat {
   constructor(base) {
+    this.tileHalfSize = tileHalfSizes.Z1;
+    sounds.CityMusic2.play();
     this.base = base;
-    this.camera = new Camera(createVector(0, 94*35));
+    this.camera = new Camera(createVector(0, 86*35));
     // this.camera = new Camera(createVector(0, 0));
     this.currentPlayer = Game.Players.Human
 
     this.action = UnitFH.Actions.Move;
     this.selectedUnitId = null;
     this.selectedBuildingId = null;
-    this.enterSequence = false;
+    this.enterSequence = true;
     this.exitSequence = false;
 
     this.currentEnemyIdx = 0;
@@ -27,10 +29,7 @@ class BaseCombat {
   initialize() {
     this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
     this.horizontalTrain.setPosition(createVector(74, 98));
-    this.horizontalTrain.setVelocity(-200);
-    
-    this.unloadUnits();
-    // this.endTurn();
+    this.horizontalTrain.setVelocity(0.2);
   }
 
   unloadUnits() {
@@ -38,8 +37,7 @@ class BaseCombat {
     let x = 86;
     let y = 89;
     for (let unit of units) {
-      unit.setPosition(createVector(x,y))
-      
+      unit.setPosition(createVector(x,y))      
       x++;
       y--;
     }
@@ -81,33 +79,27 @@ class BaseCombat {
       return;
     } 
 
-    let tilePosition = screenToBoard(mousePos, this.camera.position);
+    let tilePosition = Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize);
+    let tile = this.base.tileBoard.board[tilePosition.y][tilePosition.x];
     console.log(`Clicked ${tilePosition.array()}`)
+
     // if we don't have anything selected
     if (this.selectedUnitId === null && this.selectedBuildingId === null) {      
-      //this.base.tileBoard.selectedTile = tile;
-      // If we clicked one of our units
-      if (this.base.tileBoard.board[tilePosition.y][tilePosition.x].isUnit()) {
-        let unitId = this.base.tileBoard.board[tilePosition.y][tilePosition.x].unitId;
-        if (this.base.units[unitId].isEnemy() == false) {
-          console.log(`Selecting unit ${unitId}`);
-          this.selectedUnitId = unitId;
-          this.camera.setDestination(boardToScreen(tilePosition, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
-          this.base.units[this.selectedUnitId].isSelected = true;
-        }
+      // If we clicked a unit
+      if (tile.isUnit() && !this.base.units[tile.unitId].isEnemy()) {
+        console.log(`Selecting unit ${tile.unitId}`);
+        this.selectedUnitId = tile.unitId;
+        //this.camera.setDestination(Geometry.boardToScreen(tilePosition, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2), this.tileHalfSize));
+
+        this.base.units[this.selectedUnitId].isSelected = true;
       } 
       // If we clicked a building
-      else if (this.base.tileBoard.board[tilePosition.y][tilePosition.x].isBuilding()) {
+      else if (tile.isBuilding()) {
         console.log("Selecting building");
-        this.selectedEnemyId = this.base.tileBoard.board[tilePosition.y][tilePosition.x].buildingId;       
+        this.selectedBuildingId = tile.buildingId;       
       }
-      // If we selected an enemy
-      //else if (this.base.tileBoard.board[tilePosition.y][tilePosition.x].isEnemy()) {
-        //this.selectedElementId = this.city.tileBoard.board[tile.y][tile.x].enemyId;
-        //this.selectedElementType = "enemy"
-      //} 
+      // If we clicked a tile 
       else {
-        //this.city.tileBoard.floodBoard = undefined;
         console.log("Clicked on empty tile");
       }
       return;
@@ -148,7 +140,7 @@ class BaseCombat {
       
       else if (this.action === UnitFH.Actions.Attack) {
         console.log("Attacking");
-        // this.base.units[this.selectedUnitId].orientation = angleToOrientation(
+        // this.base.units[this.selectedUnitId].orientation = Geometry.angleToOrientation(
         //   p5.Vector.sub(tilePosition, this.base.units[this.selectedUnitId].position).heading()
         // );        
         //console.log(this.city.elements[this.selectedElementId])
@@ -187,7 +179,7 @@ class BaseCombat {
     let closestUnit = null;
     console.log(`Ref Unit Pos: ${refUnit.position.array()}`)
     for (const unit of this.base.units) {
-      if (unit.isEnemy()) {
+      if (unit === null || unit.isEnemy()) {
         continue;
       } 
       console.log(`Unit U${unit.id}: ${unit.position.array()}`)
@@ -255,11 +247,11 @@ class BaseCombat {
   }
 
   selectNextEnemyUnit() {
-    for (let i=this.currentEnemyIdx+1; i<this.base.units.length; i++) {
-      if (this.base.units[i].isEnemy()) {
-        this.currentEnemyUnit = this.base.units[i];
+    for (let [i, unit] of this.base.units.entries()) {
+      if (unit !== null && unit.isEnemy() && unit.action != UnitFH.Actions.Finished) {
+        this.currentEnemyUnit = unit;
         this.currentEnemyIdx = i;
-        this.camera.setPosition(boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
+        this.camera.setPosition(Geometry.boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2), this.tileHalfSize));
         return true;
       }
     }
@@ -268,11 +260,13 @@ class BaseCombat {
 
   endTurn() {
     for (let unit of this.base.units) {
-      unit.replenishAp();
+      if (unit !== null) {
+        unit.replenishAp();
+      }
     }
     this.currentEnemyIdx = 0
     this.currentEnemyUnit = this.base.units[0];
-    this.camera.setPosition(boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2)));
+    this.camera.setPosition(Geometry.boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2), this.tileHalfSize));
     this.currentPlayer = Game.Players.Cpu;
     this.currentEnemyUnit.unitAI.decideAction();
   }
@@ -281,6 +275,12 @@ class BaseCombat {
   
 
   update() {
+    for (let [i, unit] of this.base.units.entries()) {
+      if (unit !== null && unit.isDead) {
+        this.base.removeUnit(i);
+      }
+    }
+
     if (this.currentPlayer === Game.Players.Cpu) {
       this.enemyTurn();
       return;
@@ -289,8 +289,8 @@ class BaseCombat {
 
 
     // Enter sequence
-    if (this.enterSequence && this.horizontalTrain.position.x > 1100) {
-      this.horizontalTrain.setGear("N")
+    if (this.enterSequence && this.horizontalTrain.position.x > 85) {
+      this.horizontalTrain.setGear("N");
       if (this.horizontalTrain.velocity == 0) {
         // this.horizontalTrain.acceleration = 0;
         // this.horizontalTrain.velocity = 0;
@@ -308,7 +308,7 @@ class BaseCombat {
     // }
 
     for (let unit of this.base.units) {
-      if (unit.owner == this.currentPlayer) {
+      if (unit !== null && unit.owner == this.currentPlayer) {
         //this.base.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(null);
         unit.update();
         //this.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(unit.id);
@@ -324,7 +324,7 @@ class BaseCombat {
     this.horizontalTrain.show(this.camera.position);
     return;
     if (this.action === UnitFH.Actions.Attack && this.selectedUnitId !== null) {
-      mainCanvas.text(this.base.units[this.selectedUnitId].calculateHitProbability(screenToBoard(createVector(mouseX, mouseY), this.camera.position)), mouseX, mouseY-20)
+      mainCanvas.text(this.base.units[this.selectedUnitId].calculateHitProbability(Geometry.screenToBoard(createVector(mouseX, mouseY), this.camera.position, this.base.tileHalfSize)), mouseX, mouseY-20)
     }
     
   }

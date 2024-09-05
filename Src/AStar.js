@@ -30,9 +30,12 @@ class AStar {
 
 
   search(startPos, endPos) {
-
-    this.nodes[`${startPos.x},${startPos.y}`] = new Node(createVector(startPos.x, startPos.y), game.currentScene.base.tileBoard.board[startPos.y][startPos.x].isWall());  
-    this.nodes[`${endPos.x},${endPos.y}`] = new Node(createVector(endPos.x, endPos.y), game.currentScene.base.tileBoard.board[endPos.y][endPos.x].isWall());  
+    try {
+      this.nodes[`${startPos.x},${startPos.y}`] = new Node(createVector(startPos.x, startPos.y), game.currentScene.base.tileBoard.board[startPos.y][startPos.x].isWall());  
+      this.nodes[`${endPos.x},${endPos.y}`] = new Node(createVector(endPos.x, endPos.y), game.currentScene.base.tileBoard.board[endPos.y][endPos.x].isWall());  
+    } catch {
+      console.log("Error")
+    }
 
     let heuristic = this.manhattan;
 

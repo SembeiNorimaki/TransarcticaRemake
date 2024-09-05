@@ -26,37 +26,34 @@ class Wagon {
   };
 
   static resourceToWagon = {
-    "Oil":                 "Oil Tanker",   
-    "Gasoline":            "Oil Tanker",   
-    "Water":               "Water Tanker", 
+    "Alcohol":             "Merchandise", 
+    "Antiques":            "Merchandise", 
+    "Wood":                "Merchandise", 
+    "Fishing Rods":         "Merchandise", 
+    "Caviar":              "Merchandise", 
+    "Line Inspection Car": "Merchandise", 
+    "Furs":                "Merchandise", 
+    "Mammoth Dung":        "Merchandise", 
+    "Oli":                 "Merchandise", 
+    "Missiles":            "Merchandise", 
+    "Gasoline":            "Merchandise", 
+    "Plants":              "Merchandise", 
+    "Fish":                "Merchandise", 
+    "Rails":               "Merchandise", 
+    "Salt":                "Merchandise", 
+    "Wolf Meat":           "Merchandise", 
+    "Mamooth":             "Merchandise", 
 
+
+    "Water":               "Water Tanker", 
     "Iron":                "Gondola", 
     "Copper":              "Gondola",
     "Clay":                "Gondola",
-    
     "Iron bars":           "Iron bars",
-    "Wood":                "Wood Wagon",      
-    
     "Container":           "Container",        
-    
-    "Antiques":            "Merchandise",
-    "Fishing Rods":        "Merchandise",
-    "Caviar":              "Merchandise",
-    "Line Inspection Car": "Merchandise",
-    "Furs":                "Merchandise",
-    "Mamooth Dung":        "Merchandise",
-    "Missiles":            "Merchandise",
-    "Fish":                "Merchandise",
-    "Rails":               "Merchandise",
-    "Salt":                "Merchandise",
-    "Wolf Meat":           "Merchandise",
-
-    "Mamooth":             "Livestock",
     "Wolf":                "Livestock",
-
     "Tank":                "Vehicle Wagon",
     "Artillery":           "Vehicle Wagon"
-
   };
   
 
@@ -107,7 +104,7 @@ class Wagon {
   }
 
   checkClick(mousePos, cameraPosition) {
-    let screenPosition = boardToScreen(this.position, cameraPosition);
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPosition, game.currentScene.tileHalfSize);
     return (
       mousePos.x > screenPosition.x - this.halfSize.x &&
       mousePos.x < screenPosition.x + this.halfSize.x &&
@@ -190,7 +187,7 @@ class Wagon {
   showHorizontal(cameraPosition) {
     // This position is now a tilePosition, not a screenPosition
     let position = this.position.copy();
-    let screenPosition = boardToScreen(position, cameraPosition)
+    let screenPosition = Geometry.boardToScreen(position, cameraPosition, game.currentScene.tileHalfSize)
     // if (cameraPosition) {
     //   position.sub(cameraPosition);
     // }
@@ -200,7 +197,7 @@ class Wagon {
       screenPosition.y - this.offset[this.spriteId][1]
     );
 
-    this.showBoundingBox(screenPosition)
+    // this.showBoundingBox(screenPosition)
     
     // mainCanvas.line(
     //   screenPosition.x-50, screenPosition.y-50,screenPosition.x+50, screenPosition.y+50,
@@ -209,15 +206,15 @@ class Wagon {
     //   screenPosition.x+50, screenPosition.y-50,screenPosition.x-50, screenPosition.y+50,
     // )
     
-    // try {
-    //   if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
-    //     mainCanvas.image(resources[this.cargo], position.x-resources[this.cargo].width/2, position.y+10);
-    //     mainCanvas.text(this.usedSpace, position.x+resources[this.cargo].width/2, position.y+40)
-    //   }
-    //   // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
-    // } catch {
-
-    // }
+    try {
+      if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
+        mainCanvas.image(resources[this.cargo], screenPosition.x-resources[this.cargo].width/2, screenPosition.y+10);
+        mainCanvas.text(this.usedSpace, screenPosition.x+resources[this.cargo].width/2, screenPosition.y+40)
+      }
+      // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
+    } catch {
+      console.log("Error")
+    }
 
     
 

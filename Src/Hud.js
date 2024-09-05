@@ -81,7 +81,7 @@ class Hud {
     hudCanvas.image(gameData.hudData.frame, x, y);
     hudCanvas.text(`${game.navigationScene.locomotive.gear}`, x, y);
 
-    hudCanvas.text(screenToBoard(game.currentScene.camera.position, createVector(0,0)).array(), 600,30);
-    // hudCanvas.text(`${game.gameTime.getDay()} ${this.months[game.gameTime.getMonth()-1]} ${game.gameTime.getFullYear()} ${game.gameTime.getHours()}h`,600,30)    
+    
+    hudCanvas.text(`${game.gameTime.getDay()} ${this.months[game.gameTime.getMonth()-1]} ${game.gameTime.getFullYear()} ${game.gameTime.getHours()}h`,600,30)    
   }
 }

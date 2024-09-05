@@ -73,12 +73,21 @@ class Game {
       this.events[`${x},${y}`] = cityName;
     }
 
+    for (let [baseLocation, baseName] of Object.entries(basesLocations)) {
+      let aux = baseLocation.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = baseName;
+    }
+
     for (let [bridgeLocation, bridgeName] of Object.entries(bridgesLocations)) {
       let aux = bridgeLocation.split(",");
       let x = int(aux[0]);
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = bridgeName;
     }
+
+
 
     // // Industries are 3x3
     // for (let [industryLocation, industryName] of Object.entries(industriesLocations)) {
@@ -102,7 +111,13 @@ class Game {
 
     this.currentScene = new MainMenu();
 
-    this.newGame();
+    this.savedData = getItem("Save1");
+    if (this.savedData === null) {
+      console.log("Starting a new game");
+      this.newGame();
+    } else {
+      console.log("Game loaded");
+    }
   }
 
   newGame() {
@@ -110,13 +125,13 @@ class Game {
       "PlayerTrain": {
         coal: 123,
         gold: 456,
-        position: createVector(73, 366),
-        orientation: 180,
+        position: createVector(72, 363),
+        orientation: 270,
         wagons: [
           {"name": "Locomotive"},
           {"name": "Tender"},
           {"name": "Merchandise"},
-          // {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
+          {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
@@ -136,12 +151,8 @@ class Game {
     }
   }
 
-  loadGame() {
-    this.savedData = savedGames[0];
-  }
-
   saveGame() {
-    this.savedData = {
+    let saveData = {
       "PlayerTrain": {
         coal: this.playerTrain.coal,
         gold: this.playerTrain.gold,
@@ -149,39 +160,53 @@ class Game {
         orientation: this.navigationScene.locomotive.orientation,
         wagons: []
       },
-      "EnemyTrain": {
-        coal: 123,
-        gold: 456,
-        wagons: [
-          {"name": "Locomotive_vu"}
-        ]
+      "Cities": {}
+    }
+    
+    // Save the cities available resources
+    for (let [cityName, cityInstance] of Object.entries(this.cities)) {
+      saveData.Cities[cityName] = {"resources": {}};
+      for (let [resourceName, resourceInfo] of Object.entries(cityInstance.resources)) {
+        saveData.Cities[cityName].resources[resourceName] = {"Available": resourceInfo.Available};
       }
     }
+
     for (let wagon of this.playerTrain.wagons) {
-      this.savedData.PlayerTrain.wagons.push(wagon.name);
+      let wagonData = {
+        "name": wagon.name,
+        "content": {"resourceName": wagon.cargo, "qty": wagon.usedSpace}
+      };
+      saveData.PlayerTrain.wagons.push(wagonData);
     }
+
+    storeItem("Save1", saveData)
   }
 
-
-
+  gameOver() {
+    console.log("Game Over");
+  }
 
   initialize() {
     // Apply saveData
     this.playerTrain.initialize(this.savedData.PlayerTrain);
-    this.enemyTrain.initialize(this.savedData.EnemyTrain);
-    
-    // this.navigationScene.tileBoard.board[366][75].setTileId(0x60)
-    // this.navigationScene.tileBoard.board[365][75].setTileId(0x61)
-    // this.navigationScene.tileBoard.board[364][76].setTileId(0x62)
+    // this.enemyTrain.initialize(this.savedData.EnemyTrain);
 
-    // this.currentScene = this.navigationScene;
+    for (let [cityName, cityInstance] of Object.entries(this.cities)) {
+      cityInstance.initialize(this.savedData.Cities[cityName]);
+    } 
+
+
+
+
+    
+    
+    this.currentScene = this.navigationScene;
     // this.currentScene = new CombatScene(this.playerTrain, null);
     // this.currentScene = new CombatWolves(this.playerTrain);
     // this.currentScene = new CombatIntro(this.playerTrain);
-    // this.currentScene = new CityTradeScene(this.cities["Ruhr"]);
-    //this.currentScene = new CityTradeScene(this.cities["Taoudeni"]);
+    // this.currentScene = new CityTradeScene(this.cities["Granada"]);
     
-    this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
+    // this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
     // this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
     
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
@@ -190,11 +215,10 @@ class Game {
     // this.currentScene = new MainMenu();
     // this.currentScene = new BridgeScene(bridgeImage);
     
-
-    this.currentScene.initialize();
-
-    
-
+    // this.currentScene = new TradeScene(this.cities["Alexandria"]);
+    // this.currentScene = new TradeScene(this.cities["Granada"]);
+    // this.currentScene = new TradeScene(this.cities["Ruhr"]);
+  
     this.navigationScene.locomotive.initialize(this.savedData.PlayerTrain);
 
     this.currentScene.initialize();
@@ -248,8 +272,17 @@ class Game {
 
   checkTimedEvents() {
     if (this.gameTime.getMinutes() == 0) {
-      let mineLocation = minesLocations[Math.floor(Math.random() * minesLocations.length)];
-      game.navigationScene.tileBoard.board[mineLocation.y][mineLocation.x].setTileId(0x4A);
+      // let mineLocation = minesLocations[Math.floor(Math.random() * minesLocations.length)];
+      // game.navigationScene.tileBoard.board[mineLocation.y][mineLocation.x].setTileId(0x4A);
+
+      // update all cities
+      console.log("Upodate cities")
+      for (let [cityName, cityInstance] of Object.entries(this.cities)) {
+        for (let [resourceName, resourceInfo] of Object.entries(cityInstance.resources)) {
+          this.cities[cityName].resources[resourceName].Available += resourceInfo.Production;
+          //console.log(cityName, resourceName)
+        }
+      }
     }
   }
 
@@ -278,6 +311,6 @@ class Game {
     }    
   }
   onMouseReleased() {
-    this.currentScene.onMouseReleased();  
+    //this.currentScene.onMouseReleased();  
   }
 }

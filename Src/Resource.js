@@ -19,9 +19,13 @@
 // Sell means the city sells to you
 
 class Resource {
-  constructor(resourceName) {
-    this.resourceName = resourceName;
-    this.img = resources[resourceName];
+  constructor(name, info) {
+    this.resourceName = name;
+    this.img = resources[this.resourceName];
+    this.qtyAvailable = info.Available;
+    this.production = info.Production;
+    this.sellPrice = info.Sell;
+    this.buyPrice = info.Buy;
     this.position = createVector(0, 0);
     this.infoPanelData = {
       "title": this.resourceName,
@@ -61,5 +65,7 @@ class Resource {
   show() {
     mainCanvas.rect(this.position.x, this.position.y, this.img.width, this.img.height)
     mainCanvas.image(this.img, this.position.x, this.position.y);
+    mainCanvas.circle(this.position.x, this.position.y, 5)
+    mainCanvas.text(`${this.qtyAvailable}`, this.position.x+3, this.position.y+43);
   }
 }

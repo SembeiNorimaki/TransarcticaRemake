@@ -116,15 +116,39 @@ class Tile {
     "D": "A"
   }
 
-  static draw(canvas, tileId, screenPos) {
+  static tileToInitialPositionOffset(tileName) {
+    let a = {
+      "Rail_AB" :  createVector(-1/4, -1/4),
+      "Rail_ABc" : createVector(-1/4, -1/4),
+      "Rail_ABd" : createVector(-1/4, -1/4),
+      "Rail_AC" :  createVector(-1/4, 1/4),
+      "Rail_ACb" : createVector(-1/4, 1/4),
+      "Rail_ACd" : createVector(-1/4, 1/4),
+      "Rail_AD" :  createVector(0, 0),
+      "Rail_ADb" : createVector(0, 0),
+      "Rail_ADc" : createVector(0, 0),
+      "Rail_BC" :  createVector(0, 0),
+      "Rail_BCa" : createVector(0, 0),
+      "Rail_BCd" : createVector(0, 0),
+      "Rail_BD" :  createVector(1/4, -1/4),
+      "Rail_BDa" : createVector(1/4, -1/4),
+      "Rail_BDc" : createVector(1/4, -1/4),
+      "Rail_CD" :  createVector(1/4, 1/4),
+      "Rail_CDa" : createVector(1/4, 1/4),
+      "Rail_CDb" : createVector(1/4, 1/4),
+    };
+    return a[tileName];
+  }
+
+  static draw(canvas, tileId, screenPos, tileHalfSize) {
     screenPos.add(
       Tile.tileCodes[tileId].offset[0],
       Tile.tileCodes[tileId].offset[1]
     );
     canvas.image(
       Tile.tileCodes[tileId].img, 
-      screenPos.x - TILE_WIDTH_HALF, 
-      screenPos.y - TILE_HEIGHT_HALF);
+      screenPos.x - tileHalfSize.x, 
+      screenPos.y - tileHalfSize.y);
   }
 
   static draw2D(canvas, tileId, screenPos) {
@@ -448,7 +472,7 @@ class Tile {
       mainCanvas.endShape(CLOSE);
       mainCanvas.fill(255);
       mainCanvas.stroke(0);
-      let boardPos = screenToBoardSmall(screenPos, game.currentScene.camera.position);
+      let boardPos = Geometry.screenToBoardSmall(screenPos, game.currentScene.camera.position, tileHalfSizes.Z1);
       mainCanvas.text(`${boardPos.x},${boardPos.y}`,screenPos.x, screenPos.y-20)
     }
     
@@ -472,10 +496,10 @@ class Tile {
     canvas.push();
     canvas.strokeWeight(2);
     canvas.stroke("blue");
-    canvas.line(screenPos.x-TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y-TILE_HEIGHT_HALF);
-    canvas.line(screenPos.x-TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y+TILE_HEIGHT_HALF);
-    canvas.line(screenPos.x+TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y-TILE_HEIGHT_HALF);
-    canvas.line(screenPos.x+TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y+TILE_HEIGHT_HALF);
+    canvas.line(screenPos.x-tileHalfSizes.Z1.x,screenPos.y,screenPos.x,screenPos.y-tileHalfSizes.Z1.y);
+    canvas.line(screenPos.x-tileHalfSizes.Z1.x,screenPos.y,screenPos.x,screenPos.y+tileHalfSizes.Z1.y);
+    canvas.line(screenPos.x+tileHalfSizes.Z1.x,screenPos.y,screenPos.x,screenPos.y-tileHalfSizes.Z1.y);
+    canvas.line(screenPos.x+tileHalfSizes.Z1.x,screenPos.y,screenPos.x,screenPos.y+tileHalfSizes.Z1.y);
     canvas.pop();
   }
 
@@ -515,7 +539,8 @@ class Tile {
     canvas.pop();
   }
 
-  constructor(boardPosition, tileId) {
+  constructor(boardPosition, tileId, tileHalfSize) {
+    this.tileHalfSize = tileHalfSize;
     this.tileId = null;
     this.tileName = null;
     this.offset = null;
@@ -565,11 +590,11 @@ class Tile {
   isRoad() {
     return false;
   }
+
   isWall() {
     return this.tileId >= 0x60 && this.tileId <= 0x69;
   }
   
-
   changeTile() {
     if (this.isIntersection) {
       let newTileName = Tile.tileChanges[this.tileName];
@@ -577,6 +602,7 @@ class Tile {
       this.setTileId(newTileId);
     }
   }
+
   removeTile() {
     this.buildingId = null;
     this.unitId = null;
@@ -584,7 +610,7 @@ class Tile {
   }
 
   show(canvas, cameraPos) {
-    let screenPos = boardToScreen(this.boardPosition, cameraPos);    
+    let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize);    
 
     // Bridges  
     if (this.tileId == 0x50) {
@@ -629,13 +655,13 @@ class Tile {
     if (this.tileId == 0xA0) {  // if it's a City show the name
       canvas.fill(255,255,255,200);
       canvas.noStroke();
-      canvas.rect(screenPos.x-TILE_WIDTH_HALF, screenPos.y-122, 2*TILE_WIDTH_HALF,30)
+      canvas.rect(screenPos.x-tileHalfSizes.Z1.x, screenPos.y-122, 2*tileHalfSizes.Z1.x,30)
       canvas.textAlign(CENTER)
       canvas.textSize(22)
       canvas.fill(0)
       
-      // canvas.text("Granada", screenPos.x+TILE_WIDTH_HALF*2, screenPos.y+18);
-      let tilePos = screenToBoard(screenPos, game.navigationScene.camera.position);
+      // canvas.text("Granada", screenPos.x+tileHalfSizes.Z1.x*2, screenPos.y+18);
+      let tilePos = Geometry.screenToBoard(screenPos, game.navigationScene.camera.position, tileHalfSizes.Z1);
       tilePos.add(createVector(-1,0));
       let tileString = String(tilePos.x) + "," + String(tilePos.y);
       if (tileString in citiesLocations) {
@@ -651,14 +677,21 @@ class Tile {
   }
 
   showTerrain(canvas, cameraPos) {
-    let screenPos = boardToScreen(this.boardPosition, cameraPos);    
-    Tile.draw(canvas, this.tileId, screenPos.copy());
+    let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize);    
+    Tile.draw(canvas, this.tileId, screenPos, this.tileHalfSize)
+    // let topLeft = screenPos.copy();
+    // topLeft.add(createVector(Tile.tileCodes[tileId].offset[0], Tile.tileCodes[tileId].offset[1]));
+    // topLeft.add(this.tileHalfSize);
+    
+    // canvas.image(Tile.tileCodes[tileId].img, topLeft.x, topLeft.y);
+
+    // canvas.circle(screenPos.x, screenPos.y,10); 
+    // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
     
   }
 
-
   showBuilding(canvas, cameraPos) {
-    let screenPos = boardToScreen(this.boardPosition, cameraPos); 
+    let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize); 
     game.currentScene.base.buildings[this.buildingId].show(cameraPos);
   }
 
@@ -667,7 +700,7 @@ class Tile {
   }
 
   showWall(canvas, cameraPos) {
-    let screenPos = boardToScreen(this.boardPosition, cameraPos); 
+    let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize); 
     canvas.circle(screenPos.x, screenPos.y, 20)
   }
 
@@ -689,7 +722,7 @@ class Tile {
   }
 
   draw3D(canvas, cameraPos, auxText) {
-    let screenPos = boardToScreenSmall(this.boardPosition, cameraPos);    
+    let screenPos = Geometry.boardToScreenSmall(this.boardPosition, cameraPos, this.tileHalfSize);    
     Tile.draw3D(canvas, this.tileId, screenPos, this.isEvent);
   }
 }

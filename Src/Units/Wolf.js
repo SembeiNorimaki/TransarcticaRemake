@@ -82,7 +82,7 @@ class Wolf extends Unit {
     }
     // this.setOrientation(int(degrees(this.direction.heading())));
 
-    // TODO: how could this possibly work without calling angleToOri?
+    // TODO: how could this possibly work without calling Geometry.angleToOri?
     this.setOrientation(ori%360);
     this.setAction(Soldier.Action.Walk);
   }
@@ -187,7 +187,7 @@ class Wolf extends Unit {
       } else {
         ori = 360 - ori;
       }
-      this.setOrientation(angleToOri(ori%360));
+      this.setOrientation(Geometry.angleToOri(ori%360));
 
       if (this.sprite.getSpriteIdx() == 1 && this.sprite.getFrameCount() == 0) {
         this.fireWeapon();

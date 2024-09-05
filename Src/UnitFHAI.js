@@ -97,7 +97,7 @@ class UnitFHAI {
     }
     // if the hit probability is not high enough, move towards the enemy
     else {
-      let path = game.currentScene.base.tileBoard.calculatePath(this.ownerInstance.position, this.targetEnemy.position);
+      let path = game.currentScene.base.tileBoard.calculatePath(this.ownerInstance.tilePosition, this.targetEnemy.tilePosition);
       this.ownerInstance.setPath(path);      
     }
   }

@@ -6,5 +6,9 @@
   "Artillery": {
     "Human": "resources/units/artillery.png",
     "Cpu": "resources/units/artilleryBlue.png"  
+  },
+  "Turret": {
+    "Human": "resources/units/turret.png",
+    "Cpu": "resources/units/turret.png"  
   }
 }

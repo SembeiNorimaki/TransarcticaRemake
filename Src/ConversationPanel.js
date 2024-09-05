@@ -34,7 +34,7 @@ class ConversationPanel {
   fillData(data) {
     this.characterName = data.characterName;
     this.textLines = data.textLines;
-    for (let [i, buttonData] of data.buttons.entries()) {
+    for (let [i, buttonData] of Object.entries(data.buttons)) {
       this.buttons.push(new Button(i, true, createVector(mainCanvasDim[0]-120,mainCanvasDim[1]-150+100*buttonData.row), createVector(100,40), buttonData.text, buttonData.color))
     }
   }

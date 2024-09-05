@@ -44,8 +44,8 @@ class IndustryTradeScene extends TradeScene {
   generateBackgroundImage() {
     let backgroundImage = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
     let showOptions = { 
-      "outOfBoardTile": 0x6F,
-      "baseTile": 0x6E,
+      "outOfBoardTile": 0x00,
+      "baseTile": null,
       "showTerrain": true,
       "showBuildings": false,
       "showUnits": false,
@@ -55,7 +55,7 @@ class IndustryTradeScene extends TradeScene {
     this.tileBoard.show(backgroundImage, this.camera.position, showOptions);
 
     // show industry
-    let aux = boardToScreen(createVector(14,21),this.camera.position)
+    let aux = Geometry.boardToScreen(createVector(14,21),this.camera.position, this.tileHalfSize)
     
     backgroundImage.image(
       this.industry.imgTrade,
@@ -66,10 +66,10 @@ class IndustryTradeScene extends TradeScene {
     // Bottom rails for player train
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
-        Tile.draw(backgroundImage, 0x33, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-2.5*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImage, 0x33, createVector(i*this.tileHalfSize.x, mainCanvasDim[1]-2.5*this.tileHalfSize.y), this.tileHalfSize);
       }
       else {
-        Tile.draw(backgroundImage, 0x32, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-1.5*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImage, 0x32, createVector(i*this.tileHalfSize.x, mainCanvasDim[1]-1.5*this.tileHalfSize.y), this.tileHalfSize);
       }
     }
     return backgroundImage;
@@ -92,7 +92,7 @@ class IndustryTradeScene extends TradeScene {
       }
       wagon.setPosition(createVector(
         1100 + col * wagon.halfSize.x*2.4 - 150*row + wagon.halfSize.x, 
-        352 + row*TILE_HEIGHT_HALF*3
+        352 + row*this.tileHalfSize.y*3
       ));
       wagon.purchasePrice = wagonInfo.Sell;
       this.buyableWagons.push(wagon);
@@ -107,7 +107,7 @@ class IndustryTradeScene extends TradeScene {
       //   let wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
       //   wagon.setPos(createVector(
       //     1200 + i * wagon.halfSize.x*2 - 100*row + wagon.halfSize.x, 
-      //     386 + row*TILE_HEIGHT_HALF*2
+      //     386 + row*tileHalfSizes.Z1.y*2
       //   ));
       //   wagon.fillWagon(resourceName);
       //   this.buyableWagons.push(wagon);
@@ -236,7 +236,7 @@ class IndustryTradeScene extends TradeScene {
       }
     
       // check if we clicked the industry
-      let boardPos = screenToBoard(mousePos, this.camera.position);
+      let boardPos = Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize);
       let tileId = this.tileBoard.board[boardPos.y][boardPos.x].tileId;
       console.log(`Tile clicked: ${boardPos.array()} with tileId ${tileId}`);
 
@@ -252,7 +252,7 @@ class IndustryTradeScene extends TradeScene {
         this.selectedTrainWagonIdx = null;
         this.infoPanel.active = false;
       }
-      // let boardPos = screenToBoard(mousePos, this.cameraPos);
+      // let boardPos = Geometry.screenToBoard(mousePos, this.cameraPos);
       // console.log(`Tile clicked: ${boardPos.array()} with tileId ${this.tileBoard.board[boardPos.y][boardPos.x].tileId}`);
     }
 
@@ -342,8 +342,8 @@ class IndustryTradeScene extends TradeScene {
     // for (let resourceName of this.railResourceNames) {
     //   mainCanvas.textSize(20)
     //   mainCanvas.text(resourceName, 
-    //     1100 - i*2*TILE_WIDTH_HALF, 
-    //     394 + i*TILE_HEIGHT_HALF*2 -25)
+    //     1100 - i*2*tileHalfSizes.Z1.x, 
+    //     394 + i*tileHalfSizes.Z1.y*2 -25)
     //   i++;
     // }
     this.infoPanel.show();
@@ -351,7 +351,7 @@ class IndustryTradeScene extends TradeScene {
     // show red debug lines
     // mainCanvas.push();
     // mainCanvas.stroke("red")
-    // let aux = boardToScreen(createVector(14,21),this.cameraPos)
+    // let aux = Geometry.boardToScreen(createVector(14,21),this.cameraPos)
     // mainCanvas.line(0,aux.y,mainCanvasDim[0],aux.y)
     // mainCanvas.line(aux.x,0,aux.x,mainCanvasDim[1])
     // // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)

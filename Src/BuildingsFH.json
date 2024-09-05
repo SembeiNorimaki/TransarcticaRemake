@@ -1,14 +1,19 @@
 {
-  "Laboratory":      { "filename": "resources/buildings/lab.png", "offset": [65, 115] },
-  "AirBase":         { "filename": "resources/buildings/air.png", "offset": [0, 0] },
-  "Barracks":        { "filename": "resources/buildings/Barracks.png", "offset": [80, 90] },
-  "ConstructionBay": { "filename": "resources/buildings/bay2.png", "offset": [125, 163] },
-  "Factory":         { "filename": "resources/buildings/factory2.png", "offset": [108, 168] },
-  "Mining":          { "filename": "resources/buildings/mining.png", "offset": [0, 0] },
-  "Missiles":        { "filename": "resources/buildings/missiles.png", "offset": [0, 0] },
-  "Power":           { "filename": "resources/buildings/power.png", "offset": [0, 0] },
-  "Radar":           { "filename": "resources/buildings/radar.png", "offset": [90, 115] },
-  "Silo":            { "filename": "resources/buildings/silo.png", "offset": [0, 0] },
-  "FactoryHud":            { "filename": "resources/buildings/factoryHud.png", "offset": [0, 0] } ,
-  "ConstructionBayHud":            { "filename": "resources/buildings/bayHud.png", "offset": [0, 0] }  
+  "Laboratory":          { "filename": "resources/buildings/lab.png", "offset": [65, 115] },
+  "AirBase":             { "filename": "resources/buildings/air.png", "offset": [0, 0] },
+  "Barracks":            { "filename": "resources/buildings/Barracks.png", "offset": [80, 90] },
+  "ConstructionBay":     { "filename": "resources/buildings/bay2.png", "offset": [125, 163] },
+  "Factory":             { "filename": "resources/buildings/factory2.png", "offset": [108, 168] },
+  "Mining":              { "filename": "resources/buildings/mining.png", "offset": [0, 0] },
+  "Missiles":            { "filename": "resources/buildings/missiles.png", "offset": [0, 0] },
+  "Power":               { "filename": "resources/buildings/power.png", "offset": [0, 0] },
+  "Radar":               { "filename": "resources/buildings/radar.png", "offset": [90, 115] },
+  "Silo":                { "filename": "resources/buildings/silo.png", "offset": [0, 0] },
+  "FactoryHud":          { "filename": "resources/buildings/factoryHud.png", "offset": [0, 0] } ,
+  "ConstructionBayHud":  { "filename": "resources/buildings/bayHud.png", "offset": [0, 0] },
+
+  "House1":   { "filename": "resources/buildings/4597_zi4.png", "offset": [96, 96] },
+  "House2":   { "filename": "resources/buildings/4598_zi4.png", "offset": [124, 124] },
+  "House3":   { "filename": "resources/buildings/4599_zi4.png", "offset": [96, 96] },
+  "House4":   { "filename": "resources/buildings/4600_zi4.png", "offset": [96, 96] }
 }

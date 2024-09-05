@@ -25,7 +25,7 @@ class Bullet {
   show(cameraPosition) {
     mainCanvas.push();
     mainCanvas.fill("black")
-    let screenPos = boardToScreen(p5.Vector.add(this.position, this.verticalPosition), cameraPosition);
+    let screenPos = Geometry.boardToScreen(p5.Vector.add(this.position, this.verticalPosition), cameraPosition, tileHalfSizes.Z1);
     mainCanvas.circle(screenPos.x, screenPos.y, 5);
     mainCanvas.pop();
   }
@@ -57,7 +57,7 @@ class BallisticBullet extends Bullet {
     mainCanvas.push();
     mainCanvas.fill("black")
     // Sub because in the screen UP is negative
-    let screenPos = boardToScreen(p5.Vector.sub(this.position, this.verticalPosition), cameraPosition);
+    let screenPos = Geometry.boardToScreen(p5.Vector.sub(this.position, this.verticalPosition), cameraPosition, tileHalfSizes.Z1);
     mainCanvas.circle(screenPos.x, screenPos.y, 5);
     mainCanvas.pop();
   }

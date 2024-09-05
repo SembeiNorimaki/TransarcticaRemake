@@ -30,7 +30,7 @@ class HorizontalTrain {
     
     this.velocity = 0.0;
     this.acceleration = 0;
-    this.accelerationStrenght = 0.01;
+    this.accelerationStrenght = 0.004;
     this.brakingStrenght = 0.002;
     this.maxVelocity = 12.0;
     this.minVelocity = -12.0;
@@ -123,23 +123,23 @@ class HorizontalTrain {
 
     game.playerTrain.wagons[0].setPosition(this.currentPosition);  
     let offset = createVector(
-      (((game.playerTrain.wagons[0].halfSize.x) / TILE_WIDTH_HALF) ) / 2 , 
-      (-((game.playerTrain.wagons[0].halfSize.x ) / TILE_WIDTH_HALF) ) / 2
+      (((game.playerTrain.wagons[0].halfSize.x) / game.currentScene.tileHalfSize.x) ) / 2 , 
+      (-((game.playerTrain.wagons[0].halfSize.x ) / game.currentScene.tileHalfSize.x) ) / 2
     );
     this.currentPosition.sub(offset);
 
     for (let [i, wagon] of game.playerTrain.wagons.entries()) {
       if (i==0) continue;
       offset = createVector(
-        (((wagon.halfSize.x) / TILE_WIDTH_HALF) ) / 2 , 
-        (-((wagon.halfSize.x ) / TILE_WIDTH_HALF) ) / 2
+        (((wagon.halfSize.x) / game.currentScene.tileHalfSize.x) ) / 2 , 
+        (-((wagon.halfSize.x ) / game.currentScene.tileHalfSize.x) ) / 2
       );
       this.currentPosition.sub(offset);
       
       wagon.setPosition(this.currentPosition.copy());  
       offset = createVector(
-        (((wagon.halfSize.x) / TILE_WIDTH_HALF) ) / 2 , 
-        (-((wagon.halfSize.x ) / TILE_WIDTH_HALF) ) / 2
+        (((wagon.halfSize.x) / game.currentScene.tileHalfSize.x) ) / 2 , 
+        (-((wagon.halfSize.x ) / game.currentScene.tileHalfSize.x) ) / 2
       );
       this.currentPosition.sub(offset);
       

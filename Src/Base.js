@@ -1,11 +1,26 @@
 class Base {
   constructor(baseData) {
+    this.tileHalfSize = tileHalfSizes.Z1;
     this.name = baseData.name;
     this.units = [];
     this.buildings = [];
+    
+
+    this.wagonStorageLocations = [];
+    for (let x=71, y=32; x>40; x-=3.2, y+=3.2) {
+      this.wagonStorageLocations.push(createVector(x,y));
+    }
+    //   createVector(71, 32),
+    //   createVector(68, 35),
+    //   createVector(65, 38),
+    //   createVector(62, 41),
+    //   createVector(59, 44),
+    //   createVector(56, 47)
+    // ];
+
     this.wagons = [];
 
-    this.tileBoard = new TileBoard(gameData.baseBoard);
+    this.tileBoard = new TileBoard(gameData.baseBoard, this.tileHalfSize);
     
     let unit;
     for (let unitData of baseData.units) {
@@ -22,38 +37,42 @@ class Base {
 
     }
 
-    let x = 65;
-    let y = 39;
     for (let wagonData of baseData.wagons) {
       let wagon = new Wagon(0, wagonData.name, wagonsData[wagonData.name]);
-      wagon.setPosition(createVector(x,y));
-      this.wagons.push(wagon);
-      x += 3;
-      y -= 3;
+      this.storeWagon(wagon);
     }
 
-    this.backgroundImg = this.populateBackgroundImg();
+    
     this.initialize();
+  }
+
+  storeWagon(wagon) {
+    let idx = this.wagons.length;
+    let storagePos = this.wagonStorageLocations[idx];
+    wagon.setPosition(storagePos);
+    this.wagons.push(wagon);
   }
 
 
   populateBackgroundImg() {
-    let img = createGraphics(mainCanvasDim[0]+TILE_WIDTH_HALF*2, mainCanvasDim[1]+TILE_HEIGHT_HALF*6);
+    let img = createGraphics(mainCanvasDim[0]+this.tileHalfSize.x*2, mainCanvasDim[1]+this.tileHalfSize.y*6);
     let nCols = 29;
     let nRows = 29;
     let x, y;
     for (let row=0; row<nRows; row++) {
-      y = row * TILE_HEIGHT_HALF*2;
+      y = row * this.tileHalfSize.y*2;
       for (let col=0;col<nCols; col++) {
-        x = col * TILE_WIDTH_HALF*2;
-        Tile.draw(img, 0x6E, createVector(x,y))
-        Tile.draw(img, 0x6E, createVector(x+TILE_WIDTH_HALF,y+TILE_HEIGHT_HALF))
+        x = col * this.tileHalfSize.x*2;
+        Tile.draw(img, 0x6E, createVector(x,y),this.tileHalfSize)
+        Tile.draw(img, 0x6E, createVector(x+this.tileHalfSize.x, y+this.tileHalfSize.y),this.tileHalfSize)
       }
     }
     return img;
   }
 
   initialize() {
+    this.backgroundImg = this.populateBackgroundImg();
+
     // build central rail
     for (let x=0; x<99; x++) {
       this.tileBoard.board[99-x][x].setTileId(0x82)
@@ -107,11 +126,11 @@ class Base {
     }
 
     
-    this.addWall(createVector(84, 92), 0x60);
-    this.addWall(createVector(85, 92), 0x60);
-    this.addWall(createVector(86, 92), 0x60);
-    this.addWall(createVector(87, 92), 0x60);
-    this.addWall(createVector(88, 92), 0x60);
+    // this.addWall(createVector(84, 92), 0x60);
+    // this.addWall(createVector(85, 92), 0x60);
+    // this.addWall(createVector(86, 92), 0x60);
+    // this.addWall(createVector(87, 92), 0x60);
+    // this.addWall(createVector(88, 92), 0x60);
 
     // this.tileBoard.board[92][84].setTileId(0x60)
     // this.tileBoard.board[92][85].setTileId(0x60)
@@ -146,6 +165,12 @@ class Base {
       this.addUnit(unit);
     }
   }
+
+  removeUnit(unitIdx) {
+    this.tileBoard.removeUnit(this.units[unitIdx].tilePosition);
+    this.units[unitIdx] = null;
+  }
+
   addWall(boardPos, tileId) {
     this.tileBoard.placeWall(boardPos, tileId);
   }
@@ -153,13 +178,8 @@ class Base {
   show(cameraPosition) {
     //let start = performance.now()
     mainCanvas.background(0);
-    mainCanvas.image(this.backgroundImg, -cameraPosition.x % (TILE_WIDTH_HALF*2), -cameraPosition.y % (TILE_HEIGHT_HALF*2));
-    
-    //this.tileBoard.showTiles(mainCanvas, cameraPosition);
-    
-    //this.tileBoard.showTiles2(mainCanvas, cameraPosition);
-    //this.tileBoard.showUnits(mainCanvas, cameraPosition);
-    
+    mainCanvas.image(this.backgroundImg, -cameraPosition.x % (this.tileHalfSize.x*2), -cameraPosition.y % (this.tileHalfSize.y*2));
+       
     let showOptions = { 
       "outOfBoardTile": 0x6F,
       "baseTile": 0x6E,
@@ -170,6 +190,7 @@ class Base {
       "showMinimap": false
     }
     this.tileBoard.show(mainCanvas, cameraPosition, showOptions);
+    
     showOptions = { 
       "outOfBoardTile": 0x6F,
       "baseTile": 0x6E,
@@ -179,7 +200,7 @@ class Base {
       "showWalls": false,
       "showMinimap": false
     }
-    // this.tileBoard.show(mainCanvas, cameraPosition, showOptions);
+    this.tileBoard.show(mainCanvas, cameraPosition, showOptions);
 
 
     for (let wagon of this.wagons) {
@@ -191,6 +212,6 @@ class Base {
     //let end = performance.now()
     //console.log(end-start)
     // hudCanvas.background(0)
-    // hudCanvas.text(cameraPosition.y%TILE_HEIGHT_HALF,100,30)
+    // hudCanvas.text(cameraPosition.y%tileHalfSizes.Z1.y,100,30)
   }
 }

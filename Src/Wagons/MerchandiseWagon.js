@@ -15,6 +15,19 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class MerchandiseWagon extends Wagon {
+  static getInfoPanelData() {
+    return {
+      "title": "Merchandise",
+      "image": wagonsData.Merchandise.img[0],
+      "lines": [
+        `Capacity: ${wagonsData.Merchandise.capacity} ${wagonsData.Merchandise.units}`,
+        `Weight: ${wagonsData.Merchandise.weight} ${wagonsData.Merchandise.units}`,
+        `Cost: 200 bak`
+      ],
+      "buttons": []
+    };
+  }
+
   constructor(id, name, wagonData, cargo) {
     super(id, name, wagonData);
     this.cargo = cargo;

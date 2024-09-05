@@ -26,22 +26,27 @@ class Locomotive {
     this.prevTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
     this.acceleration = createVector(0.02, 0).setHeading(radians(this.orientation));
     this.velocity = createVector(0.0, 0.0);
-    this.braking = createVector(0.0005, 0); 
-    this.maxVelocity = 1;
+    this.braking = createVector(0.0006, 0); 
+    this.maxVelocity = 0.05;
     this.spriteIdx = 0;
     this.gear = "N";
   }
 
   initialize(savedData) {
     this.orientation = savedData.orientation;
-    this.position = savedData.position; 
+    this.position = createVector(savedData.position.x, savedData.position.y); 
     this.prevPosition = this.position.copy();
-    this.frontSensor = createVector(0.4, 0).setHeading(radians(this.orientation)).add(this.position);
     this.currentTile = this.position.copy();
     this.prevTile = this.currentTile.copy();
+    
+    this.acceleration = createVector(0.0002, 0).setHeading(radians(this.orientation));
+    
+    let tileName = game.navigationScene.tileBoard.board[this.position.y][this.position.x].tileName;
+    let offset = Tile.tileToInitialPositionOffset(tileName);
+    this.position.add(offset);
+    this.frontSensor = createVector(0.3, 0).setHeading(radians(this.orientation)).add(this.position);
     this.currentTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
     this.prevTileFrontSensor = createVector(round(this.frontSensor.x), round(this.frontSensor.y));
-    this.acceleration = createVector(0.0002, 0).setHeading(radians(this.orientation));
   }
 
   start() {
@@ -69,6 +74,8 @@ class Locomotive {
     if (this.velocity.mag() == 0) {
       this.orientation = (this.orientation + 180) % 360;
       this.acceleration.setHeading(radians(this.orientation));
+      this.frontSensor = createVector(0.3, 0).setHeading(radians(this.orientation)).add(this.position);
+      console.log(this.orientation)
       this.update();
     }
   }
@@ -113,12 +120,18 @@ class Locomotive {
     }
     this.orientation = newOri;
 
-    this.frontSensor = createVector(0.4, 0).setHeading(radians(this.orientation)).add(this.position);
+    this.frontSensor = createVector(0.3, 0).setHeading(radians(this.orientation)).add(this.position);
     this.velocity.setHeading(radians(this.orientation));
     this.acceleration.setHeading(radians(this.orientation));
   }
 
   update() {
+    // Check if wee ran out of fuel
+    if (game.playerTrain.coal <= 0) {
+      this.stop();
+      game.gameOver();
+      
+    }
     // Update train velocity
     if (this.gear == "D") {
       this.velocity.add(this.acceleration);      
@@ -148,13 +161,13 @@ class Locomotive {
 
     // update camera
     if (game.cameraFollowsLocomotive) {
-      let aux = boardToCamera(this.position);
+      let aux = Geometry.boardToCamera(this.position, game.currentScene.tileHalfSize);
       game.navigationScene.camera.setPosition(aux);
     }
   }
 
   show() {
-    this.screenPos = boardToScreen(this.position, game.navigationScene.camera.position);
+    this.screenPos = Geometry.boardToScreen(this.position, game.navigationScene.camera.position, game.navigationScene.tileHalfSize);
     // console.log(this.position.array(), this.screenPos.array())
     // this.screenPos.add([
     //   gameData.locomotiveData[this.orientation].offset[0],
@@ -164,8 +177,8 @@ class Locomotive {
     this.screenPos.x+gameData.locomotiveData[this.orientation.toString()].offset[0], 
     this.screenPos.y+gameData.locomotiveData[this.orientation.toString()].offset[1]);
     mainCanvas.fill(255)
-    mainCanvas.circle(this.screenPos.x, this.screenPos.y, 3)
-    let screenPos2 = boardToScreen(this.frontSensor, game.navigationScene.camera.position);
-    // mainCanvas.circle(screenPos2.x, screenPos2.y, 10)
+    mainCanvas.circle(this.screenPos.x, this.screenPos.y, 5)
+    let screenPos2 = Geometry.boardToScreen(this.frontSensor, game.navigationScene.camera.position, game.currentScene.tileHalfSize);
+    mainCanvas.circle(screenPos2.x, screenPos2.y, 5)
   }
 }

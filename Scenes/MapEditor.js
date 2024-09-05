@@ -114,7 +114,7 @@ class MapEditor {
       
       for (let i=0; i<n; i++) {
         path.push(createVector(x,y));
-        Tile.drawGhostRail(mainCanvas, tileId[0], boardToScreenSmall(createVector(x, y), this.camera.position));
+        Tile.drawGhostRail(mainCanvas, tileId[0], Geometry.boardToScreenSmall(createVector(x, y), this.camera.position));
         x+=deltaX;
         y+=deltaY;
       } 
@@ -128,11 +128,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }        
       }
@@ -142,11 +142,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }        
       }
@@ -157,11 +157,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }        
       }
@@ -171,11 +171,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x35, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x35, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x34, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x34, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }        
       }
@@ -186,11 +186,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }        
       }
@@ -200,11 +200,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, 1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(-1, 0))
         }        
       }
@@ -215,11 +215,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }        
       }
@@ -229,11 +229,11 @@ class MapEditor {
       for (let i=0; i<n; i++) {
         path.push(currentTile.copy());
         if (i%2) {
-          Tile.drawGhostRail(mainCanvas, 0x32, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x32, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(0, -1))
         }
         else {
-          Tile.drawGhostRail(mainCanvas, 0x33, boardToScreenSmall(currentTile, this.camera.position));
+          Tile.drawGhostRail(mainCanvas, 0x33, Geometry.boardToScreenSmall(currentTile, this.camera.position));
           currentTile.add(createVector(1, 0))
         }        
       }
@@ -244,7 +244,7 @@ class MapEditor {
   }
 
   onClick(mousePos) {
-    let tilePos = screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
+    let tilePos = Geometry.screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
     if (this.buildSelection == "City") {
       this.tileBoard.board[tilePos.y][tilePos.x].setTileId(0xA0);
     } else if (this.buildSelection == "Industry") {
@@ -266,7 +266,7 @@ class MapEditor {
       } else {
         this.posEnd = tilePos.copy();
 
-        let oriScreen = boardToScreenSmall(this.posOri, this.camera.position);
+        let oriScreen = Geometry.boardToScreenSmall(this.posOri, this.camera.position);
         let [path, tileId] = this.calculatePath(this.posOri, tilePos, oriScreen)
         
         for (let [i,pos] of path.entries()) {
@@ -357,60 +357,60 @@ class MapEditor {
   }
 
   showHud() {
-    hudCanvas.image(Tile.tileCodes[0x30].img, TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x31].img, 3*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x32].img, 5*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x33].img, 7*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x34].img, 9*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x35].img, 11*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x30].img, tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x31].img, 3*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x32].img, 5*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x33].img, 7*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x34].img, 9*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x35].img, 11*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
 
-    hudCanvas.image(Tile.tileCodes[0x3A].img, 13*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x3B].img, 15*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x3C].img, 17*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
-    hudCanvas.image(Tile.tileCodes[0x3D].img, 19*TILE_WIDTH_HALF, TILE_HEIGHT_HALF);
+    hudCanvas.image(Tile.tileCodes[0x3A].img, 13*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x3B].img, 15*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x3C].img, 17*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
+    hudCanvas.image(Tile.tileCodes[0x3D].img, 19*tileHalfSizes.Z1.x, tileHalfSizes.Z1.y);
   }
 
   show() {
     this.tileBoard.draw3D(mainCanvas, this.camera.position); 
     
-    let tilePos = screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
+    let tilePos = Geometry.screenToBoardSmall(createVector(mouseX, mouseY), this.camera.position);
 
     if (this.buildSelection == "Rail") {
       if (this.posOri !== null) {
-        let oriScreen = boardToScreenSmall(this.posOri, this.camera.position);
+        let oriScreen = Geometry.boardToScreenSmall(this.posOri, this.camera.position);
         this.calculatePath(this.posOri, tilePos, oriScreen)
       }
     }
     else if (this.buildSelection == "City") {
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(tilePos, this.camera.position))
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,0)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,0)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-1)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-1)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-1)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-2)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-2)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, "red", boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(tilePos, this.camera.position))
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, "red", Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-2)), this.camera.position));
     } else if (this.buildSelection == "Industry") {
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(tilePos, this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,0)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,0)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-1)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-1)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-1)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-2)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-2)), this.camera.position));
-      Tile.draw2DColor(mainCanvas, color(200, 200, 100), boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,0)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-1)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(0,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-1,-2)), this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(200, 200, 100), Geometry.boardToScreenSmall(p5.Vector.add(tilePos, createVector(-2,-2)), this.camera.position));
     } else if (this.buildSelection == "Ground") {
-      Tile.draw2DColor(mainCanvas, "gray", boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, "gray", Geometry.boardToScreenSmall(tilePos, this.camera.position));
     } else if (this.buildSelection == "Fix") {
-      Tile.draw2DColor(mainCanvas, "black", boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, "black", Geometry.boardToScreenSmall(tilePos, this.camera.position));
     } else if (this.buildSelection == "Water") {
-      Tile.draw2DColor(mainCanvas, "blue", boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, "blue", Geometry.boardToScreenSmall(tilePos, this.camera.position));
     } else if (this.buildSelection == "Forest") {
-      Tile.draw2DColor(mainCanvas, "green", boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, "green", Geometry.boardToScreenSmall(tilePos, this.camera.position));
     } else if (this.buildSelection == "Event") {
-      Tile.draw2DColor(mainCanvas, color(100,100,200), boardToScreenSmall(tilePos, this.camera.position));
+      Tile.draw2DColor(mainCanvas, color(100,100,200), Geometry.boardToScreenSmall(tilePos, this.camera.position));
     }
   }
 }

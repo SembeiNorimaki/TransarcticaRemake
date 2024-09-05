@@ -44,7 +44,87 @@
     "dimensions": [128, 46],
     "offset": [[64,43]],
     
-    "cargo": "Any",
+    "cargo": "",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "BioGreenHouse": {
+    "files": ["resources/tr_wagons/trn_greenhouse_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+
+    "cargo": "Plants",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Prison": {
+    "files": ["resources/tr_wagons/trn_alcatraz_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "Slaves",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Harpoon": {
+    "files": ["resources/tr_wagons/trn_harpoon_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "SpyCar": {
+    "files": ["resources/tr_wagons/trn_spy_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "Spies",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Refrigerator": {
+    "files": ["resources/tr_wagons/18329_zi4.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "Spies",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Missile Launcher": {
+    "files": ["resources/tr_wagons/13555_zi4.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Boiler": {
+    "files": ["resources/tr_wagons/trn_boiler_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "",
+    "units": "tons",
+    "capacity": 20,
+    "weight": 100
+  },
+  "Observation Tower": {
+    "files": ["resources/tr_wagons/trn_observatory_tr.png"],
+    "dimensions": [128, 46],
+    "offset": [[64,43]],
+        
+    "cargo": "",
     "units": "tons",
     "capacity": 20,
     "weight": 100

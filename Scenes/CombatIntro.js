@@ -227,34 +227,34 @@ class CombatIntro {
     let backgroundImg = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
     let x,y;
     for (let row=-1; row<14; row++) {
-      y = row*TILE_HEIGHT_HALF*2;
+      y = row*tileHalfSizes.Z1.y*2;
       for (let col=0; col<15; col++) {
-        x = col*TILE_WIDTH_HALF*2;
+        x = col*tileHalfSizes.Z1.x*2;
         Tile.draw(backgroundImg, 0x01, createVector(x,y));
-        Tile.draw(backgroundImg, 0x01, createVector(x-TILE_WIDTH_HALF, y+TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImg, 0x01, createVector(x-tileHalfSizes.Z1.x, y+tileHalfSizes.Z1.y));
       }
     }
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
         
-        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 2*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 6*TILE_HEIGHT_HALF));
-        // Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 10*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 14*TILE_HEIGHT_HALF));
-        // Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 18*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 22*TILE_HEIGHT_HALF));
-        // Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 26*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 2*tileHalfSizes.Z1.y));
+        Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 6*tileHalfSizes.Z1.y));
+        // Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 10*tileHalfSizes.Z1.y));
+        Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 14*tileHalfSizes.Z1.y));
+        // Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 18*tileHalfSizes.Z1.y));
+        Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 22*tileHalfSizes.Z1.y));
+        // Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 26*tileHalfSizes.Z1.y));
         
       }
       else {
         
-        Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 3*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 7*TILE_HEIGHT_HALF));
-        // Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 11*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 15*TILE_HEIGHT_HALF));
-        // Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 19*TILE_HEIGHT_HALF));
-        Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 23*TILE_HEIGHT_HALF));
-        // Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 27*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 3*tileHalfSizes.Z1.y));
+        Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 7*tileHalfSizes.Z1.y));
+        // Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 11*tileHalfSizes.Z1.y));
+        Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 15*tileHalfSizes.Z1.y));
+        // Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 19*tileHalfSizes.Z1.y));
+        Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 23*tileHalfSizes.Z1.y));
+        // Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 27*tileHalfSizes.Z1.y));
       }
     }
     

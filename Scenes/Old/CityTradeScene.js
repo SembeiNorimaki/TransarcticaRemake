@@ -41,22 +41,23 @@ class CityTradeScene extends TradeScene {
     let backgroundImage = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
 
     let showOptions = { 
-      "outOfBoardTile": 0x6F,
-      "baseTile": 0x6E,
+      "outOfBoardTile": 0x00,
+      "baseTile": null,
       "showTerrain": true,
       "showBuildings": false,
       "showUnits": false,
       "showWalls": false,
       "showMinimap": false
     }
+    
     this.tileBoard.show(backgroundImage, this.camera.position, showOptions);
 
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
-        Tile.draw(backgroundImage, 0x33, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-2.5*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImage, 0x33, createVector(i*this.tileHalfSize.x, mainCanvasDim[1]-2.5*this.tileHalfSize.y), this.tileHalfSize );
       }
       else {
-        Tile.draw(backgroundImage, 0x32, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-1.5*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImage, 0x32, createVector(i*this.tileHalfSize.x, mainCanvasDim[1]-1.5*this.tileHalfSize.y), this.tileHalfSize);
       }
     }
     return backgroundImage;
@@ -74,56 +75,57 @@ class CityTradeScene extends TradeScene {
   onClick(mousePos) {   
     if (mouseButton == "right") {
       this.draggedWagonId = this.horizontalTrain.onClick(mousePos, this.camera.position);
-      return
+      return;
     }
     
     // check conversation panel
     if (this.conversationPanel.active) {
       let buttonIdx = this.conversationPanel.onClick(mousePos);
-      console.log(buttonIdx)
-      switch(buttonIdx) {
-        case(1): // Accept button
-          console.log("Mission accepted");
-          this.acceptMission();
-          
-        break;
-        case(2): // Reject Button
-          console.log("Mission declined");
-          this.conversationPanel.active = false;
-        break;
+      if (buttonIdx !== null) {
+        switch(buttonIdx) {
+          case(1): // Accept button
+            console.log("Mission accepted");
+            this.acceptMission();
+            
+          break;
+          case(2): // Reject Button
+            console.log("Mission declined");
+            this.conversationPanel.active = false;
+          break;
+        }
+        return;
       }
     }
     
     // Horizontal train
-    else if (mousePos.y > 750) {
-      let wagonIdx = this.horizontalTrain.onClick(mousePos, this.camera.position);
+    let wagonIdx = this.horizontalTrain.onClick(mousePos, this.camera.position);
+    if (wagonIdx !== null) {
       console.log(`Clicked wagon ${wagonIdx}`)
-      if (wagonIdx !== null) {
-        //let wagon = this.horizontalTrain.wagons[wagonIdx]; 
-        let wagon = game.playerTrain.wagons[wagonIdx]; 
-        this.selectedTrainWagonIdx = wagonIdx;
-        this.selectedBuyableResourceIdx = null;
+      let wagon = game.playerTrain.wagons[wagonIdx]; 
+      this.selectedTrainWagonIdx = wagonIdx;
+      this.selectedBuyableResourceIdx = null;
 
-        // check if the city buys this type of resource
-        let price = "0";
+      // check if the city buys this type of resource
+      let price = "0";
 
-        // display wagon in the panel
-        let infoPanelData = wagon.generatePanelInfoData();
-        if(wagon.cargo in this.city.resources) {
-          price = this.city.resources[wagon.cargo].Buy
-          infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
-          infoPanelData.buttons = ["Sell 1", "Sell 10"];
-        } else {
-          infoPanelData.buttons = [];
-        }
-        
-        this.infoPanel.fillData(infoPanelData);
-        this.infoPanel.active = true;
+      // display wagon in the panel
+      let infoPanelData = wagon.generatePanelInfoData();
+      if(wagon.cargo in this.city.resources) {
+        price = this.city.resources[wagon.cargo].Buy
+        infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
+        infoPanelData.buttons = ["Sell 1", "Sell 10"];
+      } else {
+        infoPanelData.buttons = [];
       }
-    } 
+      
+      this.infoPanel.fillData(infoPanelData);
+      this.infoPanel.active = true;
+      return;
+    }
+     
 
     // Info panel
-    else if (this.infoPanel.active && mousePos.x > mainCanvasDim[0]-300){
+    if (this.infoPanel.active) {
       let buttonText = this.infoPanel.onClick(mousePos);
       if (buttonText !== null) {      
         if (this.selectedBuyableWagonIdx !== null) {
@@ -144,15 +146,15 @@ class CityTradeScene extends TradeScene {
             this.sellResource(10);          
           }
         }
+        return;
       }      
     }
     
     // TrafficLight
-    else if (this.trafficLight.checkClick(mousePos)) {
+    if (this.trafficLight.checkClick(mousePos)) {
       this.exitSequence = true;
       this.horizontalTrain.gearUp();
-      this.horizontalTrain.maxSpeed = 25;
-      this.horizontalTrain.acceleration = 0.2;
+      return;
     }
 
     else {
@@ -194,7 +196,7 @@ class CityTradeScene extends TradeScene {
 
     
       // check if we clicked a house
-      let boardPos = screenToBoard(mousePos, this.camera.position);
+      let boardPos = Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize);
       let tileId = this.tileBoard.board[boardPos.y][boardPos.x].tileId;
       console.log(`Tile clicked: ${boardPos.array()} with tileId ${tileId}`);
 
@@ -209,7 +211,7 @@ class CityTradeScene extends TradeScene {
       this.selectedTrainWagonIdx = null;
       this.infoPanel.active = false;
 
-      // let boardPos = screenToBoard(mousePos, this.cameraPos);
+      // let boardPos = Geometry.screenToBoard(mousePos, this.cameraPos);
       // console.log(`Tile clicked: ${boardPos.array()} with tileId ${this.tileBoard.board[boardPos.y][boardPos.x].tileId}`);
 
       // this.infoPanel.fillData(
@@ -229,8 +231,9 @@ class CityTradeScene extends TradeScene {
 
   show() {
     mainCanvas.image(this.backgroundImg, 0, 0);    
+    
     this.trafficLight.show();
-    this.horizontalTrain.show(this.camera.position);
+    this.horizontalTrain.show(createVector(0,0));
 
     for (let wagon of this.buyableWagons) {
       if (wagon !== null) {

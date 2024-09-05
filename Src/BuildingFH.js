@@ -13,12 +13,12 @@ class BuildingFH {
 
   showBoundingBox(cameraPosition) {
     mainCanvas.noFill();
-    let screenPos = boardToScreen(this.position, cameraPosition);
+    let screenPos = Geometry.boardToScreen(this.position, cameraPosition, game.currentScene.tileHalfSize);
     mainCanvas.rect(screenPos.x-this.img.width/2, screenPos.y-this.img.height, this.img.width, this.img.height)
   }
 
   checkClick(mousePos, cameraPosition) {
-    let screenPosition = boardToScreen(this.position, cameraPosition);
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPosition, game.currentScene.tileHalfSize);
     return (
       mousePos.x > screenPosition.x - this.halfSize.x &&
       mousePos.x < screenPosition.x + this.halfSize.x &&
@@ -28,7 +28,7 @@ class BuildingFH {
   }
   
   show(cameraPosition) {
-    let screenPos = boardToScreen(this.position, cameraPosition);
+    let screenPos = Geometry.boardToScreen(this.position, cameraPosition, game.currentScene.tileHalfSize);
     mainCanvas.image(this.img, screenPos.x-this.offset[0], screenPos.y-this.offset[1], this.img.width, this.img.height);
     mainCanvas.circle(screenPos.x, screenPos.y, 10)
     this.showBoundingBox(cameraPosition);

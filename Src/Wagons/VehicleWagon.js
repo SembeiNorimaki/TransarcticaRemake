@@ -42,7 +42,7 @@ class VehicleWagon extends Wagon {
 
   showHorizontal(cameraPosition) {
     let position = this.position.copy();
-    let screenPosition = boardToScreen(position, cameraPosition)
+    let screenPosition = Geometry.boardToScreen(position, cameraPosition, game.currentScene.tileHalfSize)
     mainCanvas.image(
       this.img[0], 
       screenPosition.x - this.offset[0][0], 

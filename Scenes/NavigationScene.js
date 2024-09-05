@@ -16,25 +16,36 @@
 
 class NavigationScene {
   constructor() {
+    this.tileHalfSize = tileHalfSizes.Z2;
     this.selectedIntersection = null;
-    //this.camera = new Camera(boardToCamera(createVector(10,10)));
-    this.camera = new Camera(boardToCamera(createVector(73,366)), createVector(0,0));
-    this.tileBoard = new TileBoard(gameData.mapBoard);
-    this.locomotive = new Locomotive(createVector(73, 366), 180.0);
+
+    this.camera = new Camera(createVector(0,0));
+    this.tileBoard = new TileBoard(gameData.mapBoard, this.tileHalfSize);
+    this.locomotive = new Locomotive(createVector(72, 363), 90.0);
+
+    this.backgroundImg = this.populateBackgroundImg();
   }
 
   initialize() {
-    // populate cities in the tileBoard
-    // for (let [locationStr, name] of Object.entries(citiesLocations)) {
-    //   let aux = locationStr.split(",")
-    //   this.tileBoard.buildCity(createVector(int(aux[0]), int(aux[1])));
-    // }
-    // for (let [locationStr, name] of Object.entries(industriesLocations)) {
-    //   let aux = locationStr.split(",")
-    //   this.tileBoard.buildIndustry(createVector(int(aux[0]), int(aux[1])));
-    // }
-
     this.getNewIntersection(this.locomotive.currentTile, this.locomotive.orientation);
+    this.camera.setPosition(Geometry.boardToCamera(this.locomotive.position, this.tileHalfSize));
+    // sounds.TravelMusic.play()
+  }
+
+  populateBackgroundImg() {
+    let img = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
+    let nCols = 14;
+    let nRows = 14;
+    let x, y;
+    for (let row=0; row<nRows; row++) {
+      y = row * this.tileHalfSize.y*2;
+      for (let col=0;col<nCols; col++) {
+        x = col * this.tileHalfSize.x*2;
+        Tile.draw(img, 0x01, createVector(x,y), this.tileHalfSize);
+        Tile.draw(img, 0x01, createVector(x+this.tileHalfSize.x, y+this.tileHalfSize.y), this.tileHalfSize);
+      }
+    }
+    return img;
   }
 
   processKey(key) {
@@ -55,6 +66,8 @@ class NavigationScene {
       this.camera.move(createVector(0,-300))
     } else if (key == "ArrowDown") {
       this.camera.move(createVector(0,300))
+    } else if (key == "s") {
+      game.saveGame();
     }
      
   }
@@ -64,7 +77,7 @@ class NavigationScene {
       let result = game.conversationPanel.onClick(mousePos);
       console.log(result)
     } else {
-      console.log(`Clicked tile ${screenToBoard(mousePos, this.camera.position)}`)
+      console.log(`Clicked tile ${Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize)}`)
     }
   }
 
@@ -75,7 +88,6 @@ class NavigationScene {
     
     for (let i=0; i<6; i++) {
       if (this.tileBoard.board[newPos.y][newPos.x].isIntersection) {
-        //this.tileBoard.board[newPos.y][newPos.x].isSelected = true;
         this.selectedIntersection = this.tileBoard.board[newPos.y][newPos.x]
         return;
       }
@@ -87,13 +99,10 @@ class NavigationScene {
       }
       let exitSide = Tile.orientationToExit[tileName][newOri];
       let delta = Tile.sideToDelta[exitSide];
-      
-      //console.log(`Current: ${tileName}, pos: ${newPos.array()}, ori: ${newOri}, exit: ${exitSide}, delta: ${delta}`)
-      
+
       newPos.add(createVector(delta[0], delta[1]));
       tileName =  Tile.idxToName[this.tileBoard.board[newPos.y][newPos.x].tileId];
       
-
       let entrySide = Tile.oppositeSide[exitSide];
       if (tileName in Tile.entryToOrientation) {
         newOri = Tile.entryToOrientation[tileName][entrySide];
@@ -101,8 +110,6 @@ class NavigationScene {
         this.selectedIntersection = null;
         return;
       }
-
-      //console.log(`Next: ${tileName}, pos: ${newPos.array()}, ori: ${newOri}, entry: ${entrySide}`)
     }
   }
 
@@ -153,24 +160,29 @@ class NavigationScene {
         this.locomotive.inmediateStop();
       }
 
-      // check if we arrived to a city or industry
+      // check if we arrived to a city, industry, base or bridge
       let tileString = String(this.locomotive.currentTileFrontSensor.x) + "," + String(this.locomotive.currentTileFrontSensor.y);
       if (tileString in game.events) {
         let locationName = game.events[tileString];
-        
         
         if (locationName in game.cities) {
           console.log(`Arrived to city ${locationName} at ${tileString}`);
           this.locomotive.inmediateStop();        
           this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
-          game.currentScene = new CityTradeScene(game.cities[locationName]);
+          game.currentScene = new TradeScene(game.cities[locationName]);
         } else if (locationName in game.industries) {
           console.log(`Arrived to industry ${locationName} at ${tileString}`);
           this.locomotive.inmediateStop();        
           this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
           game.currentScene = new IndustryTradeScene(game.industries[locationName]);  
+        } else if (locationName in game.bases) {
+          console.log(`Arrived to base ${locationName} at ${tileString}`);
+          this.locomotive.inmediateStop();        
+          this.locomotive.position = this.locomotive.prevTile.copy();
+          this.locomotive.turn180();
+          game.currentScene = new BaseScene(game.bases[locationName]);  
         } else if (locationName in game.bridges && !game.bridges[locationName].completed) {
           console.log(`Arrived to bridge ${locationName} at ${tileString}`);
           game.currentScene = new BridgeScene(locationName);
@@ -181,57 +193,56 @@ class NavigationScene {
     }
   }
 
-  // showHud() {
-  //   let x = hudCanvas.width-80;
-  //   let y = hudCanvas.height-30;
-  //   hudCanvas.image(gameData.hudData.fuel, x, y);
-  //   hudCanvas.text(`${int(game.playerTrain.fuel)}`, x, y);
-  //   x-=140;
-  //   hudCanvas.image(gameData.hudData.gold, x, y);
-  //   hudCanvas.text(`${game.playerTrain.gold}`, x, y);
-  //   x-=140;
-  //   hudCanvas.image(gameData.hudData.frame, x, y);
-  //   hudCanvas.text(`${this.locomotive.gear}`, x, y);
-  // }
-
   show() {
 
+    mainCanvas.background(0);
+    // mainCanvas.image(this.backgroundImg, 0, 0);
+    
     let showOptions = { 
-      "outOfBoardTile": 0x6F,
-      "baseTile": 0x6E,
+      "outOfBoardTile": 0x00,
+      "baseTile": null,
       "showTerrain": true,
       "showBuildings": false,
       "showUnits": false,
       "showWalls": false,
       "showMinimap": false
     }
-
-    // this.tileBoard.showTiles(mainCanvas, this.camera.position); 
     this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
-    this.locomotive.show();
     
+    showOptions = { 
+      "outOfBoardTile": 0x00,
+      "baseTile": null,
+      "showTerrain": false,
+      "showBuildings": true,
+      "showUnits": false,
+      "showWalls": false,
+      "showMinimap": false
+    }
+    //this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
+
+    this.locomotive.show();   
     
     // show selected intersection
     if (this.selectedIntersection) {
       // console.log(this.selectedIntersection)
-      let screenPos = boardToScreen(this.selectedIntersection.boardPosition, this.camera.position);
+      let screenPos = Geometry.boardToScreen(this.selectedIntersection.boardPosition, this.camera.position, this.tileHalfSize);
       mainCanvas.push();
       mainCanvas.strokeWeight(2);
       mainCanvas.stroke("blue")
-      mainCanvas.line(screenPos.x-TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y-TILE_HEIGHT_HALF);
-      mainCanvas.line(screenPos.x-TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y+TILE_HEIGHT_HALF);
-      mainCanvas.line(screenPos.x+TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y-TILE_HEIGHT_HALF);
-      mainCanvas.line(screenPos.x+TILE_WIDTH_HALF,screenPos.y,screenPos.x,screenPos.y+TILE_HEIGHT_HALF);
+      mainCanvas.line(screenPos.x - this.tileHalfSize.x, screenPos.y, screenPos.x, screenPos.y - this.tileHalfSize.y);
+      mainCanvas.line(screenPos.x - this.tileHalfSize.x, screenPos.y, screenPos.x, screenPos.y + this.tileHalfSize.y);
+      mainCanvas.line(screenPos.x + this.tileHalfSize.x, screenPos.y, screenPos.x, screenPos.y - this.tileHalfSize.y);
+      mainCanvas.line(screenPos.x + this.tileHalfSize.x, screenPos.y, screenPos.x, screenPos.y + this.tileHalfSize.y);
       mainCanvas.pop();
     }
 
     game.hud.show();
 
-    // show the center of the screen in red lines
+    //show the center of the screen in red lines
     // mainCanvas.push();
     // mainCanvas.stroke("red")
-    // mainCanvas.line(0,mainCanvasDim[1]/2,mainCanvasDim[0],mainCanvasDim[1]/2)
-    // mainCanvas.line(mainCanvasDim[0]/2,0,mainCanvasDim[0]/2,mainCanvasDim[1])
+    // mainCanvas.line(0, mainCanvasDim[1]/2, mainCanvasDim[0], mainCanvasDim[1]/2)
+    // mainCanvas.line(mainCanvasDim[0]/2, 0, mainCanvasDim[0]/2, mainCanvasDim[1])
     // mainCanvas.pop();
   }
 }

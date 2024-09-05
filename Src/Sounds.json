@@ -1,5 +1,11 @@
 {
   "ArtilleryShoot": {"filename": "resources/sounds/artilleryShoot.mp3"},
   "BattleMusic": {"filename": "resources/sounds/battle.mp3"},
-  "MoveTrack": {"filename": "resources/sounds/MOVETRK.WAV"}
+  "MoveTrack": {"filename": "resources/sounds/MOVETRK.WAV"},
+  "VehicleExplosion": {"filename": "resources/sounds/EXPVEHIC.WAV"},
+  "TravelMusic": {"filename": "resources/sounds/Travelling.mp3"},
+  "CityMusic1": {"filename": "resources/sounds/city1.wav"},
+  "CityMusic2": {"filename": "resources/sounds/city2.wav"},
+  "CityMusic3": {"filename": "resources/sounds/city3.wav"},
+  "CityMusic4": {"filename": "resources/sounds/city4.wav"}
 }

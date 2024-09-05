@@ -38,7 +38,7 @@ class ImageConverter {
   }
 
   constructor() {
-    this.tileHalfSize = createVector(8, 4);
+    // this.tileHalfSize = createVector(8, 4);
   }
 
   initialize(heightmapRaw) {
@@ -51,7 +51,7 @@ class ImageConverter {
     this.filterPeninsulas();
     this.processHeightmap();
     //console.log(this.board2)
-    this.tileHalfSize = createVector(4, 2);
+    // this.tileHalfSize = createVector(4, 2);
   }
   
   // Given a grayscale image, returns a binary/ternary image to be used as heighmap

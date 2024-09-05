@@ -16,14 +16,23 @@
 
 class City {
   constructor(cityData) {
-    // this.cityData = cityData;
     this.name = cityData.name;
     this.resources = cityData.resources;
     this.wagons = cityData.wagons;
-    this.objectiveData = cityData.objectives;
-
-    
-    this.objective = new Objective(this.objectiveData);
+    this.objectiveData = cityData.objectives;    
+    if (Object.keys(cityData.objectives).length === 0) {
+      this.objectiveData = null;
+      this.objective = null;
+    } else {
+      this.objectiveData = cityData.objectives;    
+      this.objective = new Objective(this.objectiveData);    
+    }
     
   }  
+
+  initialize(savedData) {
+    for (let [resourceName, resourceInfo] of Object.entries(savedData.resources)) {
+      this.resources[resourceName].Available = resourceInfo.Available;
+    }
+  }
 }

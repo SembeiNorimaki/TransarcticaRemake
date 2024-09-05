@@ -77,25 +77,25 @@ class CombatScene {
     let backgroundImg = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
     let x,y;
     for (let row=-1; row<13; row++) {
-      y = row*TILE_HEIGHT_HALF*2;
+      y = row*tileHalfSizes.Z1.y*2;
       for (let col=0; col<15; col++) {
-        x = col*TILE_WIDTH_HALF*2;
+        x = col*tileHalfSizes.Z1.x*2;
         Tile.draw(backgroundImg, 0x01, createVector(x,y));
-        Tile.draw(backgroundImg, 0x01, createVector(x-TILE_WIDTH_HALF, y+TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImg, 0x01, createVector(x-tileHalfSizes.Z1.x, y+tileHalfSizes.Z1.y));
       }
     }
     for (let i=-1;i<30;i++) {
       if (!(i%2)) {
-        Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-1*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, mainCanvasDim[1]-1*tileHalfSizes.Z1.y));
         if (this.enemyHTrain !== null) {
-          Tile.draw(backgroundImg, 0x33, createVector(i*TILE_WIDTH_HALF, 2*TILE_HEIGHT_HALF));
+          Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 2*tileHalfSizes.Z1.y));
         }
         
       }
       else {
-        Tile.draw(backgroundImg, 0x32, createVector(i*TILE_WIDTH_HALF, mainCanvasDim[1]-0*TILE_HEIGHT_HALF));
+        Tile.draw(backgroundImg, 0x32, createVector(i*tileHalfSizes.Z1.x, mainCanvasDim[1]-0*tileHalfSizes.Z1.y));
         if (this.enemyHTrain !== null) {
-          Tile.draw(backgroundImg , 0x32, createVector(i*TILE_WIDTH_HALF, 3*TILE_HEIGHT_HALF));
+          Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 3*tileHalfSizes.Z1.y));
         }
       }
     }

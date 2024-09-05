@@ -37,6 +37,7 @@ class Train {
   initialize(saveData) {
     this.gold = saveData.gold;
     this.coal = saveData.coal;
+    
     for (let wagonSaveData of saveData.wagons) {
       this.addWagon(wagonSaveData.name);
       if ("content" in wagonSaveData) {
@@ -93,11 +94,12 @@ class Train {
           this.gold -= unitCost * qty;
           return true;
         } else {
+          qty -= wagon.availableSpace;
           wagon.addResource(wagon.availableSpace, unitCost);
           this.contents[resourceName] += wagon.availableSpace;
           wagon.purchasePrice = unitCost * wagon.availableSpace;
           this.gold -= unitCost * wagon.availableSpace;
-          qty -= wagon.availableSpace;
+          
         }
       }
     }

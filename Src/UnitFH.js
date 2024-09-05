@@ -45,7 +45,7 @@ class UnitFH {
     this.direction = createVector(0,0);
 
     this.maxAp = 200;
-    this.maxHp = 100;
+    this.maxHp = 15;
 
     this.currentAp = this.maxAp;
     this.currentHp = this.maxHp;
@@ -119,7 +119,7 @@ class UnitFH {
   move(delta) {    
     this.position.add(delta);
     this.currentAp -= this.speed*10;
-    game.currentScene.camera.setPosition(boardToCamera(this.position, createVector(-mainCanvasDim[0]/2, -mainCanvasDim[1]/2)))
+    game.currentScene.camera.setPosition(Geometry.boardToCamera(this.position, game.currentScene.tileHalfSize))
   }
 
   calculateHitProbability(targetPos) {
@@ -142,6 +142,7 @@ class UnitFH {
     if (this.currentHp <= 0) {
       this.currentHp = 0;
       this.isDead = true;
+      sounds.VehicleExplosion.play();
     }
   }
 
@@ -159,7 +160,7 @@ class UnitFH {
       ori = 360 - ori;
     }
     
-    this.setOrientation(angleToOri(ori%360));
+    this.setOrientation(Geometry.angleToOri(ori%360));
 
     this.bullet = new BallisticBullet(this.position, targetPos, this.bulletSpeed, 
       this.attackValue);
@@ -172,12 +173,12 @@ class UnitFH {
   showPath(cameraPosition) {
     let ori, dst;    
     if (this.path.length > 0) {
-      ori = boardToScreen(this.position, cameraPosition);
-      dst = boardToScreen(this.path[0], cameraPosition);
+      ori = Geometry.boardToScreen(this.position, cameraPosition, tileHalfSizes.Z1);
+      dst = Geometry.boardToScreen(this.path[0], cameraPosition, tileHalfSizes.Z1);
       mainCanvas.line(ori.x, ori.y, dst.x, dst.y);
       for(let i=0; i<this.path.length-1; i++) {
-        ori = boardToScreen(this.path[i], cameraPosition);
-        dst = boardToScreen(this.path[i+1], cameraPosition);
+        ori = Geometry.boardToScreen(this.path[i], cameraPosition, tileHalfSizes.Z1);
+        dst = Geometry.boardToScreen(this.path[i+1], cameraPosition, tileHalfSizes.Z1);
         mainCanvas.line(ori.x, ori.y, dst.x, dst.y);
         mainCanvas.circle(ori.x, ori.y, 4)
       }
@@ -378,7 +379,7 @@ class UnitFH {
   //     // } else {
   //     //   ori = 360 - ori;
   //     // }
-  //     // this.setOrientation(angleToOri(ori%360));
+  //     // this.setOrientation(Geometry.angleToOri(ori%360));
 
   //     // if (this.sprite.getSpriteIdx() == 1 && this.sprite.getFrameCount() == 0) {
   //     //   this.fireWeapon();
@@ -390,17 +391,17 @@ class UnitFH {
   showRangeCircle(screenPos) {
     // let aux1, aux2;
     // if (this.orientation === UnitFH.Orientations.SE) {
-    //   aux1 = boardToScreen(p5.Vector.add(this.position, createVector(5,-4)));
-    //   aux2 = boardToScreen(p5.Vector.add(this.position, createVector(5, 4)));
+    //   aux1 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(5,-4)));
+    //   aux2 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(5, 4)));
     // } else if (this.orientation === UnitFH.Orientations.NW) {
-    //   aux1 = boardToScreen(p5.Vector.add(this.position, createVector(-5,-4)));
-    //   aux2 = boardToScreen(p5.Vector.add(this.position, createVector(-5, 4)));
+    //   aux1 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(-5,-4)));
+    //   aux2 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(-5, 4)));
     // } else if (this.orientation === UnitFH.Orientations.NE) {
-    //   aux1 = boardToScreen(p5.Vector.add(this.position, createVector(-4,-5)));
-    //   aux2 = boardToScreen(p5.Vector.add(this.position, createVector(4,-5)));
+    //   aux1 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(-4,-5)));
+    //   aux2 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(4,-5)));
     // } else if (this.orientation === UnitFH.Orientations.SW) {
-    //   aux1 = boardToScreen(p5.Vector.add(this.position, createVector(-4,5)));
-    //   aux2 = boardToScreen(p5.Vector.add(this.position, createVector(4,5)));
+    //   aux1 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(-4,5)));
+    //   aux2 = Geometry.boardToScreen(p5.Vector.add(this.position, createVector(4,5)));
     // }
 
     mainCanvas.push();
@@ -441,7 +442,10 @@ class UnitFH {
 
 
   show(cameraPosition) {
-    let screenPos = boardToScreen(this.getPosition(), cameraPosition);
+    if (this.isDead) {
+      return;
+    }
+    let screenPos = Geometry.boardToScreen(this.getPosition(), cameraPosition, tileHalfSizes.Z1);
     this.showPath(cameraPosition);
     this.sprite.update();
     this.sprite.show(createVector(screenPos.x-this.offset.x, screenPos.y-this.offset.y));
