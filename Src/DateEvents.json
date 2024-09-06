@@ -1,0 +1,23 @@
+{
+  "2019-02-04T22:35": {
+    "characterName": "Yuri",
+    "textLines": [
+      "Welcome to Transarctica comrade, I'm Yuri your second in command. I'll show you how to command the train.",
+      "Press CTRL to Start/Stop the engine",
+      "When the locomotive is stopped you can press SHIFT to reverse it",
+      "The train automatically selects the next intersection when in range. Press SPACE to change the intersection"
+
+    ],
+    "buttons": [{"text": "OK", "color": "green", "row": 0}]
+  },
+
+  "2019-02-05T02:35": {
+    "characterName": "Yuri",
+    "textLines": [
+      "This is a commercial town. Click the resources to display information about them",
+      "Click your train to sell resources",
+      "Houses with an exclamation mark will give you quests to complete"
+    ],
+    "buttons": [{"text": "OK", "color": "green", "row": 0}]
+  }
+}

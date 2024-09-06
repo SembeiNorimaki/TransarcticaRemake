@@ -6,11 +6,10 @@ class TradeScene {
     this.camera = new Camera(createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2))
 
     this.backgroundImg = this.populateBackgroundImg();
-    this.enterSequence = false;
+    this.enterSequence = true;
     this.exitSequence = false;
-    this.conversationPanel = null;
+    this.conversationPanel = new ConversationPanel();
     if (this.city.objective !== null) {
-      this.conversationPanel = new ConversationPanel();
       this.conversationPanel.fillData({
         "characterName": "Trader",
         "textLines": this.city.objective.summary,
@@ -51,8 +50,6 @@ class TradeScene {
     
 
     this.resourceLocations = [
-      createVector(12, 7),
-      createVector(12, 5),
       createVector(12, 3),
       createVector(12, 1),
       createVector(12, -1),
@@ -80,10 +77,10 @@ class TradeScene {
 
   // Initialized the HorizontalTrain
   initialize() {
-    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
-    this.horizontalTrain.setPosition(createVector(23, 0));
-    // this.horizontalTrain.setPosition(createVector(12, 11));
-    this.horizontalTrain.setVelocity(0.0);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human, game.playerTrain.wagons);
+    // this.horizontalTrain.setPosition(createVector(23, 0));
+    this.horizontalTrain.setPosition(createVector(11, 12));
+    this.horizontalTrain.setVelocity(0.2);
   }
 
   // Populates functions
@@ -155,7 +152,7 @@ class TradeScene {
   populateBuyableSpecialWagons() {
     let idx = 0;
     for (let [wagonName, wagonInfo] of Object.entries(this.city.wagons)) {
-      if (wagonInfo.Available == 0) {
+      if (wagonInfo.Sell == 0) {
         continue;
       }
       let wagon;
@@ -211,8 +208,7 @@ class TradeScene {
 
     // Add wagon to the train (it also updates the weight)
     game.playerTrain.addWagon(wagonName, 0);
-    // Fill the wagon
-    game.playerTrain.wagons.at(-1).fillWagon(resourceName);
+    
     game.playerTrain.wagons.at(-1).purchasePrice = price;
     // Substract wagon cost from player gold
     game.playerTrain.gold -= price;
@@ -375,7 +371,7 @@ class TradeScene {
         this.selectedBuyableWagonIdx = null;
 
         let infoPanelData = resource.generatePanelInfoData();
-        infoPanelData.lines.push(`Unit Price: ${resource.purchasePrice} baks`);
+        infoPanelData.lines.push(`Unit Price: ${resource.buyPrice} baks`);
         infoPanelData.buttons = ["Buy 1", "Buy 10"];
         this.infoPanel.fillData(infoPanelData);
         this.infoPanel.active = true;
@@ -407,7 +403,7 @@ class TradeScene {
     }
 
     // Enter sequence
-    if (this.enterSequence && this.horizontalTrain.position.x > 6) {
+    if (this.enterSequence && this.horizontalTrain.position.x > 19) {
       this.horizontalTrain.setGear("N");
       if (this.horizontalTrain.velocity == 0) {
         this.enterSequence = false;

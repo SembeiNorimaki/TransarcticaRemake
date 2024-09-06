@@ -17,31 +17,23 @@
 class HorizontalTrain {
   constructor(owner, wagons) {
     this.owner = owner;
-    // game.playerTrain.wagons = wagons;
 
-    this.position = createVector(81, 93);
-
-    // if (this.owner == Game.Players.Human) {
-    //   this.position = createVector(1400, 800+8);
-    // } else {
-    //   this.position = createVector(1400, 50-32);
-    //   this.horizontalTrainAI = new HorizontalTrainAI(this);
-    // }
-    
+    this.position = createVector(0, 0);   
     this.velocity = 0.0;
     this.acceleration = 0;
-    this.accelerationStrenght = 0.004;
-    this.brakingStrenght = 0.002;
-    this.maxVelocity = 12.0;
-    this.minVelocity = -12.0;
-    this.gear = "N";    
-
+    this.accelerationStrenght = 0.006;
+    this.brakingStrenght = 0.006;
+    this.maxVelocity = 0.4;
+    this.minVelocity = -0.4;
+    this.gear = "N";   
     
+    this.wagons = wagons;
   }
 
+  
   findWagonIdxByName(name) {
     let result = [];
-    for (const [i, wagon] of game.playerTrain.wagons.entries()) {
+    for (const [i, wagon] of this.wagons.entries()) {
       if (wagon.constructor.name == name) {
         result.push(i)
       }
@@ -121,14 +113,14 @@ class HorizontalTrain {
 
     this.currentPosition = this.position.copy();
 
-    game.playerTrain.wagons[0].setPosition(this.currentPosition);  
+    this.wagons[0].setPosition(this.currentPosition);  
     let offset = createVector(
-      (((game.playerTrain.wagons[0].halfSize.x) / game.currentScene.tileHalfSize.x) ) / 2 , 
-      (-((game.playerTrain.wagons[0].halfSize.x ) / game.currentScene.tileHalfSize.x) ) / 2
+      (((this.wagons[0].halfSize.x) / game.currentScene.tileHalfSize.x) ) / 2 , 
+      (-((this.wagons[0].halfSize.x ) / game.currentScene.tileHalfSize.x) ) / 2
     );
     this.currentPosition.sub(offset);
 
-    for (let [i, wagon] of game.playerTrain.wagons.entries()) {
+    for (let [i, wagon] of this.wagons.entries()) {
       if (i==0) continue;
       offset = createVector(
         (((wagon.halfSize.x) / game.currentScene.tileHalfSize.x) ) / 2 , 
@@ -142,13 +134,13 @@ class HorizontalTrain {
         (-((wagon.halfSize.x ) / game.currentScene.tileHalfSize.x) ) / 2
       );
       this.currentPosition.sub(offset);
-      
+      wagon.update();
     }
   }
 
   // getClickedWagon(mousePos) {
-  //   for (let i=0; i<game.playerTrain.wagons.length; i++) {
-  //     if (mousePos.x >= game.playerTrain.wagons[i].position.x - game.playerTrain.wagons[i].halfSize.x) {
+  //   for (let i=0; i<this.wagons.length; i++) {
+  //     if (mousePos.x >= this.wagons[i].position.x - this.wagons[i].halfSize.x) {
   //       console.log(`Clicked wagon ${i}`);
   //       return i;
   //     }
@@ -157,7 +149,7 @@ class HorizontalTrain {
   // }
 
   onClick(mousePos, cameraPosition) {
-    for (const [i, wagon] of game.playerTrain.wagons.entries()) {
+    for (const [i, wagon] of this.wagons.entries()) {
       if (wagon.checkClick(mousePos, cameraPosition)) {
         return i;
       }
@@ -168,8 +160,8 @@ class HorizontalTrain {
     // let i = this.getClickedWagon(mousePos);
     // if (i !== null) {
     //   game.currentScene.infoPanel.fillData({
-    //     "title": game.playerTrain.wagons[i].name,
-    //     "image": game.playerTrain.wagons[i].img[0],
+    //     "title": this.wagons[i].name,
+    //     "image": this.wagons[i].img[0],
     //     "lines": ["1","2","3"],
     //     "buttons": "sell"
     //   }); 
@@ -181,7 +173,7 @@ class HorizontalTrain {
   }
 
   show(cameraPosition) {
-    for (let [i, wagon] of game.playerTrain.wagons.entries()) {
+    for (let [i, wagon] of this.wagons.entries()) {
       wagon.showHorizontal(cameraPosition);
     }
   }

@@ -31,7 +31,6 @@ class Industry {
     this.offsetTrade = industriesInfo[this.industryType].offsetTrade;
     this.offsetNav = industriesInfo[this.industryType].offsetNav;
 
-    console.log(this.resourceName)
     this.panelInfo = {
       "title": this.name,
       "image": industriesInfo[this.industryType].imgInfo,

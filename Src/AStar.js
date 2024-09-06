@@ -1,3 +1,12 @@
+// javascript-astar 0.4.1
+// http://github.com/bgrins/javascript-astar
+// Freely distributable under the MIT License.
+// Implements the astar search algorithm in javascript using a Binary Heap.
+// Includes Binary Heap (with modifications) from Marijn Haverbeke.
+// http://eloquentjavascript.net/appendix2.html
+
+// Adapted by SembeiNorimaki
+
 class AStar {
   constructor() {
     // this.boardSize = createVector(grid[0].length, grid.length);
@@ -37,7 +46,7 @@ class AStar {
       console.log("Error")
     }
 
-    let heuristic = this.manhattan;
+    let heuristic = this.diagonal;
 
     let openHeap = this.getHeap();
     openHeap.push(this.nodes[`${startPos.x},${startPos.y}`]);
@@ -92,6 +101,14 @@ class AStar {
     return abs(pos0.x - pos1.x) + abs(pos0.y - pos1.y);
   }
 
+  diagonal(pos0, pos1) {
+    let D = 1;
+    let D2 = Math.sqrt(2);
+    let d1 = Math.abs(pos1.x - pos0.x);
+    let d2 = Math.abs(pos1.y - pos0.y);
+    return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
+  }
+
   neighbors(node) {
     let ret = [];
     
@@ -118,6 +135,30 @@ class AStar {
         this.nodes[`${node.pos.x},${node.pos.y+1}`] = new Node(createVector(node.pos.x, node.pos.y+1), game.currentScene.base.tileBoard.board[node.pos.y+1][node.pos.x].isWall());  
       } 
       ret.push(this.nodes[`${node.pos.x},${node.pos.y+1}`]);
+    }
+
+    if (node.pos.y < this.boardSize.y-1 && node.pos.x > 0) {  // South West
+      if (`${node.pos.x-1},${node.pos.y+1}` in this.nodes === false) {
+        this.nodes[`${node.pos.x-1},${node.pos.y+1}`] = new Node(createVector(node.pos.x-1, node.pos.y+1), game.currentScene.base.tileBoard.board[node.pos.y+1][node.pos.x-1].isWall());        
+      }
+    }
+    
+    if (node.pos.y < this.boardSize.y-1 && node.pos.x < this.boardSize.x-1) {  // South East
+      if (`${node.pos.x+1},${node.pos.y+1}` in this.nodes === false) {
+        this.nodes[`${node.pos.x+1},${node.pos.y+1}`] = new Node(createVector(node.pos.x+1, node.pos.y+1), game.currentScene.base.tileBoard.board[node.pos.y+1][node.pos.x+1].isWall());        
+      }
+    }
+    
+    if (node.pos.y > 0 && node.pos.x > 0) {  // North West
+      if (`${node.pos.x-1},${node.pos.y-1}` in this.nodes === false) {
+        this.nodes[`${node.pos.x-1},${node.pos.y-1}`] = new Node(createVector(node.pos.x-1, node.pos.y-1), game.currentScene.base.tileBoard.board[node.pos.y-1][node.pos.x-1].isWall());        
+      }
+    }
+    
+    if (node.pos.y > 0 && node.pos.x < this.boardSize.x-1) {  // North East
+      if (`${node.pos.x+1},${node.pos.y-1}` in this.nodes === false) {
+        this.nodes[`${node.pos.x+1},${node.pos.y-1}`] = new Node(createVector(node.pos.x+1, node.pos.y-1), game.currentScene.base.tileBoard.board[node.pos.y-1][node.pos.x+1].isWall());        
+      }
     }
 
     return ret;

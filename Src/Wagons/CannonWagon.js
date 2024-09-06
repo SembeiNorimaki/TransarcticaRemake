@@ -17,7 +17,7 @@
 class CannonWagon extends Wagon {
   constructor(id, name, wagonData) {
     super(id, name, wagonData);
-    this.reloadTime = 300;
+    this.reloadTime = 30;
     this.reloadCount = this.reloadTime;
   }
 
@@ -34,7 +34,8 @@ class CannonWagon extends Wagon {
   fire() {
     if (this.isReadyToFire()) {
       this.reloadCount = this.reloadTime;
-      let spawnPosition = createVector(this.position.x + this.halfSize.x, this.position.y-40); 
+      // let screenPosition = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
+      let spawnPosition = createVector(this.position.x, this.position.y); 
       game.currentScene.cannonball = new Cannonball(spawnPosition);
     }
   }

@@ -28,10 +28,10 @@ class Game {
     this.gameTime = new Date(1549312452 * 1000);
 
     
-    this.cameraFollowsLocomotive = false;
+    this.cameraFollowsLocomotive = true;
 
     this.navigationScene = new NavigationScene();
-    //this.navigationScene.initialize();
+    
 
     this.playerTrain = new Train(Game.Players.Human);
     
@@ -39,7 +39,6 @@ class Game {
     this.enemyTrain = new Train(Game.Players.Cpu);
 
     this.hud = new Hud();
-    this.conversationPanel = new ConversationPanel();
 
     // In navigationScene or keep it here?
     this.industries = {};
@@ -87,6 +86,10 @@ class Game {
       this.events[`${x},${y}`] = bridgeName;
     }
 
+    this.dateEvents = dateEvents;
+
+
+
 
 
     // // Industries are 3x3
@@ -118,19 +121,23 @@ class Game {
     } else {
       console.log("Game loaded");
     }
+
+    this.newGame();
   }
 
   newGame() {
     this.savedData = {
       "PlayerTrain": {
-        coal: 123,
-        gold: 456,
-        position: createVector(72, 363),
-        orientation: 270,
+        coal: 1000,
+        gold: 1500,
+        position: createVector(84, 440),
+        orientation: 90,
         wagons: [
           {"name": "Locomotive"},
           {"name": "Tender"},
           {"name": "Merchandise"},
+          {"name": "Barracks"},
+          {"name": "Cannon"},
           {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
@@ -145,7 +152,9 @@ class Game {
         coal: 123,
         gold: 456,
         wagons: [
-          {"name": "Locomotive_vu"}
+          {"name": "Locomotive_vu"},
+          {"name": "Tender_vu"},
+          {"name": "Merchandise_vu"},
         ]
       }
     }
@@ -158,6 +167,13 @@ class Game {
         gold: this.playerTrain.gold,
         position: this.navigationScene.locomotive.currentTile,
         orientation: this.navigationScene.locomotive.orientation,
+        wagons: []
+      },
+      "EnemyTrain": {
+        coal: 100,
+        gold: 100,
+        position: createVector(0,0),
+        orientation: 0,
         wagons: []
       },
       "Cities": {}
@@ -189,11 +205,11 @@ class Game {
   initialize() {
     // Apply saveData
     this.playerTrain.initialize(this.savedData.PlayerTrain);
-    // this.enemyTrain.initialize(this.savedData.EnemyTrain);
+    this.enemyTrain.initialize(this.savedData.EnemyTrain);
 
-    for (let [cityName, cityInstance] of Object.entries(this.cities)) {
-      cityInstance.initialize(this.savedData.Cities[cityName]);
-    } 
+    // for (let [cityName, cityInstance] of Object.entries(this.cities)) {
+    //   cityInstance.initialize(this.savedData.Cities[cityName]);
+    // } 
 
 
 
@@ -201,13 +217,13 @@ class Game {
     
     
     this.currentScene = this.navigationScene;
-    // this.currentScene = new CombatScene(this.playerTrain, null);
+    // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
     // this.currentScene = new CombatWolves(this.playerTrain);
     // this.currentScene = new CombatIntro(this.playerTrain);
     // this.currentScene = new CityTradeScene(this.cities["Granada"]);
     
     // this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
-    // this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
+    this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
     
     // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
     // this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
@@ -271,12 +287,21 @@ class Game {
   }
 
   checkTimedEvents() {
+    let currentTimeStr = this.gameTime.toISOString().slice(0,16);
+    if (currentTimeStr in this.dateEvents) {
+      console.log(`Time event ${currentTimeStr}`)
+      this.currentScene.conversationPanel.fillData(this.dateEvents[currentTimeStr]);
+      this.currentScene.conversationPanel.active = true;
+    }
+
+
+
     if (this.gameTime.getMinutes() == 0) {
       // let mineLocation = minesLocations[Math.floor(Math.random() * minesLocations.length)];
       // game.navigationScene.tileBoard.board[mineLocation.y][mineLocation.x].setTileId(0x4A);
 
       // update all cities
-      console.log("Upodate cities")
+      //console.log("Upodate cities")
       for (let [cityName, cityInstance] of Object.entries(this.cities)) {
         for (let [resourceName, resourceInfo] of Object.entries(cityInstance.resources)) {
           this.cities[cityName].resources[resourceName].Available += resourceInfo.Production;
@@ -286,12 +311,12 @@ class Game {
     }
   }
 
-  update(){
+  update() {
     this.currentScene.update();    
     this.currentScene.show(); 
     if (this.objectivesVisible) 
       this.showObjectives();  
-    this.conversationPanel.show();
+    
     this.hud.show();
     this.gameTime.setMinutes(this.gameTime.getMinutes()+1)
     this.checkTimedEvents();

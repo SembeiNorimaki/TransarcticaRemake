@@ -15,6 +15,7 @@ class BaseCombat {
 
     this.currentEnemyIdx = 0;
     this.currentEnemyUnit = this.base.units[0];
+    this.conversationPanel = new ConversationPanel();
 
 
     
@@ -27,13 +28,13 @@ class BaseCombat {
 
 
   initialize() {
-    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human, game.playerTrain.wagons);
     this.horizontalTrain.setPosition(createVector(74, 98));
     this.horizontalTrain.setVelocity(0.2);
   }
 
   unloadUnits() {
-    let units = game.playerTrain.wagons[3].unloadAll();
+    let units = game.playerTrain.wagons[6].unloadAll();
     let x = 86;
     let y = 89;
     for (let unit of units) {

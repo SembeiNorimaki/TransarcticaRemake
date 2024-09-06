@@ -60,7 +60,7 @@ let gameData = {
 }
 
 // TODO: Either events or industries and cities separated
-let events;
+let events, dateEvents;
 let industriesLocations = {};
 let citiesLocations = {};
 let basesLocations = {};
@@ -111,6 +111,7 @@ let characters = {};
 
 
 let atlasPlayer, atlasCpu;
+
 function preload() {
 
   // Sounds
@@ -556,6 +557,7 @@ function preload() {
   charactersData.Trader = loadImage('resources/misc/trader2.png');
 
   // Events
+  dateEvents = loadJSON("Src/DateEvents.json");
   //events = loadJSON("Src/Events.json");
 }
 

@@ -29,7 +29,7 @@ class Cannonball {
     
 
     this.position = position;
-    this.velocity = createVector(0, -30);
+    this.velocity = createVector(-0.1, -0.1);
     this.diam = 10;
     this.finished = false;
     
@@ -55,12 +55,12 @@ class Cannonball {
 
     this.position.add(this.velocity);
     if (this.direction == "N" && this.position.y <= this.targetY) {
-      this.sprite.setAction("explode");
-      this.velocity.y = 0;
+      // this.sprite.setAction("explode");
+      // this.velocity.y = 0;
       // this.finished = true;
     } else if (this.direction == "S" && this.position.y >= this.targetY) {
-      this.sprite.setAction("explode");
-      this.velocity.y = 0;
+      // this.sprite.setAction("explode");
+      // this.velocity.y = 0;
     }
 
     if (this.sprite.getAction() == "explode" && this.sprite.getSpriteIdx() == 6) {
@@ -68,12 +68,12 @@ class Cannonball {
     }
   }
 
-  show(cameraPos) {
-    let position = this.position.copy();
-    if (cameraPos) {
-      position.sub(cameraPos);
-    }
-    this.sprite.show(position);
+  show(cameraPos, tileHalfSize) {
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPos, tileHalfSize);
+    // if (cameraPos) {
+    //   position.sub(cameraPos);
+    // }
+    this.sprite.show(screenPosition);
 
     // mainCanvas.push();
     // mainCanvas.fill(20)

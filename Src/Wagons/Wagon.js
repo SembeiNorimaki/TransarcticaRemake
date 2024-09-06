@@ -213,7 +213,7 @@ class Wagon {
       }
       // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
     } catch {
-      console.log("Error")
+      console.log(`Error in wagon ${this.id} ${this.name}`)
     }
 
     

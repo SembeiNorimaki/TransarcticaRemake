@@ -136,11 +136,12 @@ class Soldier extends Unit {
   }
 
   checkClick(mousePos) {
+    let screenPos = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
     return (
-      mousePos.x >= this.position.x - this.halfSize.x && 
-      mousePos.x <= this.position.x + this.halfSize.x && 
-      mousePos.y >= this.position.y - this.halfSize.y && 
-      mousePos.y <= this.position.y + this.halfSize.y);
+      mousePos.x >= screenPos.x - this.halfSize.x && 
+      mousePos.x <= screenPos.x + this.halfSize.x && 
+      mousePos.y >= screenPos.y - this.halfSize.y && 
+      mousePos.y <= screenPos.y + this.halfSize.y);
   }
 
   fireWeapon() {
@@ -242,16 +243,13 @@ class Soldier extends Unit {
     hudCanvas.text("Rifleman", 150, 30);
   }
 
-  show(cameraPos) {
+  show(cameraPos, tileHalfSize) {
     //console.log(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
     //mainCanvas.image(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
     
-    let position = this.position.copy();
-    if (cameraPos) {
-      position.sub(cameraPos);
-    }
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPos, tileHalfSize);
     
-    this.sprite.show(position);
+    this.sprite.show(screenPosition);
     if (this.sprite.currentAction == "shoot" && this.sprite.spriteIdx == 1) {
       mainCanvas.circle(position.x, position.y-20, 10);
     }
@@ -260,16 +258,16 @@ class Soldier extends Unit {
     if (this.selected) {
       mainCanvas.push();
       mainCanvas.noFill();
-      mainCanvas.circle(position.x, position.y, 60);
+      mainCanvas.rect(screenPosition.x-this.halfSize.x, screenPosition.y-this.halfSize.y, this.halfSize.x*2, this.halfSize.y*2);
       this.showHud();
       mainCanvas.pop();
       //mainCanvas.fill(255)
     }
     mainCanvas.fill(0);
-    mainCanvas.text(this.id, position.x-10, position.y+35);
-    mainCanvas.text(this.hp, position.x-10, position.y+45);
-    mainCanvas.text(this.action, position.x-10, position.y+55);
-    mainCanvas.text(this.role, position.x-10, position.y+65);
+    mainCanvas.text(this.id, screenPosition.x-10, screenPosition.y+35);
+    mainCanvas.text(this.hp, screenPosition.x-10, screenPosition.y+45);
+    mainCanvas.text(this.action, screenPosition.x-10, screenPosition.y+55);
+    mainCanvas.text(this.role, screenPosition.x-10, screenPosition.y+65);
 
     if (this.path.length) {
       mainCanvas.push();

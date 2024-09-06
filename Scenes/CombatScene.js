@@ -16,7 +16,7 @@
 
 class CombatScene {
   constructor(playerTrain, enemyTrain) {
-
+    this.tileHalfSize = tileHalfSizes.Z1;
     this.board = [
       [0,0,0,0,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0,0,0],
@@ -27,22 +27,22 @@ class CombatScene {
     ]
     this.boardDim = createVector(200, 200);
     
-    this.camera = new Camera(createVector(0,0));
+    // this.camera = new Camera(createVector(0,0));
+    this.camera = new Camera(createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2))
+    this.backgroundImg = this.populateBackgroundImg();
 
     
-    this.playerHTrain = new HorizontalTrain(Game.Players.Human);
-    this.playerHTrain.setPosition(createVector(1400, 845));
+    this.playerHTrain = new HorizontalTrain(Game.Players.Human, playerTrain.wagons);
+    this.playerHTrain.setPosition(createVector(40, 8));
     this.playerHTrain.update();
 
-    // Maybe there's no enemy train
+    //Maybe there's no enemy train
     this.enemyHTrain = null;
     if (enemyTrain !== null) {
-      this.enemyHTrain = new HorizontalTrain(Game.Players.Cpu);
-      this.enemyHTrain.setPosition(createVector(1400, 80));
+      this.enemyHTrain = new HorizontalTrain(Game.Players.Cpu, enemyTrain.wagons);
+      this.enemyHTrain.setPosition(createVector(10, -6));
       this.enemyHTrain.update();
     }
-
-    this.backgroundImg = this.generateCombatBackground();
 
     // TODO: currently soldierAI is inside soldier. Is this then necessary?
     this.combatAI = new CombatAI();
@@ -54,16 +54,16 @@ class CombatScene {
     this.playerUnits = [];
     this.enemyUnits = [];
     
-    this.playerUnits.push(new Rifleman(1, createVector(500,650), 0, Game.Players.Human));
-    this.enemyUnits.push(new Wolf(0, createVector(500,-100), Game.Players.Cpu));
+    // this.playerUnits.push(new Rifleman(1, createVector(500,650), 0, Game.Players.Human));
+    // this.enemyUnits.push(new Wolf(0, createVector(500,-100), Game.Players.Cpu));
     
-    this.enemyUnits[0].setRole({
-      "role": "patrol",
-      "waypoints": [
-        createVector(500,800),
-        createVector(1000,800),
-      ]
-    });
+    // this.enemyUnits[0].setRole({
+    //   "role": "patrol",
+    //   "waypoints": [
+    //     createVector(500,800),
+    //     createVector(1000,800),
+    //   ]
+    // });
     
 
     this.selectedWagon = null;
@@ -73,35 +73,36 @@ class CombatScene {
     this.combatAI.initialize();
   }
 
-  generateCombatBackground() {
-    let backgroundImg = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
-    let x,y;
-    for (let row=-1; row<13; row++) {
-      y = row*tileHalfSizes.Z1.y*2;
-      for (let col=0; col<15; col++) {
-        x = col*tileHalfSizes.Z1.x*2;
-        Tile.draw(backgroundImg, 0x01, createVector(x,y));
-        Tile.draw(backgroundImg, 0x01, createVector(x-tileHalfSizes.Z1.x, y+tileHalfSizes.Z1.y));
+  populateBackgroundImg() {
+    let img = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
+    let nCols = 27;
+    let nRows = 26;
+    let x, y;
+    for (let row=0; row<nRows; row++) {
+      y = row * this.tileHalfSize.y*2;
+      for (let col=0;col<nCols; col++) {
+        x = col * this.tileHalfSize.x*2;
+        Tile.draw(img, 0x6E, createVector(x,y), this.tileHalfSize)
+        Tile.draw(img, 0x6E, createVector(x+this.tileHalfSize.x, y+this.tileHalfSize.y), this.tileHalfSize)
       }
     }
-    for (let i=-1;i<30;i++) {
-      if (!(i%2)) {
-        Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, mainCanvasDim[1]-1*tileHalfSizes.Z1.y));
-        if (this.enemyHTrain !== null) {
-          Tile.draw(backgroundImg, 0x33, createVector(i*tileHalfSizes.Z1.x, 2*tileHalfSizes.Z1.y));
-        }
-        
-      }
-      else {
-        Tile.draw(backgroundImg, 0x32, createVector(i*tileHalfSizes.Z1.x, mainCanvasDim[1]-0*tileHalfSizes.Z1.y));
-        if (this.enemyHTrain !== null) {
-          Tile.draw(backgroundImg , 0x32, createVector(i*tileHalfSizes.Z1.x, 3*tileHalfSizes.Z1.y));
-        }
-      }
+
+    // bottom and top rail
+    let yBottom = 24 * this.tileHalfSize.y*2;
+    let yTop = 2 * this.tileHalfSize.y*2;
+    for (let col=0;col<nCols; col++) {
+      x = col * this.tileHalfSize.x*2;
+      Tile.draw(img, 0x83, createVector(x, yTop), this.tileHalfSize);
+      Tile.draw(img, 0x82, createVector(x+this.tileHalfSize.x, yTop+this.tileHalfSize.y), this.tileHalfSize);
+
+      Tile.draw(img, 0x83, createVector(x, yBottom), this.tileHalfSize);
+      Tile.draw(img, 0x82, createVector(x+this.tileHalfSize.x, yBottom+this.tileHalfSize.y), this.tileHalfSize);
     }
-    
-    return backgroundImg;
+
+    return img;
   }
+
+
 
   // Left arrow: Locomotive gear down
   // Right arrow: Locomotive gear up
@@ -124,74 +125,84 @@ class CombatScene {
 
   }
 
-  onClick(mousePos) {
-    mousePos.add(this.camera.position);
-    // Click on own train
-    if (mousePos.y > 750) {
-      let i = this.playerHTrain.onClick(mousePos, this.camera.position);
-      this.selectedWagon = this.playerHTrain.wagons[i];
-      if (this.selectedWagon.name == "Cannon") {
+  onClick(mousePos) {   
+    // Horizontal train
+    let wagonIdx = this.playerHTrain.onClick(mousePos, this.camera.position);
+    if (wagonIdx !== null) {
+      console.log(`Clicked wagon ${wagonIdx}`);
+      this.selectedWagon = this.playerHTrain.wagons[wagonIdx];
+      switch(this.selectedWagon.name) {
+        case("Cannon"):
         this.selectedWagon.fire();
-        // this.fireCannon(i);
-      } else if (this.selectedWagon.name == "Machinegun") {
-        // this.fireMachinegun(i);
+        break;
+        case("Machinegun"):
         this.selectedWagon.fire();
-      } else if (this.selectedWagon.name == "Barracks") {
-        this.deploySoldier(i);
-      } else if (this.selectedWagon.name == "Livestock") {
-        this.deployMamooth(i);
-      }
-    }
+        break;
+        case("Barracks"):
+        this.deploySoldier(wagonIdx);
+        break;
+        case("Livestock"):
+        this.deployMamooth(wagonIdx);
+        break;
+      };
+      return;
+    } 
+
     // Click on enemy train
-    else if (mousePos.y < 120 && this.enemyHTrain !== null) {
-      let i = this.enemyHTrain.onClick(mousePos, this.camera.position);
-      let wagonName = this.enemyHTrain.wagons[i].name;
-      console.log(`Clicked enemy wagon ${i}: ${wagonName}`);
-    }
-    // click on the battlefield
-    else {
-      if (mouseButton == "left") {
-        //check if soldier is clicked, then select/deselect it
-        for (let soldier of this.playerUnits) {
-          soldier.selected = soldier.checkClick(mousePos);
+    wagonIdx = this.enemyHTrain.onClick(mousePos, this.camera.position);
+    if (wagonIdx !== null) {
+      console.log(`Clicked wagon ${wagonIdx}`);
+      return;
+    }    
+
+    // Left click on the battlefield    
+    if (mouseButton == "left") {
+      //check if soldier is clicked, then select/deselect it
+      for (let soldier of this.playerUnits) {
+        soldier.selected = soldier.checkClick(mousePos);
+        if (soldier.selected) {
+          console.log(`Soldier ${soldier.id} selected`)
+          return;
         }
-        
-        //check if mamooth is clicked
-        
-
-      } 
-      else if (mouseButton == "right") {
-        for (let soldier of this.playerUnits) {
-          if (soldier.selected) {
-            // if we click in an empty zone, move there
-            for (let enemy of this.enemyUnits) {
-              if (enemy.checkClick(mousePos)) {
-                console.log(`Setting enemy target to enemyId ${enemy.id}`)
-                soldier.setTargetUnit(enemy);
-                soldier.setTargetPosition(mousePos);
-                return;
-              }
-            }
-
-            // if we click on an enemy soldier, set him as a target
-            soldier.setTargetPosition(mousePos);
-            break;
-          }
-        } 
-        
-        // for (let mamooth of this.playerMamooths) {
-        //   if (mamooth.selected) {
-        //     mamooth.setTargetPosition(mousePos);
-        //     break;
-        //   }
-        // }
-      }   
+      }
+      return;
     }
+
+    // Right click on the battlefield    
+    if (mouseButton == "right") {
+      for (let soldier of this.playerUnits) {
+        if (soldier.selected) {
+          
+          
+          // if we click on an enemy soldier, set him as a target
+          for (let enemy of this.enemyUnits) {
+            if (enemy.checkClick(mousePos)) {
+              console.log(`Setting enemy target to enemyId ${enemy.id}`)
+              soldier.setTargetUnit(enemy);
+              soldier.setTargetPosition(mousePos);
+              return;
+            }
+          }
+
+          // if we click in an empty zone, move there
+          soldier.setTargetPosition(Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize));
+          return;
+        }
+      } 
+      
+      // for (let mamooth of this.playerMamooths) {
+      //   if (mamooth.selected) {
+      //     mamooth.setTargetPosition(mousePos);
+      //     break;
+      //   }
+      // }
+      return;
+    }  
   }
 
   deploySoldier(i) {
-    let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 760);
-    this.playerUnits.push(new Rifleman(9,spawnPosition,0,Game.Players.Human));
+    let spawnPosition = p5.Vector.add(this.playerHTrain.wagons[i].position, createVector(-2,-2));
+    this.playerUnits.push(new Rifleman(9, spawnPosition, 0, Game.Players.Human));
   }
   
   findEnemyBarracks() {
@@ -240,7 +251,7 @@ class CombatScene {
     // update trains
     this.playerHTrain.update();
     if (this.enemyHTrain !== null) {
-      this.enemyHTrain.update();
+      //this.enemyHTrain.update();
     }
     
     //this.combatAI.update();
@@ -287,18 +298,18 @@ class CombatScene {
             soldier.setTargetUnit(enemy);
           }
         }
-        soldier.update();
+        //soldier.update();
       }
 
       for (let enemy of this.enemyUnits) {
-        enemy.update();
+        //enemy.update();
       }
   }
 
   // TODO: show in hud. Maybe make it a class
   showMinimap() {
     hudCanvas.push();
-    hudCanvas.fill(200)
+    hudCanvas.fill(200);
     hudCanvas.rect(mainCanvasDim[0] - 600,0,600,60);
 
     this.factor = 200;
@@ -307,8 +318,11 @@ class CombatScene {
     // enemy
     if (this.enemyHTrain !== null) {
       hudCanvas.fill("red");
-      xmax = mainCanvasDim[0] - 600 + this.factor * (this.enemyHTrain.wagons[0].position.x + 2*this.enemyHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
-      xmin = mainCanvasDim[0] - 600 + this.factor * this.enemyHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
+      let screenPosFirst = Geometry.boardToScreen(this.enemyHTrain.wagons[0].position, this.camera.position, this.tileHalfSize);
+      let screenPosLast = Geometry.boardToScreen(this.enemyHTrain.wagons.at(-1).position, this.camera.position, this.tileHalfSize);
+
+      xmax = mainCanvasDim[0] - 600 + this.factor * (screenPosFirst.x + 2*this.enemyHTrain.wagons[0].halfSize.x) / mainCanvasDim[0];
+      xmin = mainCanvasDim[0] - 600 + this.factor * screenPosLast.x / mainCanvasDim[0];
       hudCanvas.rect(xmin, 1, xmax - xmin, 4);
     }
 
@@ -321,8 +335,10 @@ class CombatScene {
     
     // player
     hudCanvas.fill("blue");
-    xmax = mainCanvasDim[0] - 600 + this.factor * (this.playerHTrain.wagons[0].position.x + 2*this.playerHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
-    xmin = mainCanvasDim[0] - 600 + this.factor * this.playerHTrain.wagons.at(-1).position.x / mainCanvasDim[0];
+    let screenPosFirst = Geometry.boardToScreen(this.playerHTrain.wagons[0].position, this.camera.position, this.tileHalfSize);
+    let screenPosLast = Geometry.boardToScreen(this.playerHTrain.wagons.at(-1).position, this.camera.position, this.tileHalfSize);
+    xmax = mainCanvasDim[0] - 600 + this.factor * (screenPosFirst.x + 2*this.playerHTrain.wagons[0].halfSize.x)/ mainCanvasDim[0];
+    xmin = mainCanvasDim[0] - 600 + this.factor * screenPosLast.x / mainCanvasDim[0];
     hudCanvas.rect(xmin, 55, xmax - xmin, 4);
     
     for (let soldier of this.playerUnits) {
@@ -356,15 +372,18 @@ class CombatScene {
     mainCanvas.pop();
   }
   show() {
+    mainCanvas.background(0);
     mainCanvas.image(this.backgroundImg, 0, 0);
+   
     
-    this.playerHTrain.show(this.camera.position);
+    
+    
     if (this.enemyHTrain !== null) {
       this.enemyHTrain.show(this.camera.position);
     }
     
     if (this.cannonball !== null) {
-      this.cannonball.show(this.camera.position);
+      this.cannonball.show(this.camera.position, this.tileHalfSize);
     }
 
     if (this.machinegunbullets !== null) {
@@ -372,12 +391,14 @@ class CombatScene {
     }
 
     for (let soldier of this.playerUnits) {
-      soldier.show(this.camera.position);
+      soldier.show(this.camera.position, this.tileHalfSize);
     }
 
     for (let soldier of this.enemyUnits) {
-      soldier.show(this.camera.position);
+      soldier.show(this.camera.position, this.tileHalfSize);
     }
+
+    this.playerHTrain.show(this.camera.position);
 
     if (this.selectedWagon !== null) {
       this.selectedWagon.showHud();

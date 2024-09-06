@@ -25,7 +25,7 @@ class BaseScene {
 
   initialize() {
     this.camera = new Camera(Geometry.boardToCamera(createVector(61, 31), this.tileHalfSize));
-    this.horizontalTrain = new HorizontalTrain(Game.Players.Human);
+    this.horizontalTrain = new HorizontalTrain(Game.Players.Human, game.playerTrain.wagons);
     this.horizontalTrain.setPosition(createVector(44, 54));
     this.horizontalTrain.setVelocity(0.2);
   }

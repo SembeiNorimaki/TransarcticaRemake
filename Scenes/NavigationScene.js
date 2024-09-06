@@ -24,6 +24,7 @@ class NavigationScene {
     this.locomotive = new Locomotive(createVector(72, 363), 90.0);
 
     this.backgroundImg = this.populateBackgroundImg();
+    this.conversationPanel = new ConversationPanel();
   }
 
   initialize() {
@@ -73,12 +74,13 @@ class NavigationScene {
   }
 
   onClick(mousePos) {
-    if (game.conversationPanel.active && mousePos.y > mainCanvasDim[1]-200) {
-      let result = game.conversationPanel.onClick(mousePos);
-      console.log(result)
-    } else {
-      console.log(`Clicked tile ${Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize)}`)
-    }
+    // if (this.conversationPanel.active && mousePos.y > mainCanvasDim[1]-200) {
+    //   let result = game.conversationPanel.onClick(mousePos);
+    //   console.log(result)
+    // } else {
+    //   console.log(`Clicked tile ${Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize)}`)
+    // }
+    this.conversationPanel.active = false;
   }
 
   // TODO: precompute next intersection
@@ -86,7 +88,7 @@ class NavigationScene {
     let newPos = pos.copy();
     let newOri = ori;
     
-    for (let i=0; i<6; i++) {
+    for (let i=0; i<10; i++) {
       if (this.tileBoard.board[newPos.y][newPos.x].isIntersection) {
         this.selectedIntersection = this.tileBoard.board[newPos.y][newPos.x]
         return;
@@ -237,6 +239,7 @@ class NavigationScene {
     }
 
     game.hud.show();
+    this.conversationPanel.show();
 
     //show the center of the screen in red lines
     // mainCanvas.push();
