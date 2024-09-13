@@ -36,7 +36,7 @@ class Rifleman extends Soldier {
 
     this.fireSpeed = 10;
     this.fireCount = this.fireSpeed;
-    this.walkSpeed = 1;
+    this.walkSpeed = 0.01;
     
 
   }

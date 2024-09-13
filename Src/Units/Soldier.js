@@ -175,7 +175,7 @@ class Soldier extends Unit {
       // if we have waypoints to go
       if (this.path.length) {
         // check if we have arrived at the first waypoint
-        if (p5.Vector.dist(this.position, this.path[0]) < 2) {
+        if (p5.Vector.dist(this.position, this.path[0]) < 0.1) {
           // set the position to the reached waypoint to correct offset errors
           this.position.set(this.path[0]);
           // remove first waypoint from path
@@ -250,6 +250,8 @@ class Soldier extends Unit {
     let screenPosition = Geometry.boardToScreen(this.position, cameraPos, tileHalfSize);
     
     this.sprite.show(screenPosition);
+    mainCanvas.circle(screenPosition.x, screenPosition.y, 10);
+
     if (this.sprite.currentAction == "shoot" && this.sprite.spriteIdx == 1) {
       mainCanvas.circle(position.x, position.y-20, 10);
     }
@@ -278,12 +280,17 @@ class Soldier extends Unit {
         mainCanvas.stroke("black")
         //mainCanvas.strokeWeight(1)
       }
-      // mainCanvas.line(position.x, position.y, this.path[0].x-cameraPos.x, this.path[0].y-cameraPos.y);
+      let screenPos, screenPosNext;
+      screenPos = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
+      screenPosNext = Geometry.boardToScreen(this.path[0], game.currentScene.camera.position, game.currentScene.tileHalfSize);
+      mainCanvas.line(screenPos.x, screenPos.y, screenPosNext.x, screenPosNext.y);
       for (let i=0; i<this.path.length-1; i++) {
-        //mainCanvas.circle(this.path[i].x, this.path[i].y, 10);
-        // mainCanvas.line(this.path[i].x-cameraPos.x, this.path[i].y-cameraPos.y, this.path[i+1].x-cameraPos.x, this.path[i+1].y-cameraPos.y);
+        screenPos = Geometry.boardToScreen(this.path[i], game.currentScene.camera.position, game.currentScene.tileHalfSize);
+        screenPosNext = Geometry.boardToScreen(this.path[i+1], game.currentScene.camera.position, game.currentScene.tileHalfSize);
+        mainCanvas.circle(screenPos.x, screenPos.y, 10);
+        mainCanvas.line(screenPos.x, screenPos.y, screenPosNext.x, screenPosNext.y);
       }
-      // mainCanvas.circle(this.path.at(-1).x-cameraPos.x, this.path.at(-1).y-cameraPos.y, 10);
+      //mainCanvas.circle(this.path.at(-1).x-cameraPos.x, this.path.at(-1).y-cameraPos.y, 10);
       mainCanvas.pop();
     }
 
@@ -295,15 +302,15 @@ class Soldier extends Unit {
     // }
 
     
-    //mainCanvas.fill(0,0,0,100);
-    //if (this.owner == Game.Players.Cpu) {
-      // mainCanvas.push();
-      // mainCanvas.noFill();
-      // mainCanvas.stroke("red");
-      // mainCanvas.circle(position.x, position.y, this.range*2);
-      // mainCanvas.stroke("blue");
-      // mainCanvas.circle(position.x, position.y, this.viewRange*2);
-      // mainCanvas.pop();
-    //}
+    mainCanvas.fill(0,0,0,100);
+    if (this.owner == Game.Players.Cpu) {
+      mainCanvas.push();
+      mainCanvas.noFill();
+      mainCanvas.stroke("red");
+      mainCanvas.circle(screenPosition.x, screenPosition.y, this.range*2);
+      mainCanvas.stroke("blue");
+      mainCanvas.circle(screenPosition.x, screenPosition.y, this.viewRange*2);
+      mainCanvas.pop();
+    }
   }
 }

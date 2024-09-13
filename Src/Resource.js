@@ -63,9 +63,9 @@ class Resource {
   }
 
   show() {
-    mainCanvas.rect(this.position.x, this.position.y, this.img.width, this.img.height)
+    // mainCanvas.rect(this.position.x, this.position.y, this.img.width, this.img.height)
     mainCanvas.image(this.img, this.position.x, this.position.y);
-    mainCanvas.circle(this.position.x, this.position.y, 5)
+    // mainCanvas.circle(this.position.x, this.position.y, 5)
     mainCanvas.text(`${this.qtyAvailable}`, this.position.x+3, this.position.y+43);
   }
 }

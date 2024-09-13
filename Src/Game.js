@@ -21,17 +21,13 @@ class Game {
   };
 
   constructor() {
-    //this.saveData = saveData;
-
     Tile.initialize();
 
     this.gameTime = new Date(1549312452 * 1000);
-
     
     this.cameraFollowsLocomotive = true;
 
     this.navigationScene = new NavigationScene();
-    
 
     this.playerTrain = new Train(Game.Players.Human);
     
@@ -40,75 +36,24 @@ class Game {
 
     this.hud = new Hud();
 
-    // In navigationScene or keep it here?
-    this.industries = {};
-    for (let [industryName, industryVal] of Object.entries(gameData.industriesData)) {
-      this.industries[industryName] = new Industry(industryVal);
-    }
-
-    this.cities = {};
-    for (let [cityName, cityVal] of Object.entries(gameData.citiesData)) {
-      this.cities[cityName] = new City(cityVal);
-    }
-
-    this.bases = {};
-    for (let [baseName, baseVal] of Object.entries(gameData.basesData)) {
-      this.bases[baseName] = new Base(baseVal);
-    }
-
-    this.bridges = {};
-    for (let [bridgeName, bridgeVal] of Object.entries(gameData.bridgesData)) {
-      this.bridges[bridgeName] = new Bridge(bridgeVal);
-    }
-
-
-
-    this.events = {};
-    
-    for (let [cityLocation, cityName] of Object.entries(citiesLocations)) {
-      let aux = cityLocation.split(",");
-      let x = int(aux[0]);
-      let y = int(aux[1]); 
-      this.events[`${x},${y}`] = cityName;
-    }
-
-    for (let [baseLocation, baseName] of Object.entries(basesLocations)) {
-      let aux = baseLocation.split(",");
-      let x = int(aux[0]);
-      let y = int(aux[1]); 
-      this.events[`${x},${y}`] = baseName;
-    }
-
-    for (let [bridgeLocation, bridgeName] of Object.entries(bridgesLocations)) {
-      let aux = bridgeLocation.split(",");
-      let x = int(aux[0]);
-      let y = int(aux[1]); 
-      this.events[`${x},${y}`] = bridgeName;
-    }
-
     this.dateEvents = dateEvents;
 
-
-
-
-
-    // // Industries are 3x3
-    // for (let [industryLocation, industryName] of Object.entries(industriesLocations)) {
-    //   let aux = industryLocation.split(",");
-    //   let x = int(aux[0]);
-    //   let y = int(aux[1]); 
-    //   this.events[`${x},${y}`] = industryName;
-    //   this.events[`${x-1},${y}`] = industryName;
-    //   this.events[`${x-2},${y}`] = industryName;
-    //   this.events[`${x},${y-1}`] = industryName;
-    //   this.events[`${x-2},${y-1}`] = industryName;
-    //   this.events[`${x},${y-2}`] = industryName;
-    //   this.events[`${x-1},${y-2}`] = industryName;
-    //   this.events[`${x-2},${y-2}`] = industryName;
-      
-    // }
+    this.events = {};
+    this.cities = {};
+    this.industries = {};
+    this.bases = {};
+    this.bridges = {};
+    this.mines = {};
+    this.initializeCities();
+    this.initializeIndustries();
+    this.initializeBases();
+    this.initializeBridges();
+    this.initializeMines();
     
 
+    
+
+  
     this.objectives = [];
     this.objectivesVisible = false;
 
@@ -130,22 +75,21 @@ class Game {
       "PlayerTrain": {
         coal: 1000,
         gold: 1500,
-        position: createVector(84, 440),
-        orientation: 90,
+        position: createVector(78, 366),
+        orientation: 180,
         wagons: [
           {"name": "Locomotive"},
-          {"name": "Tender"},
-          {"name": "Merchandise"},
+          {"name": "Tender", "content": {"resourceName": "Coal", "qty": 1000}},
           {"name": "Barracks"},
           {"name": "Cannon"},
-          {"name": "Merchandise", "content": {"resourceName": "Furs", "qty": 7}},
+          {"name": "Crane"},
+          {"name": "Merchandise", "content": {"resourceName": "Rails", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
           // {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 7}},
           //{"name": "Vehicle Wagon"},
-          {"name": "Vehicle Wagon", "vehicles": ["Tank", "Tank", "Artillery", "Tank", "Artillery"]},
-          {"name": "Merchandise"}
+          {"name": "Vehicle Wagon", "vehicles": ["Tank", "Tank", "Artillery", "Tank", "Artillery"]}
         ]
       },
       "EnemyTrain": {
@@ -155,6 +99,8 @@ class Game {
           {"name": "Locomotive_vu"},
           {"name": "Tender_vu"},
           {"name": "Merchandise_vu"},
+          {"name": "Barracks_vu"},
+          {"name": "Cannon_vu"},
         ]
       }
     }
@@ -202,35 +148,91 @@ class Game {
     console.log("Game Over");
   }
 
+  initializeCities() {
+    for (let [name, value] of Object.entries(gameData.citiesData)) {
+      this.cities[name] = new City(value);
+    }
+
+    for (let [location, name] of Object.entries(citiesLocations)) {
+      let aux = location.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = name;
+      this.cities[name].location = createVector(x, y);
+      this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
+    }
+  }
+
+  initializeIndustries() {
+    for (let [name, value] of Object.entries(gameData.industriesData)) {
+      this.industries[name] = new Industry(value);
+    }
+
+    for (let [location, name] of Object.entries(industriesLocations)) {
+      let aux = location.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = name;
+      this.industries[name].location = createVector(x, y);
+      this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
+    }
+  }
+
+  initializeBases() {
+    for (let [name, value] of Object.entries(gameData.basesData)) {
+      this.bases[name] = new Base(value);
+    }
+
+    for (let [location, name] of Object.entries(basesLocations)) {
+      let aux = location.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = name;
+      this.bases[name].location = createVector(x, y);
+    }
+  }
+
+  initializeMines() {
+    for (let [name, value] of Object.entries(gameData.minesData)) {
+      this.mines[name] = new Mine(value);
+      this.dateEvents[value.revealDate] = name;
+    }
+
+    for (let [location, name] of Object.entries(minesLocations)) {
+      let aux = location.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.mines[name].location = createVector(x, y);
+    }
+  }
+
+  initializeBridges() {
+    for (let [name, value] of Object.entries(gameData.bridgesData)) {
+      this.bridges[name] = new Bridge(value);
+    }
+
+    for (let [location, name] of Object.entries(bridgesLocations)) {
+      let aux = location.split(",");
+      let x = int(aux[0]);
+      let y = int(aux[1]); 
+      this.events[`${x},${y}`] = name;
+      this.bridges[name].locations.push(createVector(x, y));
+    }
+  }
+
   initialize() {
     // Apply saveData
     this.playerTrain.initialize(this.savedData.PlayerTrain);
     this.enemyTrain.initialize(this.savedData.EnemyTrain);
-
-    // for (let [cityName, cityInstance] of Object.entries(this.cities)) {
-    //   cityInstance.initialize(this.savedData.Cities[cityName]);
-    // } 
-
-
-
-
-    
+   
     
     this.currentScene = this.navigationScene;
-    // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
-    // this.currentScene = new CombatWolves(this.playerTrain);
-    // this.currentScene = new CombatIntro(this.playerTrain);
-    // this.currentScene = new CityTradeScene(this.cities["Granada"]);
-    
+    this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
     // this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
-    this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
+    // this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
     
-    // this.currentScene = new IndustryTradeScene(this.industries["Barcelona_Mine"]);
-    // this.currentScene = new IndustryTradeScene(this.industries["Madrid_Mine"]);
-    // this.currentScene = new MapEditor();
-    // this.currentScene = new MainMenu();
-    // this.currentScene = new BridgeScene(bridgeImage);
-    
+    // this.currentScene = new TradeScene(this.industries["Barcelona_Mine"]);
+   
     // this.currentScene = new TradeScene(this.cities["Alexandria"]);
     // this.currentScene = new TradeScene(this.cities["Granada"]);
     // this.currentScene = new TradeScene(this.cities["Ruhr"]);
@@ -286,12 +288,19 @@ class Game {
     mainCanvas.text("awervcwser svtrswertve ervwervwser ewsrvwservwserv", 200, mainCanvasDim[1]-150)
   }
 
+  processTimeEvent(eventName) {
+    if (eventName.startsWith("Mine")) {
+      this.mines[eventName].reveal();
+    }
+  }
+
   checkTimedEvents() {
     let currentTimeStr = this.gameTime.toISOString().slice(0,16);
     if (currentTimeStr in this.dateEvents) {
       console.log(`Time event ${currentTimeStr}`)
-      this.currentScene.conversationPanel.fillData(this.dateEvents[currentTimeStr]);
-      this.currentScene.conversationPanel.active = true;
+      this.processTimeEvent(this.dateEvents[currentTimeStr]);
+      // this.currentScene.conversationPanel.fillData(this.dateEvents[currentTimeStr]);
+      // this.currentScene.conversationPanel.active = true;
     }
 
 

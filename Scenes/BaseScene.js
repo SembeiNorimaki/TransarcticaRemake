@@ -15,11 +15,13 @@ class BaseScene {
     this.selectedUnit = null;    
     this.enterSequence = true;
 
-    this.draggedWagonId = null;
+    this.draggedWagonTrainId = null;
+    this.draggedWagonDepotId = null;
     let binId = null;
 
     let hudData = [];
     this.infoPanel = new InfoPanel();
+    this.trafficLight = new TrafficLight(createVector(71, 22));
 
   }
 
@@ -32,16 +34,17 @@ class BaseScene {
 
   update() {
     // Enter sequence
-    if (this.enterSequence && this.horizontalTrain.position.x > 60) {
-      this.horizontalTrain.setGear("N")
+    if (this.enterSequence && this.horizontalTrain.position.x > 68) {
+      this.horizontalTrain.setGear("N");
       if (this.horizontalTrain.velocity == 0) {
-        // this.horizontalTrain.acceleration = 0;
-        // this.horizontalTrain.velocity = 0;
         this.enterSequence = false;
-        // this.unloadUnits();
-        // this.exitSequence = true;
-        // this.horizontalTrain.setGear("D");
       }
+    }
+
+    // Exit sequence
+    if (this.exitSequence && game.playerTrain.wagons.at(-1).position.x > 90) {
+      game.currentScene = game.navigationScene;
+      game.navigationScene.getNewIntersection(game.navigationScene.locomotive.currentTile, game.navigationScene.locomotive.orientation);
     }
 
 
@@ -49,10 +52,16 @@ class BaseScene {
   }
 
   onMouseReleased() {
-    if (this.draggedWagonId !== null && this.binId !== null) {
-      const element = game.playerTrain.wagons.splice(this.draggedWagonId, 1)[0]
+    if (this.draggedWagonTrainId !== null && this.binId !== null) {
+      const element = game.playerTrain.wagons.splice(this.draggedWagonTrainId, 1)[0]
       game.playerTrain.wagons.splice(this.binId, 0, element);
-      this.draggedWagonId = null;
+      this.draggedWagonTrainId = null;
+      this.binId = null;
+    }
+    if (this.draggedWagonDepotId !== null && this.binId !== null) {
+      const element = this.base.wagons[this.draggedWagonTrainId]
+      game.playerTrain.wagons.splice(this.binId, 0, element);
+      this.draggedWagonDepotId = null;
       this.binId = null;
     }
   }
@@ -61,11 +70,14 @@ class BaseScene {
 
     // Right click takes a wagon to drag
     if (mouseButton == "right") {
-      this.draggedWagonId = this.horizontalTrain.onClick(mousePos, this.camera.position);
-      if (this.draggedWagonId === null) {
+      // check if we clicked a wagon from the train
+      this.draggedWagonTrainId = this.horizontalTrain.onClick(mousePos, this.camera.position);
+      if (this.draggedWagonTrainId === null) {
+        // check if we clicked a wagon from the depot
         for (let wagon of this.base.wagons) {
           if (wagon.checkClick(mousePos, this.camera.position)) {
             console.log(`Clicked stored wagon: ${wagon.name}`)
+            this.draggedWagonDepotId = wagon.id;
           }
         }
       }
@@ -73,16 +85,28 @@ class BaseScene {
     }
 
     // If we are dragging a wagon
-    if (this.draggedWagonId !== null && this.binId !== null) {
-      const element = game.playerTrain.wagons.splice(this.draggedWagonId, 1)[0];
+    if (this.draggedWagonTrainId !== null && this.binId !== null) {
+      const element = game.playerTrain.wagons.splice(this.draggedWagonTrainId, 1)[0];
       if (this.binId == -1) {
-        // this.base.storeWagon(game.playerTrain.wagons[this.draggedWagonId]);
+        // this.base.storeWagon(game.playerTrain.wagons[this.draggedWagonTrainId]);
         this.base.storeWagon(element);
-        // game.playerTrain.wagons.splice(this.draggedWagonId, 1)
+        // game.playerTrain.wagons.splice(this.draggedWagonTrainId, 1)
       } else {        
-        game.playerTrain.wagons.splice(this.binId, 0, element);  
+        if (this.binId <= this.draggedWagonTrainId) {
+          game.playerTrain.wagons.splice(this.binId, 0, element);  
+        } else if (this.binId > this.draggedWagonTrainId){
+          game.playerTrain.wagons.splice(this.binId-1, 0, element);  
+        }
       }
-      this.draggedWagonId = null;
+      this.draggedWagonTrainId = null;
+      this.binId = null;
+      return;
+    }
+
+    if (this.draggedWagonDepotId !== null && this.binId !== null) {
+      const element = this.base.wagons[this.draggedWagonDepotId];
+      game.playerTrain.wagons.splice(this.binId, 0, element);  
+      this.draggedWagonDepotId = null;
       this.binId = null;
       return;
     }
@@ -93,6 +117,13 @@ class BaseScene {
     if (this.infoPanel.active) {
       this.infoPanel.checkClick(mousePos)
       console.log(`Clicked wagon ${wagonId}`);
+      return;
+    }
+
+    // TrafficLight
+    if (this.trafficLight.checkClick(mousePos)) {
+      this.exitSequence = true;
+      this.horizontalTrain.gearUp();
       return;
     }
 
@@ -203,7 +234,7 @@ class BaseScene {
       case(BaseScene.Actions.Build):
         aux = Geometry.screenToBoard(createVector(mouseX, mouseY), this.camera.position, this.tileHalfSize);
         this.selectedBuilding.setPosition(aux);
-        this.selectedBuilding.show(this.camera.position);
+        this.selectedBuilding.show(mainCanvas, this.camera.position);
       break;
       case(BaseScene.Actions.Train):
         aux = Geometry.screenToBoard(createVector(mouseX, mouseY), this.camera.position, this.tileHalfSize);
@@ -227,33 +258,53 @@ class BaseScene {
     //   this.selectedUnit.show(this.camera.position);
     // }
 
+    this.trafficLight.show(this.camera.position, this.tileHalfSize);
+
+
+
 
     // show dragged wagon
-    if (this.draggedWagonId !== null) {
-      mainCanvas.image(game.playerTrain.wagons[this.draggedWagonId].img[0], mouseX - game.playerTrain.wagons[this.draggedWagonId].halfSize.x, mouseY);
-
+    if (this.draggedWagonTrainId !== null) {
+      mainCanvas.image(game.playerTrain.wagons[this.draggedWagonTrainId].img[0], mouseX - game.playerTrain.wagons[this.draggedWagonTrainId].halfSize.x, mouseY);
       for (let [i, wagon] of game.playerTrain.wagons.entries()) {
         let screenPos = Geometry.boardToScreen(wagon.position, this.camera.position, this.tileHalfSize);
         if (mouseY < screenPos.y && mouseY > screenPos.y-100 && mouseX > screenPos.x) {
-          this.binId = i
+          if (i !== this.binId) {
+            console.log(`Bin Id: ${i}`)
+          }
+          this.binId = i;
           mainCanvas.line(screenPos.x+wagon.halfSize.x, screenPos.y, screenPos.x+wagon.halfSize.x, screenPos.y-100)
           return;
         }
       }
-
       let screenPos = Geometry.boardToScreen(this.base.wagonStorageLocations[0], this.camera.position, this.tileHalfSize);
       if (mouseY < screenPos.y && mouseY > screenPos.y-60) {
         mainCanvas.rect(100, screenPos.y-60,1000,60);
         this.binId = -1;
         return;
       }
-      // for (let [i, storeLoc] of this.base.wagonStorageLocations.entries()) {
-      //   let screenPos = Geometry.boardToScreen(storeLoc, this.camera.position, this.tileHalfSize);
-      //   if (mouseY < screenPos.y+30 && mouseY > screenPos.y-30 && mouseX > screenPos.x-100 && mouseX < screenPos.x+100) {
-      //     mainCanvas.rect(screenPos.x-100, screenPos.y-30,200,60)
-      //   }
-      // }
+    }
 
+    // show dragged wagon
+    if (this.draggedWagonDepotId !== null) {
+      mainCanvas.image(this.base.wagons[this.draggedWagonDepotId].img[0], mouseX - this.base.wagons[this.draggedWagonDepotId].halfSize.x, mouseY);
+      for (let [i, wagon] of game.playerTrain.wagons.entries()) {
+        let screenPos = Geometry.boardToScreen(wagon.position, this.camera.position, this.tileHalfSize);
+        if (mouseY < screenPos.y && mouseY > screenPos.y-100 && mouseX > screenPos.x) {
+          if (i !== this.binId) {
+            console.log(`Bin Id: ${i}`)
+          }
+          this.binId = i;
+          mainCanvas.line(screenPos.x+wagon.halfSize.x, screenPos.y, screenPos.x+wagon.halfSize.x, screenPos.y-100)
+          return;
+        }
+      }
+      let screenPos = Geometry.boardToScreen(this.base.wagonStorageLocations[0], this.camera.position, this.tileHalfSize);
+      if (mouseY < screenPos.y && mouseY > screenPos.y-60) {
+        mainCanvas.rect(100, screenPos.y-60,1000,60);
+        this.binId = -1;
+        return;
+      }
     }
 
     //this.infoPanel.show();

@@ -15,10 +15,13 @@
     "name": "Rails_Granada",
     "type": "Rail",
     "resources": {
-      "Salt": 5
+      "Rails": 5
     },
     "wagons": {
       "Crane": 1
+    },
+    "manpower": {
+      "Slaves": 10
     },
     "tiles": [[75,366], [76,366], [77,366]],
     "orientation": "AD" 

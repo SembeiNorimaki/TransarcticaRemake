@@ -141,24 +141,28 @@ class AStar {
       if (`${node.pos.x-1},${node.pos.y+1}` in this.nodes === false) {
         this.nodes[`${node.pos.x-1},${node.pos.y+1}`] = new Node(createVector(node.pos.x-1, node.pos.y+1), game.currentScene.base.tileBoard.board[node.pos.y+1][node.pos.x-1].isWall());        
       }
+      ret.push(this.nodes[`${node.pos.x-1},${node.pos.y+1}`]);
     }
     
     if (node.pos.y < this.boardSize.y-1 && node.pos.x < this.boardSize.x-1) {  // South East
       if (`${node.pos.x+1},${node.pos.y+1}` in this.nodes === false) {
         this.nodes[`${node.pos.x+1},${node.pos.y+1}`] = new Node(createVector(node.pos.x+1, node.pos.y+1), game.currentScene.base.tileBoard.board[node.pos.y+1][node.pos.x+1].isWall());        
       }
+      ret.push(this.nodes[`${node.pos.x+1},${node.pos.y+1}`]);
     }
     
     if (node.pos.y > 0 && node.pos.x > 0) {  // North West
       if (`${node.pos.x-1},${node.pos.y-1}` in this.nodes === false) {
         this.nodes[`${node.pos.x-1},${node.pos.y-1}`] = new Node(createVector(node.pos.x-1, node.pos.y-1), game.currentScene.base.tileBoard.board[node.pos.y-1][node.pos.x-1].isWall());        
       }
+      ret.push(this.nodes[`${node.pos.x-1},${node.pos.y-1}`]);
     }
     
     if (node.pos.y > 0 && node.pos.x < this.boardSize.x-1) {  // North East
       if (`${node.pos.x+1},${node.pos.y-1}` in this.nodes === false) {
         this.nodes[`${node.pos.x+1},${node.pos.y-1}`] = new Node(createVector(node.pos.x+1, node.pos.y-1), game.currentScene.base.tileBoard.board[node.pos.y-1][node.pos.x+1].isWall());        
       }
+      ret.push(this.nodes[`${node.pos.x+1},${node.pos.y-1}`]);
     }
 
     return ret;

@@ -141,19 +141,6 @@ function textToImage(text) {
   return img;
 }
 
-function makeMinimap() {
-  mainCanvas.noStroke()
-  let x = 0;
-  let y = 0;
-  for (let row of game.navigationScene.tileBoard.board) {
-    x = 0;
-    for (let tile of row) {
-      Tile.draw2D(mainCanvas, tile.tileId, createVector(x,y))
-      x += TILE_MINI_WIDTH;
-    }
-    y += TILE_MINI_HEIGHT;
-  }
-}
 
 function segmentImage(img) {
   let NCOLS = img.width
@@ -170,7 +157,7 @@ function segmentImage(img) {
       } else if (px == "100,100,100,255") {  // land 
           board[y][x] = 0x01;
       } else if (px == "255,0,0,255"){       // cities
-        board[y][x] = 0xF0;
+        board[y][x] = 0x01;  // F0
       } else if (px == "0,0,255,255"){       // rails
         board[y][x] = 0xF1;
       }
@@ -424,18 +411,12 @@ function downloadText(content, filename) {
   saveAs(blob, filename);
 }
 
-
-
-
-
 function screenToBoardSmall(pos, cameraPos) {
   return createVector(
     round((((pos.x + cameraPos.x - mainCanvasDim[0]/2) / TILE_MINI_WIDTH)  + ((pos.y + cameraPos.y - mainCanvasDim[1]/2) / TILE_MINI_HEIGHT) ) / 2) , 
     round((((pos.y + cameraPos.y - mainCanvasDim[1]/2) / TILE_MINI_HEIGHT)  - ((pos.x + cameraPos.x - mainCanvasDim[0]/2) / TILE_MINI_WIDTH) ) / 2) 
   );
 }
-
-
 
 function cameraToBoardSmall(pos) {
   return createVector(

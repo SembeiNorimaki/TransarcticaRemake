@@ -1,5 +1,5 @@
 {
-  "orientations": [270, 315, 0, 45, 90, 135, 180, 225],
+  "orientations": [315, 0, 45, 90, 135, 180, 225, 270],
   "spriteSize": [32, 52],
   "offset": [16, 8],
   "actions": {

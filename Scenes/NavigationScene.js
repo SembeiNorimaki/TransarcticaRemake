@@ -24,10 +24,18 @@ class NavigationScene {
     this.locomotive = new Locomotive(createVector(72, 363), 90.0);
 
     this.backgroundImg = this.populateBackgroundImg();
+    
     this.conversationPanel = new ConversationPanel();
+
+    // This is needed because tile.drawBuildings will look for buildings in game.currentScene
+    // Store here the buildings representing cities, industries
+
+    this.buildings = [];
+    this.units = [];
   }
 
   initialize() {
+    // this.minimapImg = this.populateMinimap();
     this.getNewIntersection(this.locomotive.currentTile, this.locomotive.orientation);
     this.camera.setPosition(Geometry.boardToCamera(this.locomotive.position, this.tileHalfSize));
     // sounds.TravelMusic.play()
@@ -48,6 +56,18 @@ class NavigationScene {
     }
     return img;
   }
+
+  populateMinimap() {
+    let img = createGraphics(game.navigationScene.tileBoard.boardDim.x*2, game.navigationScene.tileBoard.boardDim.y*2);
+    for (let [y, row] of game.navigationScene.tileBoard.board.entries()) {
+      for (let [x, tile] of row.entries()) {
+        Tile.draw2D(img, tile.tileId, createVector(x*2, y*2));
+      }
+    }
+    return img;
+  }
+  
+
 
   processKey(key) {
     console.log(key)
@@ -74,6 +94,8 @@ class NavigationScene {
   }
 
   onClick(mousePos) {
+    let tilePos = Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize);
+    console.log(`Clicked tile ${tilePos.array()}`)
     // if (this.conversationPanel.active && mousePos.y > mainCanvasDim[1]-200) {
     //   let result = game.conversationPanel.onClick(mousePos);
     //   console.log(result)
@@ -185,6 +207,9 @@ class NavigationScene {
           this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
           game.currentScene = new BaseScene(game.bases[locationName]);  
+        } else if (locationName in game.mines) {
+          console.log("Arrived to a minee");
+          game.currentScene = new MineScene(locationName);
         } else if (locationName in game.bridges && !game.bridges[locationName].completed) {
           console.log(`Arrived to bridge ${locationName} at ${tileString}`);
           game.currentScene = new BridgeScene(locationName);
@@ -211,16 +236,16 @@ class NavigationScene {
     }
     this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
     
-    showOptions = { 
-      "outOfBoardTile": 0x00,
-      "baseTile": null,
-      "showTerrain": false,
-      "showBuildings": true,
-      "showUnits": false,
-      "showWalls": false,
-      "showMinimap": false
-    }
-    //this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
+    // showOptions = { 
+    //   "outOfBoardTile": 0x00,
+    //   "baseTile": null,
+    //   "showTerrain": false,
+    //   "showBuildings": true,
+    //   "showUnits": false,
+    //   "showWalls": false,
+    //   "showMinimap": false
+    // }
+    // this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
 
     this.locomotive.show();   
     

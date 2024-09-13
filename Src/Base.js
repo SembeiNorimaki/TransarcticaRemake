@@ -4,10 +4,11 @@ class Base {
     this.name = baseData.name;
     this.units = [];
     this.buildings = [];
+    this.location = null;
     
 
     this.wagonStorageLocations = [];
-    for (let x=71, y=32; x>40; x-=3.2, y+=3.2) {
+    for (let x=71, y=33; x>40; x-=3.2, y+=3.2) {
       this.wagonStorageLocations.push(createVector(x,y));
     }
     //   createVector(71, 32),
@@ -38,7 +39,7 @@ class Base {
     }
 
     for (let wagonData of baseData.wagons) {
-      let wagon = new Wagon(0, wagonData.name, wagonsData[wagonData.name]);
+      let wagon = new Wagon(this.wagons.length, wagonData.name, wagonsData[wagonData.name]);
       this.storeWagon(wagon);
     }
 
@@ -80,9 +81,9 @@ class Base {
     }
 
     // secondary central rail
-    for (let x=25; x<75; x++) {
-      this.tileBoard.board[104-x][x].setTileId(0x82)
-      this.tileBoard.board[104-x-1][x].setTileId(0x83)
+    for (let x=28; x<78; x++) {
+      this.tileBoard.board[105-x][x].setTileId(0x82)
+      this.tileBoard.board[105-x-1][x].setTileId(0x83)
     }
     // this.tileBoard.board[27][74].setTileId(0x6A)
 

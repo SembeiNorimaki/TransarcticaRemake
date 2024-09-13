@@ -16,9 +16,13 @@
 
 class City {
   constructor(cityData) {
+    this.building = null;
+    this.position = null;
+
     this.name = cityData.name;
     this.resources = cityData.resources;
     this.wagons = cityData.wagons;
+    this.location = null;
     this.objectiveData = cityData.objectives;    
     if (Object.keys(cityData.objectives).length === 0) {
       this.objectiveData = null;
@@ -26,13 +30,29 @@ class City {
     } else {
       this.objectiveData = cityData.objectives;    
       this.objective = new Objective(this.objectiveData);    
-    }
-    
+    }    
+
+    this.buildings = [];
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,5)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,2)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,-1)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,5)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,2)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,-1)));    
+
   }  
 
   initialize(savedData) {
     for (let [resourceName, resourceInfo] of Object.entries(savedData.resources)) {
       this.resources[resourceName].Available = resourceInfo.Available;
     }
+  }
+
+  setNavigationBuilding(navigationBuilding) {
+    this.navigationBuilding = navigationBuilding;
+  }
+
+  setPosition(position) {
+    this.position = position;
   }
 }

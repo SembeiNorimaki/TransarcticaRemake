@@ -18,15 +18,16 @@ class Bridge {
   constructor(bridgeData) {
     this.bridgeData = bridgeData;
     this.completed = false;
+    this.locations = [];
   }
 
   process() {
-    // if (this.checkRequirements()) {
-    //   console.log("")
-    // } 
+    if (this.checkRequirements()) {
+      this.build();
+    } 
     // game.conversationPanel.fillData(this.generateConversationData());
     // game.conversationPanel.active = true; 
-    this.build();
+    
 
   }
 
@@ -57,11 +58,13 @@ class Bridge {
     }
 
     for (let tilePos of this.bridgeData.tiles) {
-      console.log(tilePos)
       game.navigationScene.tileBoard.board[tilePos[1]][tilePos[0]].setTileId(tileId);
     }
 
-    // TODO: substract resources from the train
+    // remove resources from train
+    for (let [resourceName, qty] of Object.entries(this.bridgeData.resources)) {
+      game.playerTrain.sellResourceByName(resourceName, qty, 0);
+    }
   }
 
   generateConversationData() {
@@ -88,12 +91,29 @@ class Bridge {
   
 
   checkRequirements() {
+    let wagonsOK = false;
+    let resourcesOK = true;
+    let manpowerOK = false;
+
+    // Check resources
     for (let [resourceName, qty] of Object.entries(this.bridgeData.resources)) {
       if (resourceName in game.playerTrain.contents == false || game.playerTrain.contents[resourceName] < qty) {
         console.log(`Not enough ${resourceName}. Required: ${qty}. Available: ${game.playerTrain.contents[resourceName]}`);
-        return false;
+        resourcesOK = false;
+        break;
       }
     }
-    return true;
+
+    // check wagons
+    for (let [wagonName, qty] of Object.entries(this.bridgeData.wagons)) {
+      for (let wagon of game.playerTrain.wagons) {
+        if (wagon.name == wagonName) {
+          wagonsOK = true;
+          break;
+        }
+      }
+    }
+
+    return wagonsOK && resourcesOK;
   }
 }

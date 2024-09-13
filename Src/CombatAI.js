@@ -26,7 +26,6 @@ class CombatAI {
   }
 
   update() {
-    return;
 
     this.updateCounter--;
     if (this.updateCounter > 0) 
@@ -34,21 +33,22 @@ class CombatAI {
     if (this.turn == 0) {
       game.currentScene.deployEnemySoldier(-2);
       game.currentScene.deployEnemySoldier(-1);
+      game.currentScene.deployEnemySoldier(0);
       game.currentScene.deployEnemySoldier(1);
       game.currentScene.deployEnemySoldier(2);
-    } else if (this.turn == 1) {
-      game.currentScene.enemySoldiers[0].setTargetPosition(createVector(500,100));
-      game.currentScene.enemySoldiers[1].setTargetPosition(createVector(750,100));
-      game.currentScene.enemySoldiers[2].setTargetPosition(createVector(1000,100));
-      game.currentScene.enemySoldiers[3].setTargetPosition(createVector(1300,100));
+    } else if (this.turn == 1000) {
+      game.currentScene.enemyUnits[0].setTargetPosition(createVector(500,100));
+      game.currentScene.enemyUnits[1].setTargetPosition(createVector(750,100));
+      game.currentScene.enemyUnits[2].setTargetPosition(createVector(1000,100));
+      game.currentScene.enemyUnits[3].setTargetPosition(createVector(1300,100));
     }
-    else if (this.turn == 10) {
-      game.currentScene.enemySoldiers[0].setTargetPosition(createVector(500,700));
-      game.currentScene.enemySoldiers[1].setTargetPosition(createVector(750,700));
-      game.currentScene.enemySoldiers[2].setTargetPosition(createVector(1000,700));
-      game.currentScene.enemySoldiers[3].setTargetPosition(createVector(1300,700));
+    else if (this.turn == 1000) {
+      game.currentScene.enemyUnits[0].setTargetPosition(createVector(500,700));
+      game.currentScene.enemyUnits[1].setTargetPosition(createVector(750,700));
+      game.currentScene.enemyUnits[2].setTargetPosition(createVector(1000,700));
+      game.currentScene.enemyUnits[3].setTargetPosition(createVector(1300,700));
     }
-    if (game.currentScene.enemySoldiers.length > 0) { 
+    if (game.currentScene.enemyUnits.length > 0) { 
       
     }
     this.updateCounter = 100;

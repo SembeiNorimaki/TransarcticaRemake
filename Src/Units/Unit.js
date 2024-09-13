@@ -20,9 +20,9 @@ class Unit {
     this.owner = owner;
     this.position = position.copy();
     if (this.owner == Game.Players.Human) {
-      this.defaultOrientation = 90;
+      this.defaultOrientation = 135;
     } else {
-      this.defaultOrientation = 270;
+      this.defaultOrientation = 315;
     }
     this.orientation = this.defaultOrientation;
     this.direction = createVector(0, 0);

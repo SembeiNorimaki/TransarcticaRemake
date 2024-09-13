@@ -29,17 +29,20 @@ class Cannonball {
     
 
     this.position = position;
-    this.velocity = createVector(-0.1, -0.1);
+    this.velocity = createVector(-0.3, -0.3);
     this.diam = 10;
     this.finished = false;
     
-    if (this.velocity.y < 0) {
-      this.targetY = 70;
-      this.direction = "N";
-    } else {
-      this.targetY = 800;
-      this.direction = "S";
-    }
+    this.targetY = 2;
+    this.direction = "N";
+
+    // if (this.velocity.y < 0) {
+    //   this.targetY = 70;
+    //   this.direction = "N";
+    // } else {
+    //   this.targetY = 800;
+    //   this.direction = "S";
+    // }
   }
 
   // explode() {
@@ -54,13 +57,14 @@ class Cannonball {
     this.sprite.update();
 
     this.position.add(this.velocity);
-    if (this.direction == "N" && this.position.y <= this.targetY) {
-      // this.sprite.setAction("explode");
-      // this.velocity.y = 0;
+    if (this.direction == "N" && (this.position.x + this.position.y) <= this.targetY) {
+      this.sprite.setAction("explode");
+      this.velocity.set(createVector(0,0));
       // this.finished = true;
-    } else if (this.direction == "S" && this.position.y >= this.targetY) {
-      // this.sprite.setAction("explode");
-      // this.velocity.y = 0;
+    } else if (this.direction == "S" && (this.position.x + this.position.y) >= this.targetY) {
+      this.sprite.setAction("explode");
+      this.velocity.set(createVector(0,0));
+      this.finished = true;
     }
 
     if (this.sprite.getAction() == "explode" && this.sprite.getSpriteIdx() == 6) {

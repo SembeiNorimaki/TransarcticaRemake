@@ -15,28 +15,34 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class TrafficLight {
-  constructor(position, images, halfSize) {
+  static Color = {
+    Red: 0,
+    Green: 1
+  }
+  constructor(position) {
     this.position = position;
-    this.redImage = images[1];
-    this.greenImage = images[0];
-    this.halfSize = createVector(halfSize.x, halfSize.y); 
-    this.currentColor = 0;
+    this.screenPosition = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
+    this.redImage = gameData.trafficLightData.red;
+    this.greenImage = gameData.trafficLightData.green;
+    this.halfSize = createVector(50, 50); 
+    this.currentColor = TrafficLight.Color.Red;
     this.currentImage = this.redImage;
   }
 
   checkClick(mousePos) {
+    let screenPosition = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
     if (
-      mousePos.x > this.position.x - this.halfSize.x &&
-      mousePos.x < this.position.x + this.halfSize.x &&
-      mousePos.y > this.position.y - this.halfSize.y &&
-      mousePos.y < this.position.y + this.halfSize.y
+      mousePos.x > screenPosition.x - this.halfSize.x &&
+      mousePos.x < screenPosition.x + this.halfSize.x &&
+      mousePos.y > screenPosition.y - this.halfSize.y &&
+      mousePos.y < screenPosition.y + this.halfSize.y
     ) {
       console.log("Traffic light clicked");
-      if (this.currentColor == 0) {
-        this.currentColor = 1;
+      if (this.currentColor == TrafficLight.Color.Red) {
+        this.currentColor = TrafficLight.Color.Green;
         this.currentImage = this.greenImage;
       } else {
-        this.currentColor = 0;
+        this.currentColor = TrafficLight.Color.Red;
         this.currentImage = this.redImage;
       } 
       return true;
@@ -44,16 +50,17 @@ class TrafficLight {
     return false;    
   }
 
-  show() {
-    mainCanvas.image(this.currentImage, this.position.x-this.halfSize.x, this.position.y-this.halfSize.y);
-    mainCanvas.stroke(0)
+  show(cameraPos, tileHalfSize) {
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPos, tileHalfSize);
+    mainCanvas.image(this.currentImage, screenPosition.x-this.halfSize.x, screenPosition.y-this.halfSize.y);
+    // mainCanvas.stroke(0)
     // mainCanvas.rect(
-    //   this.position.x-this.halfSize.x,
-    //   this.position.y-this.halfSize.y,
+    //   screenPosition.x-this.halfSize.x,
+    //   screenPosition.y-this.halfSize.y,
     //   this.halfSize.x*2,
     //   this.halfSize.y*2
     // );
-    //mainCanvas.circle(this.position.x,this.position.y,50);
+    // mainCanvas.circle(screenPosition.x, screenPosition.y,20);
 
   }
 }

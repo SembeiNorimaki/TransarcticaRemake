@@ -275,7 +275,7 @@
     "dimensions": [128, 54],
     "offset": [[64,50]],
     
-    "cargo": "liquid",
+    "cargo": "Liquid",
     "units": "liters",
     "capacity": 50,
     "weight": 1000

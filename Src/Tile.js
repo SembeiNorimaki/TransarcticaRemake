@@ -152,6 +152,7 @@ class Tile {
   }
 
   static draw2D(canvas, tileId, screenPos) {
+    canvas.noStroke();
     let tileName = Tile.idxToName[tileId] 
     if (tileName.startsWith("Rail")) {
       canvas.fill("black")
@@ -159,10 +160,10 @@ class Tile {
       canvas.fill("gray")
     } else if (tileName == "Village") {
       canvas.fill("red")
-    } else {
+    } else {      
       canvas.fill("blue");
     }
-    canvas.rect(screenPos.x, screenPos.y, TILE_MINI_WIDTH, TILE_MINI_HEIGHT);
+    canvas.rect(screenPos.x, screenPos.y, 2, 2);
   }
 
   static draw2DOLD(canvas, tileId, screenPos) {
@@ -548,6 +549,7 @@ class Tile {
     this.isEvent = false;
     this.unitId = null;
     this.buildingId = null;
+    this.buildingTypeId = null;
     this.isOccupied = false;
 
     this.setTileId(tileId);
@@ -577,6 +579,10 @@ class Tile {
 
   setBuildingId(id) {
     this.buildingId = id;
+  }
+
+  setBuildingTypeId(id) {
+    this.buildingTypeId = id;
   }
 
   isUnit() {
@@ -678,20 +684,20 @@ class Tile {
 
   showTerrain(canvas, cameraPos) {
     let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize);    
+    
+    if (this.tileId >= 0xA0) {  // Village needs ground to be drawn
+      Tile.draw(canvas, 0x01, screenPos, this.tileHalfSize)
+    }
+    
     Tile.draw(canvas, this.tileId, screenPos, this.tileHalfSize)
-    // let topLeft = screenPos.copy();
-    // topLeft.add(createVector(Tile.tileCodes[tileId].offset[0], Tile.tileCodes[tileId].offset[1]));
-    // topLeft.add(this.tileHalfSize);
     
-    // canvas.image(Tile.tileCodes[tileId].img, topLeft.x, topLeft.y);
-
-    // canvas.circle(screenPos.x, screenPos.y,10); 
+    // canvas.circle(screenPos.x, screenPos.y, 10); 
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
-    
   }
 
   showBuilding(canvas, cameraPos) {
     let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize); 
+    // game.currentScene.buildings[this.buildingId].show(cameraPos);
     game.currentScene.base.buildings[this.buildingId].show(cameraPos);
   }
 

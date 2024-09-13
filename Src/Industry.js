@@ -20,10 +20,26 @@ class Industry {
     this.industryType = industryData.industryType;
     this.resources = industryData.resources;
     this.wagons = industryData.wagons;
+    this.location = null;
+
     this.resourceName = Object.keys(this.resources)[0];
     this.produces = industryData.produces;
     this.requires = industryData.requires;
     this.qty = industryData.qty;
+
+
+    this.objectiveData = industryData.objectives;    
+    if (Object.keys(industryData.objectives).length === 0) {
+      this.objectiveData = null;
+      this.objective = null;
+    } else {
+      this.objectiveData = industryData.objectives;    
+      this.objective = new Objective(this.objectiveData);    
+    }    
+
+    this.buildings = [];
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(11,5)));
+    this.buildings.at(-1).setImage(industriesInfo[this.industryType].imgTrade, this.offsetTrade = industriesInfo[this.industryType].offsetTrade);
 
     this.imgTrade = industriesInfo[this.industryType].imgTrade;
     this.imgNav = industriesInfo[this.industryType].imgNav;

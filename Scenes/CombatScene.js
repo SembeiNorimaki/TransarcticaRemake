@@ -17,17 +17,7 @@
 class CombatScene {
   constructor(playerTrain, enemyTrain) {
     this.tileHalfSize = tileHalfSizes.Z1;
-    this.board = [
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0,0,0]      
-    ]
-    this.boardDim = createVector(200, 200);
-    
-    // this.camera = new Camera(createVector(0,0));
+       
     this.camera = new Camera(createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2))
     this.backgroundImg = this.populateBackgroundImg();
 
@@ -40,9 +30,11 @@ class CombatScene {
     this.enemyHTrain = null;
     if (enemyTrain !== null) {
       this.enemyHTrain = new HorizontalTrain(Game.Players.Cpu, enemyTrain.wagons);
-      this.enemyHTrain.setPosition(createVector(10, -6));
+      this.enemyHTrain.setPosition(createVector(12, -8));
       this.enemyHTrain.update();
     }
+
+    this.selectedWagon = null;
 
     // TODO: currently soldierAI is inside soldier. Is this then necessary?
     this.combatAI = new CombatAI();
@@ -59,14 +51,13 @@ class CombatScene {
     
     // this.enemyUnits[0].setRole({
     //   "role": "patrol",
-    //   "waypoints": [
+    //   "waypoints": [ 
     //     createVector(500,800),
     //     createVector(1000,800),
     //   ]
-    // });
-    
+    // });    
 
-    this.selectedWagon = null;
+    
   }
 
   initialize() {
@@ -104,16 +95,14 @@ class CombatScene {
 
 
 
-  // Left arrow: Locomotive gear down
-  // Right arrow: Locomotive gear up
+  // Left, right arrow: Move locomotive
+  // A, S: Move camera
   processKey(key) {
     if (key == "ArrowLeft") {
       this.playerHTrain.gearDown();
     } else if (key == "ArrowRight") {
       this.playerHTrain.gearUp();
-    }
-
-    else if (key.toUpperCase() == "A") {
+    } else if (key.toUpperCase() == "A") {
       if (this.camera.position.x >= 100) {
         this.camera.move(createVector(-300, 0));
       }
@@ -122,7 +111,6 @@ class CombatScene {
         this.camera.move(createVector(300, 0));
       }
     }
-
   }
 
   onClick(mousePos) {   
@@ -151,11 +139,11 @@ class CombatScene {
     // Click on enemy train
     wagonIdx = this.enemyHTrain.onClick(mousePos, this.camera.position);
     if (wagonIdx !== null) {
-      console.log(`Clicked wagon ${wagonIdx}`);
+      console.log(`Clicked enemy wagon ${wagonIdx}`);
       return;
     }    
 
-    // Left click on the battlefield    
+    // Left click on the battlefield deselects soldier   
     if (mouseButton == "left") {
       //check if soldier is clicked, then select/deselect it
       for (let soldier of this.playerUnits) {
@@ -171,8 +159,7 @@ class CombatScene {
     // Right click on the battlefield    
     if (mouseButton == "right") {
       for (let soldier of this.playerUnits) {
-        if (soldier.selected) {
-          
+        if (soldier.selected) {        
           
           // if we click on an enemy soldier, set him as a target
           for (let enemy of this.enemyUnits) {
@@ -190,18 +177,13 @@ class CombatScene {
         }
       } 
       
-      // for (let mamooth of this.playerMamooths) {
-      //   if (mamooth.selected) {
-      //     mamooth.setTargetPosition(mousePos);
-      //     break;
-      //   }
-      // }
       return;
     }  
   }
 
   deploySoldier(i) {
-    let spawnPosition = p5.Vector.add(this.playerHTrain.wagons[i].position, createVector(-2,-2));
+    let spawnPosition = p5.Vector.add(this.playerHTrain.wagons[i].position, createVector(-2, -2));
+    spawnPosition.set(round(spawnPosition.x), round(spawnPosition.y))
     this.playerUnits.push(new Rifleman(9, spawnPosition, 0, Game.Players.Human));
   }
   
@@ -217,24 +199,10 @@ class CombatScene {
   deployEnemySoldier(spot) {
     // find a barracks wagon
     let i = this.findEnemyBarracks();
-    let spawnPosition = createVector(this.enemyHTrain.wagons[i].position.x + this.enemyHTrain.wagons[i].halfSize.x + spot*20, 100);
-    this.enemyUnits.push(new Rifleman(12,spawnPosition, 0, Game.Players.Cpu));
+    let spawnPosition = p5.Vector.add(this.enemyHTrain.wagons[i].position, createVector(0.5*spot, -0.5*spot));
+    this.enemyUnits.push(new Rifleman(12, spawnPosition, 0, Game.Players.Cpu));
   }
 
-  deployMamooth(i) {
-    let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, 700);
-    this.playerMamooths.push(new Mamooth(15,spawnPosition,Game.Players.Human));
-  }
-
-  // fireCannon(i) {   
-  //   let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, this.playerHTrain.wagons[i].position.y-40); 
-  //   this.cannonball = new Cannonball(spawnPosition);
-  // }
-
-  // fireMachinegun(i) {   
-  //   let spawnPosition = createVector(this.playerHTrain.wagons[i].position.x + this.playerHTrain.wagons[i].halfSize.x, this.playerHTrain.wagons[i].position.y-40); 
-  //   this.cannonball = new Cannonball(spawnPosition);
-  // }
 
   cannonHitEnemy(pos) {
     console.log(pos)
@@ -251,10 +219,10 @@ class CombatScene {
     // update trains
     this.playerHTrain.update();
     if (this.enemyHTrain !== null) {
-      //this.enemyHTrain.update();
+      this.enemyHTrain.update();
     }
     
-    //this.combatAI.update();
+    this.combatAI.update();
 
     if (this.cannonball !== null) {
       this.cannonball.update();
@@ -298,11 +266,11 @@ class CombatScene {
             soldier.setTargetUnit(enemy);
           }
         }
-        //soldier.update();
+        soldier.update();
       }
 
       for (let enemy of this.enemyUnits) {
-        //enemy.update();
+        enemy.update();
       }
   }
 
@@ -358,19 +326,7 @@ class CombatScene {
   }
 
 
-  showBoard() {
-    mainCanvas.push();
-    mainCanvas.noFill();
-    mainCanvas.strokeWeight(0.1)
-    this.boardDim.set(85,39);
-    let D = 20;
-    for (let row=5; row< this.boardDim.y; row++) {
-      for (let col=0; col< this.boardDim.x; col++) {
-        mainCanvas.rect(col*D,row*D,D,D);
-      }  
-    }
-    mainCanvas.pop();
-  }
+
   show() {
     mainCanvas.background(0);
     mainCanvas.image(this.backgroundImg, 0, 0);

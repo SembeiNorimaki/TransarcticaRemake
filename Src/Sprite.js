@@ -115,6 +115,6 @@ class Sprite {
     //   screenPos.x, 
     //   screenPos.y
     // );
-    //mainCanvas.circle(screenPos.x, screenPos.y, 5);
+    mainCanvas.circle(screenPos.x, screenPos.y, 10);
   }
 }

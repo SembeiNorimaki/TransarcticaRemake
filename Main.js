@@ -65,7 +65,7 @@ let industriesLocations = {};
 let citiesLocations = {};
 let basesLocations = {};
 let bridgesLocations = {};
-let minesLocations = [];
+let minesLocations = {};
 
 let charactersData = {};
 let backgroundImg;
@@ -157,13 +157,6 @@ function preload() {
     let spriteSize = [170, 150]
     for (let i=0; i<16; i++) {
       explosionAnim.push(atlas.get(0, i*spriteSize[1], spriteSize[0], spriteSize[1]));
-    }
-  });
-
-  // Mines Locations
-  loadJSON("Src/MinesLocations.json", jsonData => {
-    for (let loc of Object.values(jsonData)) {
-      minesLocations.push(createVector(loc[0], loc[1]));
     }
   });
   
@@ -297,6 +290,11 @@ function preload() {
     gameData.basesData = jsonData;
   });
 
+  // Mines into gameData.minesData
+  loadJSON("Src/Mines.json", jsonData => {
+    gameData.minesData = jsonData;
+  });
+
   // Load buildingsFH images
   loadJSON("Src/BuildingsFH.json", jsonData => {
     gameData.buildingsFHData = jsonData;
@@ -385,6 +383,13 @@ function preload() {
       bridgesLocations[key] = val;
     }
   });
+
+  // Mines Locations
+  loadJSON("Src/MinesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      minesLocations[key] = val;
+    }
+  });
   
   // City template map into gameData.cityBoard
   loadStrings("maps/cityTemplate.txt", mapData => {
@@ -464,6 +469,27 @@ function preload() {
       const offset = jsonData.offset;
       gameData.unitsData.soldier = [];
       for (let soldierId=0; soldierId<1; soldierId++) {
+        gameData.unitsData.soldier.push({});
+        for (const [action, value] of Object.entries(jsonData.actions)) {
+          gameData.unitsData.soldier[soldierId][action] = {};
+          for (const [j, ori] of Object.entries(jsonData.orientations)) {
+            gameData.unitsData.soldier[soldierId][action][ori] = [];
+            for (let i of value) {
+              let x = spriteSize[0] * i + offset[0];
+              let y = spriteSize[1] * j + offset[1];
+              gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+            }
+          }
+        }  
+      }
+    });
+  });
+
+  loadImage("resources/units/soldierRed.png", soldierAtlas => {
+    loadJSON("Src/Units/Soldier.json", jsonData => {
+      const spriteSize = jsonData.spriteSize;
+      const offset = jsonData.offset;
+      for (let soldierId=1; soldierId<2; soldierId++) {
         gameData.unitsData.soldier.push({});
         for (const [action, value] of Object.entries(jsonData.actions)) {
           gameData.unitsData.soldier[soldierId][action] = {};

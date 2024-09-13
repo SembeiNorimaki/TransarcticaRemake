@@ -34,10 +34,10 @@ class Wagon {
     "Line Inspection Car": "Merchandise", 
     "Furs":                "Merchandise", 
     "Mammoth Dung":        "Merchandise", 
-    "Oli":                 "Merchandise", 
+    "Oil":                 "Oil Tank", 
     "Missiles":            "Merchandise", 
     "Gasoline":            "Merchandise", 
-    "Plants":              "Merchandise", 
+    "Plants":              "BioGreenHouse", 
     "Fish":                "Merchandise", 
     "Rails":               "Merchandise", 
     "Salt":                "Merchandise", 
@@ -77,6 +77,8 @@ class Wagon {
     this.hp = 50;
     this.maxHp = 100;
 
+    this.defaultCargo = null;
+
     this.merchandiseValue = 0;
 
     this.destination = null;
@@ -90,16 +92,13 @@ class Wagon {
     let data = {
       "title": this.name,
       "image": this.img[this.spriteId],
-      "lines": [`Capacity: ${this.capacity} ${this.unit}`],
+      "lines": [
+        `Cargo: ${this.cargo}`,
+        `Content: ${this.usedSpace} / ${this.capacity} ${this.unit}`,
+        `Weight: ${this.weight}`
+      ],
       "buttons": ""
     };
-    if (this.usedSpace == 0) {
-      data.lines.push("Content: Empty");
-    } else {
-      data.lines.push(`Content: ${this.usedSpace} ${this.unit} of ${this.cargo}`);
-    }
-    data.lines.push(`Weight: ${this.weight}`);
-
     return data;
   }
 
@@ -148,14 +147,14 @@ class Wagon {
     //this.recalculateSpriteId();
   }
 
-  fillWagon(resourceName) {
+  fillWagon(resourceName, unitPrice) {
     this.setCargo(resourceName);  // TODO: Dangerous. This is good for merchandise, but dangerous for other wagons
-    this.addResource(this.capacity)
+    this.addResource(this.capacity, unitPrice);
   }
 
   emptyWagon() {
-    this.setCargo(null);  // TODO: Dangerous. This is good for merchandise, but dangerous for other wagons
-    this.removeResource(this.usedSpace);
+    this.setCargo(this.defaultCargo);  
+    this.removeResource(this.usedSpace, 0);
   }
 
   receiveDamage(amount) {
@@ -207,7 +206,7 @@ class Wagon {
     // )
     
     try {
-      if (game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
+      if (game.currentScene.constructor.name != "CombatScene" && game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
         mainCanvas.image(resources[this.cargo], screenPosition.x-resources[this.cargo].width/2, screenPosition.y+10);
         mainCanvas.text(this.usedSpace, screenPosition.x+resources[this.cargo].width/2, screenPosition.y+40)
       }

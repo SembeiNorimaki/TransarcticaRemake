@@ -16,33 +16,32 @@
 
 class BridgeScene {
   constructor(bridgeName) {
-    // this.backgroundImage = img;
+    this.tileHalfSize = tileHalfSizes.Z1;
     this.bridgeName = bridgeName; 
-    let conversationData = game.bridges[bridgeName].generateConversationData()
-    game.conversationPanel.fillData(conversationData);
-    game.conversationPanel.active = true;
+    this.conversationPanel = new ConversationPanel();
+    let conversationData = game.bridges[bridgeName].generateConversationData();
+    this.conversationPanel.fillData(conversationData);
+    this.conversationPanel.active = true;
 
   }
   initialize() {
   }
   onClick(mousePos) {
-    if (game.conversationPanel.active) {
-      let result = game.conversationPanel.onClick(mousePos);
+    if (this.conversationPanel.active) {
+      let result = this.conversationPanel.onClick(mousePos);
       switch(result) {
-        case(0):  // Yes
-          game.bridges[this.bridgeName].build();
-          game.currentScene = game.navigationScene;
-          game.conversationPanel.active = false;
+        case('0'):  // Yes
+          game.bridges[this.bridgeName].process();
+          game.currentScene.conversationPanel.active = false;
           game.bridges[this.bridgeName].completed = true;
-          
+          game.currentScene = game.navigationScene;
         break;
-        case(1):  // No
+        case('1'):  // No
           game.currentScene = game.navigationScene;
           game.conversationPanel.active = false;
         break;
       }
-    }
-    
+    }    
   }
 
   update() {
@@ -52,7 +51,7 @@ class BridgeScene {
   show() {
     // mainCanvas.image(this.backgroundImage, 0, 0);
     // mainCanvas.image(textToImage("You arrive next to a collapsed bridge"), 100, 800)
-    let a = 0;
+    this.conversationPanel.show();
     
   }
 }

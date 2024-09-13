@@ -1,0 +1,34 @@
+{
+  "Mine1": {
+    "name": "Mine1",
+    "revealDate": "2019-02-05T01:00",
+    "resources": {
+      "Coal": 5000
+    },
+    "orientation": "C" 
+  },
+  "Mine2": {
+    "name": "Mine2",
+    "revealDate": "2019-02-05T03:00",
+    "resources": {
+      "Coal": 5000
+    },
+    "orientation": "A" 
+  },
+  "Mine3": {
+    "name": "Mine3",
+    "revealDate": "2019-02-05T05:00",
+    "resources": {
+      "Coal": 5000
+    },
+    "orientation": "B" 
+  },
+  "Mine4": {
+    "name": "Mine4",
+    "revealDate": "2019-02-05T07:00",
+    "resources": {
+      "Coal": 5000
+    },
+    "orientation": "D" 
+  }
+}
