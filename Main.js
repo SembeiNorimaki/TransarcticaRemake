@@ -16,7 +16,7 @@
 
 
 //let mapFile = "maps/Tutorial.txt";
-let mapImage = "maps/Europe.png";
+let mapImage = "Src/maps/Europe.png";
 let loadFromLocalStorage = false;
 
 const TILE_WIDTH_HALF_Z1 = 33;
@@ -392,7 +392,7 @@ function preload() {
   });
   
   // City template map into gameData.cityBoard
-  loadStrings("maps/cityTemplate.txt", mapData => {
+  loadStrings("Src/maps/cityTemplate.txt", mapData => {
     let NCOLS = split(mapData[0], ',').length;
     let NROWS = mapData.length;
     gameData.cityBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
@@ -404,7 +404,7 @@ function preload() {
   });
 
   // Base template map into gameData.baseBoard
-  loadStrings("maps/baseTemplate.txt", mapData => {
+  loadStrings("Src/maps/baseTemplate.txt", mapData => {
     let NCOLS = split(mapData[0], ',').length;
     let NROWS = mapData.length;
     gameData.baseBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
@@ -416,7 +416,7 @@ function preload() {
   });
 
   // Industry template map into industryBoard
-  loadStrings("maps/industryTemplate.txt", mapData => {
+  loadStrings("Src/maps/industryTemplate.txt", mapData => {
     let NCOLS = split(mapData[0], ',').length;
     let NROWS = mapData.length;
     industryBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
@@ -629,10 +629,6 @@ function keyPressed() {
 
 function mousePressed() {
   game.onMousePressed(createVector(mouseX, mouseY));
-}
-
-function mouseMoved() {
-  // game.currentScene.mouseMoved();
 }
 
 function mouseReleased() {
