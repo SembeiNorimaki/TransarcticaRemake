@@ -12,6 +12,9 @@
   "FactoryHud":          { "filename": "resources/buildings/factoryHud.png", "offset": [0, 0] } ,
   "ConstructionBayHud":  { "filename": "resources/buildings/bayHud.png", "offset": [0, 0] },
 
+  "Village":  { "filename": "resources/Village_small.png", "offset": [124, 136] },
+  "Base":  { "filename": "resources/Base.png", "offset": [140, 200] },
+
   "House1":   { "filename": "resources/buildings/4597_zi4.png", "offset": [96, 96] },
   "House2":   { "filename": "resources/buildings/4598_zi4.png", "offset": [124, 124] },
   "House3":   { "filename": "resources/buildings/4599_zi4.png", "offset": [96, 96] },

@@ -15,7 +15,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Cannonball {
-  constructor(position) {
+  constructor(position, direction) {
 
     let spriteData = {
       "imgs": gameData.cannonballData,
@@ -29,29 +29,17 @@ class Cannonball {
     
 
     this.position = position;
-    this.velocity = createVector(-0.3, -0.3);
+    this.direction = direction;
+    if (this.direction == "N") {
+      this.velocity = createVector(-0.3, -0.3);
+      this.targetY = 2;
+    } else {
+      this.velocity = createVector(0.3, 0.3);
+      this.targetY = 45;
+    }
     this.diam = 10;
     this.finished = false;
-    
-    this.targetY = 2;
-    this.direction = "N";
-
-    // if (this.velocity.y < 0) {
-    //   this.targetY = 70;
-    //   this.direction = "N";
-    // } else {
-    //   this.targetY = 800;
-    //   this.direction = "S";
-    // }
   }
-
-  // explode() {
-  //   this.diam = 20;
-  //   this.velocity.y = 0;
-  //   this.finished = true;
-
-
-  // }
 
   update() {
     this.sprite.update();
@@ -60,11 +48,9 @@ class Cannonball {
     if (this.direction == "N" && (this.position.x + this.position.y) <= this.targetY) {
       this.sprite.setAction("explode");
       this.velocity.set(createVector(0,0));
-      // this.finished = true;
     } else if (this.direction == "S" && (this.position.x + this.position.y) >= this.targetY) {
       this.sprite.setAction("explode");
       this.velocity.set(createVector(0,0));
-      this.finished = true;
     }
 
     if (this.sprite.getAction() == "explode" && this.sprite.getSpriteIdx() == 6) {

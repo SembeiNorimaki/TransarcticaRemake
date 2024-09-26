@@ -21,16 +21,17 @@ class CombatScene {
     this.camera = new Camera(createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2))
     this.backgroundImg = this.populateBackgroundImg();
 
-    
     this.playerHTrain = new HorizontalTrain(Game.Players.Human, playerTrain.wagons);
-    this.playerHTrain.setPosition(createVector(40, 8));
+    this.playerHTrain.setPosition(createVector(48, 0));
+    this.playerHTrain.setAccelerationsVelocities(0.002, 0.002, 0.05, -0.05);
     this.playerHTrain.update();
 
     //Maybe there's no enemy train
     this.enemyHTrain = null;
     if (enemyTrain !== null) {
       this.enemyHTrain = new HorizontalTrain(Game.Players.Cpu, enemyTrain.wagons);
-      this.enemyHTrain.setPosition(createVector(12, -8));
+      this.enemyHTrain.setAccelerationsVelocities(0.002, 0.002, 0.05, -0.05);
+      this.enemyHTrain.setPosition(createVector(20, -16));
       this.enemyHTrain.update();
     }
 
@@ -39,9 +40,8 @@ class CombatScene {
     // TODO: currently soldierAI is inside soldier. Is this then necessary?
     this.combatAI = new CombatAI();
 
-    // TODO: more than one cannonball is possible (enemy and player shooting simultanously). Make this an array
-    this.cannonball = null;
-    this.machinegunbullets = null;
+    this.cannonballs = [];
+    this.machinegunBullets = [];
 
     this.playerUnits = [];
     this.enemyUnits = [];
@@ -182,9 +182,8 @@ class CombatScene {
   }
 
   deploySoldier(i) {
-    let spawnPosition = p5.Vector.add(this.playerHTrain.wagons[i].position, createVector(-2, -2));
-    spawnPosition.set(round(spawnPosition.x), round(spawnPosition.y))
-    this.playerUnits.push(new Rifleman(9, spawnPosition, 0, Game.Players.Human));
+    let unit = game.playerTrain.wagons[i].deploySoldier();
+    this.playerUnits.push(unit);
   }
   
   findEnemyBarracks() {
@@ -205,14 +204,26 @@ class CombatScene {
 
 
   cannonHitEnemy(pos) {
-    console.log(pos)
-    console.log(this.enemyHTrain)
-    let i = this.enemyHTrain.onClick(pos, this.camera.position);
+    let screenPos = Geometry.boardToScreen(pos, this.camera.position, this.tileHalfSize);
+    let i = this.enemyHTrain.onClick(screenPos, this.camera.position);
     if (i === null) 
       return;
     let wagonName = this.enemyHTrain.wagons[i].name;
     console.log(`Cannon hits enemy wagon ${i}: ${wagonName}`);
     this.enemyHTrain.wagons[i].receiveDamage(40);
+  }
+  cannonHitPlayer(pos) {
+    let screenPos = Geometry.boardToScreen(pos, this.camera.position, this.tileHalfSize);
+    let i = this.playerHTrain.onClick(screenPos, this.camera.position);
+    if (i === null) 
+      return;
+    let wagonName = this.playerHTrain.wagons[i].name;
+    console.log(`Cannon hits player wagon ${i}: ${wagonName}`);
+    this.playerHTrain.wagons[i].receiveDamage(40);
+  }
+
+  machinegunHitUnit(unit) {
+    unit.receiveDamage(1);
   }
 
   update() {
@@ -224,22 +235,41 @@ class CombatScene {
     
     this.combatAI.update();
 
-    if (this.cannonball !== null) {
-      this.cannonball.update();
-      if (this.cannonball.finished) {
-        this.cannonHitEnemy(this.cannonball.position)
-        this.cannonball = null;
+    // Cannonball
+    for (let [i, cannonball] of this.cannonballs.entries()) {
+      if (cannonball === null) {
+        continue;
+      }
+      cannonball.update();
+      if (cannonball.finished) {
+        if (cannonball.direction == "N") {
+          this.cannonHitEnemy(cannonball.position)
+        } else {
+          this.cannonHitPlayer(cannonball.position)
+        }
+        this.cannonballs[i] = null;
       }
     }
 
-    if (this.machinegunbullets !== null) {
-      this.machinegunbullets.update();
-      if (this.machinegunbullets.finished) {
-        // this.cannonHitEnemy(this.cannonball.position)
-        this.machinegunbullets = null;
+    // Machinegun bullets
+    for (let [i, machinegunBullet] of this.machinegunBullets.entries()) {
+      if (machinegunBullet === null) {
+        continue;
+      }
+      machinegunBullet.update();
+      // Check if the bullet hits a soldier
+      for (let unit of this.playerUnits) {
+        if (machinegunBullet.position.dist(unit.position) < 0.5) {
+          machinegunBullet.explode();
+          this.machinegunHitUnit(unit);
+        }
+      }
+
+      if (machinegunBullet.finished) {
+        
+        this.machinegunBullets[i] = null;
       }
     }
-
 
     // remove dead soldiers
     for (let i=0; i<this.playerUnits.length; i++) {
@@ -255,23 +285,21 @@ class CombatScene {
       }
     }
 
-
-    //if (frameCount % 4 === 0) {
       
-      // check if enemy in range and engage
-      for (let soldier of this.playerUnits) {
-        for(let enemy of this.enemyUnits) {
-          if (soldier.inAttackRange(enemy.position)) {
-            soldier.setAction(Soldier.Action.Shoot);
-            soldier.setTargetUnit(enemy);
-          }
+    // check if enemy in range and engage
+    for (let soldier of this.playerUnits) {
+      for(let enemy of this.enemyUnits) {
+        if (soldier.inAttackRange(enemy.position)) {
+          soldier.setAction(Soldier.Action.Shoot);
+          soldier.setTargetUnit(enemy);
         }
-        soldier.update();
       }
+      soldier.update();
+    }
 
-      for (let enemy of this.enemyUnits) {
-        enemy.update();
-      }
+    for (let enemy of this.enemyUnits) {
+      enemy.update();
+    }
   }
 
   // TODO: show in hud. Maybe make it a class
@@ -332,18 +360,22 @@ class CombatScene {
     mainCanvas.image(this.backgroundImg, 0, 0);
    
     
-    
-    
     if (this.enemyHTrain !== null) {
       this.enemyHTrain.show(this.camera.position);
     }
     
-    if (this.cannonball !== null) {
-      this.cannonball.show(this.camera.position, this.tileHalfSize);
+    for (let cannonball of this.cannonballs) {
+      if (cannonball === null) {
+        continue;
+      }
+      cannonball.show(this.camera.position, this.tileHalfSize);
     }
 
-    if (this.machinegunbullets !== null) {
-      this.machinegunbullets.show(this.camera.position);
+    for (let machinegunBullet of this.machinegunBullets) {
+      if (machinegunBullet === null) {
+        continue;
+      }
+      machinegunBullet.show(this.camera.position, this.tileHalfSize);
     }
 
     for (let soldier of this.playerUnits) {

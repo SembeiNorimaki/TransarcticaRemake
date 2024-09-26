@@ -30,8 +30,8 @@ class Rifleman extends Soldier {
     }
 
     this.sprite = new Sprite("idle", this.orientation, spriteData);
-    this.attackRange = 150;
-    this.viewRange = 200;
+    this.attackRange = 4;
+    this.viewRange = 5;
     this.hp = 100;
 
     this.fireSpeed = 10;

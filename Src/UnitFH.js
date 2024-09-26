@@ -77,6 +77,19 @@ class UnitFH {
 
   }
 
+  generatePanelInfoData() {
+    let data = {
+      "title": this.name,
+      "image": this.sprite.getHudImg(),
+      "lines": [
+      ],
+      "buttons": ["Load to Train"]
+    };
+
+    return data;
+  }
+
+
   setPosition(position) {
     this.position = createVector(position.x, position.y);
     this.tilePosition = createVector(round(position.x), round(position.y));    
@@ -454,7 +467,7 @@ class UnitFH {
     mainCanvas.text(this.action, screenPos.x, screenPos.y-40);
 
 
-    this.showBars(screenPos);
+    // this.showBars(screenPos);
     
 
     if (this.isSelected) {      

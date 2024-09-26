@@ -1,6 +1,6 @@
 class VehicleWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
+  constructor(id, name, wagonData, owner) {
+    super(id, name, wagonData, owner);
     this.loadPositions = [null, null, null, null, null];  // Has capacity for 5 vehicles
   }
 
@@ -57,5 +57,7 @@ class VehicleWagon extends Wagon {
         );
       }
     }
+
+    this.showHealthBar(screenPosition);
   }
 }

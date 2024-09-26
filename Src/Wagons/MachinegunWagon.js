@@ -15,8 +15,8 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class MachinegunWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
+  constructor(id, name, wagonData, owner) {
+    super(id, name, wagonData, owner);
     this.reloadTime = 50;
     this.reloadCount = this.reloadTime;
   }
@@ -34,8 +34,12 @@ class MachinegunWagon extends Wagon {
   fire() {
     if (this.isReadyToFire()) {
       this.reloadCount = this.reloadTime;
-      let spawnPosition = createVector(this.position.x + this.halfSize.x, this.position.y-40); 
-      game.currentScene.machinegunbullets = new MachinegunBullets(spawnPosition);
+      let spawnPosition = createVector(this.position.x, this.position.y);
+      let direction = "N";
+      if (this.owner == Game.Players.Cpu) {
+        direction = "S";
+      }
+      game.currentScene.machinegunBullets.push(new MachinegunBullets(spawnPosition, direction));
     }
   }
 

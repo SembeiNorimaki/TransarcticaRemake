@@ -15,35 +15,53 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class MachinegunBullets {
-  constructor(position) {
+  constructor(position, direction) {
+    let spriteData = {
+      "imgs": gameData.cannonballData,
+      "actions": ["move", "explode"],
+      "nSprites": {"move": 1, "explode": 7},
+      "spriteDuration": {"move": 1, "explode": 4}
+    }
+    this.orientation = 0;
+
+    this.sprite = new Sprite("move", this.orientation, spriteData);
+
     this.position = position;
-    this.velocity = createVector(0, -30);
+    this.direction = direction;
+    if (this.direction == "N") {
+      this.velocity = createVector(-0.3, -0.3);
+      this.targetY = 2;
+    } else {
+      this.velocity = createVector(0.3, 0.3);
+      this.targetY = 45;
+    }
+
+    this.diam = 10;
     this.finished = false;
-    this.targetY = 200;
-    this.direction = "N";
+  }
+  
+  explode() {
+    this.sprite.setAction("explode");
+    this.velocity.set(createVector(0,0));
   }
 
   update() {
-    this.position.add(this.velocity);
+    this.sprite.update();
 
-    if (this.direction == "N" && this.position.y <= this.targetY) {
-      //this.sprite.setAction("explode");
-      this.velocity.y = 0;
-      this.finished = true;
-    } else if (this.direction == "S" && this.position.y >= this.targetY) {
-      //this.sprite.setAction("explode");
-      this.velocity.y = 0;
+    this.position.add(this.velocity);
+    if (this.direction == "N" && (this.position.x + this.position.y) <= this.targetY) {
+      this.explode();
+    } else if (this.direction == "S" && (this.position.x + this.position.y) >= this.targetY) {
+      this.explode();
+    }
+
+    if (this.sprite.getAction() == "explode" && this.sprite.getSpriteIdx() == 6) {
       this.finished = true;
     }
   }
 
-  show(cameraPos) {
-    let position = this.position.copy();
-    if (cameraPos) {
-      position.sub(cameraPos);
-    }
-    mainCanvas.fill("black");
-    mainCanvas.circle(position.x, position.y, 5);
-    mainCanvas.noFill();
+  show(cameraPos, tileHalfSize) {
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPos, tileHalfSize);
+    this.sprite.show(screenPosition);    
   }
 }

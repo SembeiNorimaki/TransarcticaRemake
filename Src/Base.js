@@ -39,7 +39,7 @@ class Base {
     }
 
     for (let wagonData of baseData.wagons) {
-      let wagon = new Wagon(this.wagons.length, wagonData.name, wagonsData[wagonData.name]);
+      let wagon = new Wagon(this.wagons.length, wagonData.name, wagonsData[wagonData.name], Game.Players.Human);
       this.storeWagon(wagon);
     }
 
@@ -125,6 +125,23 @@ class Base {
       this.addWall(createVector(x, 99-20), 0x60);
       // this.tileBoard.board[99-20][x].setTileId(0x60)
     }
+
+    // roads
+    for (let y=44; y>24; y--) {
+      this.tileBoard.board[y][48].setTileId(0x71)
+      this.tileBoard.board[y+6*1][42].setTileId(0x71)
+      this.tileBoard.board[y+6*2][36].setTileId(0x71)
+      this.tileBoard.board[y+6*3][30].setTileId(0x71)
+      this.tileBoard.board[y+6*4][24].setTileId(0x71)
+    }
+    for (let x=24; x<44; x++) {
+      this.tileBoard.board[49][x].setTileId(0x70)
+      this.tileBoard.board[42][x+6*1].setTileId(0x70)
+      this.tileBoard.board[36][x+6*2].setTileId(0x70)
+      this.tileBoard.board[30][x+6*3].setTileId(0x70)
+      this.tileBoard.board[24][x+6*4].setTileId(0x70)
+    }
+
 
     
     // this.addWall(createVector(84, 92), 0x60);

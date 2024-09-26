@@ -15,8 +15,8 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class LocomotiveWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
+  constructor(id, name, wagonData, owner) {
+    super(id, name, wagonData, owner);
   }
 
   showWeightBar(cameraPos) {

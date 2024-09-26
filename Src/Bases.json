@@ -4,26 +4,26 @@
     "units": [
       {
         "name": "Artillery",
-        "position": [83, 80]
+        "position": [68, 43]
       },
       {
         "name": "Tank",
-        "position": [85, 80]
+        "position": [70, 41]
       },
       {
         "name": "Artillery",
-        "position": [65, 54]
+        "position": [72, 39]
       }
       
     ],
     "buildings": [      
       {
         "name": "ConstructionBay",
-        "position": [70, 50]
+        "position": [46, 35]
       },
       {
         "name": "Factory",
-        "position": [75, 45]
+        "position": [52, 34]
       }
     ],
     "wagons": [

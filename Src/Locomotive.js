@@ -15,10 +15,11 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Locomotive {
-  constructor(position, orientation) {
+  constructor(position, orientation, owner) {
     this.position = position;
     this.prevPosition = position.copy();
     this.orientation = orientation;
+    this.owner = owner;
     this.frontSensor = createVector(0.4, 0).setHeading(radians(this.orientation)).add(this.position);
     this.currentTile = this.position.copy();
     this.prevTile = this.currentTile.copy();
@@ -173,9 +174,15 @@ class Locomotive {
     //   gameData.locomotiveData[this.orientation].offset[0],
     //   gameData.locomotiveData[this.orientation].offset[1] 
     // ]);
-    mainCanvas.image(gameData.locomotiveData[this.orientation.toString()].imgList[this.spriteIdx], 
-    this.screenPos.x+gameData.locomotiveData[this.orientation.toString()].offset[0], 
-    this.screenPos.y+gameData.locomotiveData[this.orientation.toString()].offset[1]);
+    if (this.owner == Game.Players.Human) {
+      mainCanvas.image(gameData.locomotiveData.Human[this.orientation.toString()].img, 
+      this.screenPos.x+gameData.locomotiveData.Human[this.orientation.toString()].offset[0], 
+      this.screenPos.y+gameData.locomotiveData.Human[this.orientation.toString()].offset[1]);
+    } else {
+      mainCanvas.image(gameData.locomotiveData.Cpu[this.orientation.toString()].img, 
+      this.screenPos.x+gameData.locomotiveData.Cpu[this.orientation.toString()].offset[0], 
+      this.screenPos.y+gameData.locomotiveData.Cpu[this.orientation.toString()].offset[1]);
+    }
     mainCanvas.fill(255)
     mainCanvas.circle(this.screenPos.x, this.screenPos.y, 5)
     let screenPos2 = Geometry.boardToScreen(this.frontSensor, game.navigationScene.camera.position, game.currentScene.tileHalfSize);

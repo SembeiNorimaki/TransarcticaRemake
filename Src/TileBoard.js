@@ -31,21 +31,28 @@ class TileBoard {
         }
       }
     }
+
+    this.buildings = {};
+    this.units = {};
   }
 
   placeUnit(position, unit) {
+    this.units[unit.id] = unit;
     this.board[position.y][position.x].setUnitId(unit.id);
   }
 
   placeBuilding(position, building) {
+    this.buildings[building.id] = building;
     this.board[position.y][position.x].setBuildingId(building.id);
   }
 
   removeUnit(position) {
+    delete this.units[this.board[position.y][position.x].unitId];
     this.board[position.y][position.x].setUnitId(null);
   }
 
   removeBuilding(position) {
+    delete this.buildings[this.board[position.y][position.x].buildingId];
     this.board[position.y][position.x].setBuildingId(null);
   }
 
@@ -75,14 +82,24 @@ class TileBoard {
     let col, row;
     let nX = 28;
     let nY = 28;
-  
+    let i = 0;
+    
     for (let y=0; y<nY; y++) {
       col = col0;
       row = row0;
       for (let x=0; x<nX; x++) {
-        yield (createVector(col, row))
+        yield (createVector(col, row, i))
         col++;
         row--;
+        i++;
+      }
+      col = col0+1;
+      row = row0;
+      for (let x=0; x<nX; x++) {
+        yield (createVector(col, row, i))
+        col++;
+        row--;
+        i++;
       }
       col0++;
       row0++;
@@ -125,27 +142,27 @@ class TileBoard {
         }    
         
       }      
-      tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
-      if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
-        if (showOptions.showTerrain) {
-          screenPos = Geometry.boardToScreen(tilePos, cameraPos,  this.tileHalfSize);
-          Tile.draw(canvas, showOptions.outOfBoardTile, screenPos, this.tileHalfSize);
-        }
-      } else {
-        tile = this.board[tilePos.y][tilePos.x];        
-        if (showOptions.showTerrain && tile.tileId != showOptions.baseTile) {
-          tile.showTerrain(canvas, cameraPos);
-        }
-        if (showOptions.showBuildings && tile.isBuilding()) {
-          tile.showBuilding(canvas, cameraPos);
-        }
-        if (showOptions.showUnits && tile.isUnit()) {
-          tile.showUnit(canvas, cameraPos);
-        }
-        if (showOptions.showWalls && tile.isWall()) {
-          tile.showWall(canvas, cameraPos);
-        }       
-      }
+      // tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
+      // if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
+      //   if (showOptions.showTerrain) {
+      //     screenPos = Geometry.boardToScreen(tilePos, cameraPos,  this.tileHalfSize);
+      //     Tile.draw(canvas, showOptions.outOfBoardTile, screenPos, this.tileHalfSize);
+      //   }
+      // } else {
+      //   tile = this.board[tilePos.y][tilePos.x];        
+      //   if (showOptions.showTerrain && tile.tileId != showOptions.baseTile) {
+      //     tile.showTerrain(canvas, cameraPos, tilePos.z);
+      //   }
+      //   if (showOptions.showBuildings && tile.isBuilding()) {
+      //     tile.showBuilding(canvas, cameraPos);
+      //   }
+      //   if (showOptions.showUnits && tile.isUnit()) {
+      //     tile.showUnit(canvas, cameraPos);
+      //   }
+      //   if (showOptions.showWalls && tile.isWall()) {
+      //     tile.showWall(canvas, cameraPos);
+      //   }       
+      // }
       tilePos = generator.next();
     }
   }

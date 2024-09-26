@@ -149,6 +149,7 @@ class Tile {
       Tile.tileCodes[tileId].img, 
       screenPos.x - tileHalfSize.x, 
       screenPos.y - tileHalfSize.y);
+    
   }
 
   static draw2D(canvas, tileId, screenPos) {
@@ -685,20 +686,36 @@ class Tile {
   showTerrain(canvas, cameraPos) {
     let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize);    
     
-    if (this.tileId >= 0xA0) {  // Village needs ground to be drawn
-      Tile.draw(canvas, 0x01, screenPos, this.tileHalfSize)
+    if (this.tileId === 0xA0) {  // Village needs ground to be drawn
+      Tile.draw(canvas, 0x01, screenPos, this.tileHalfSize);
+      
     }
     
-    Tile.draw(canvas, this.tileId, screenPos, this.tileHalfSize)
+    Tile.draw(canvas, this.tileId, screenPos.copy(), this.tileHalfSize)
     
+    if (this.tileId === 0xA0) {
+      let cityName = citiesLocations[`${this.boardPosition.x-1},${this.boardPosition.y}`];
+      canvas.textSize(26)
+      canvas.fill(255,255,255,120)
+      canvas.noStroke();
+      canvas.rect(screenPos.x-100, screenPos.y-180-30, 200, 40)
+      canvas.fill(0)
+      canvas.textAlign(CENTER)
+      canvas.text(cityName, screenPos.x, screenPos.y-180)
+    }
     // canvas.circle(screenPos.x, screenPos.y, 10); 
     // canvas.text(this.boardPosition.array(), screenPos.x, screenPos.y); 
+    
   }
 
   showBuilding(canvas, cameraPos) {
     let screenPos = Geometry.boardToScreen(this.boardPosition, cameraPos, this.tileHalfSize); 
     // game.currentScene.buildings[this.buildingId].show(cameraPos);
-    game.currentScene.base.buildings[this.buildingId].show(cameraPos);
+    if (game.currentScene.hasOwnProperty("tileBoard")) {
+      game.currentScene.tileBoard.buildings[this.buildingId].show(canvas, cameraPos);
+    } else {
+      game.currentScene.base.tileBoard.buildings[this.buildingId].show(canvas, cameraPos);
+    }
   }
 
   showUnit(canvas, cameraPos) {

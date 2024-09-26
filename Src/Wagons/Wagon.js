@@ -57,7 +57,7 @@ class Wagon {
   };
   
 
-  constructor(id, name, wagonData) {
+  constructor(id, name, wagonData, owner) {
     this.id = id;
     this.name = name;
     this.img = wagonData.img;
@@ -77,6 +77,8 @@ class Wagon {
     this.hp = 50;
     this.maxHp = 100;
 
+    this.isWreck = false;
+
     this.defaultCargo = null;
 
     this.merchandiseValue = 0;
@@ -84,6 +86,7 @@ class Wagon {
     this.destination = null;
 
     this.infoPanelData = this.generatePanelInfoData();
+    this.owner = owner;
     
 
   }
@@ -98,6 +101,21 @@ class Wagon {
         `Weight: ${this.weight}`
       ],
       "buttons": ""
+    };
+    return data;
+  }
+
+  // In a base we want different buttons
+  generatePanelInfoDataBase() {
+    let data = {
+      "title": this.name,
+      "image": this.img[this.spriteId],
+      "lines": [
+        `Cargo: ${this.cargo}`,
+        `Content: ${this.usedSpace} / ${this.capacity} ${this.unit}`,
+        `Weight: ${this.weight}`
+      ],
+      "buttons": null
     };
     return data;
   }
@@ -160,18 +178,24 @@ class Wagon {
   receiveDamage(amount) {
     this.hp -= amount;
     if (this.hp <= 0) {
-      this.img = wagonsData.wreck_vu.img;
+      this.hp = 0;
+      this.isWreck = true;
+      if (this.owner == Game.Players.Human) {
+        this.img = wagonsData.Wreck.img;
+      } else {
+        this.img = wagonsData.Wreck_vu.img;
+      }
       this.spriteId = 0;
     }
   }
 
-  showHealthBar() {
+  showHealthBar(screenPosition) {
     mainCanvas.push();
     //mainCanvas.rectMode(CENTER)
     mainCanvas.fill("red");
-    mainCanvas.rect(this.position.x + this.halfSize.x - 50, this.position.y+30, 100, 4);
+    mainCanvas.rect(screenPosition.x - 50, screenPosition.y+5, 100, 4);
     mainCanvas.fill("green");
-    mainCanvas.rect(this.position.x + this.halfSize.x - 50, this.position.y+30, 100*this.hp/this.maxHp, 4);    
+    mainCanvas.rect(screenPosition.x - 50, screenPosition.y+5, 100*this.hp/this.maxHp, 4);    
     mainCanvas.pop();
   }
 
@@ -209,11 +233,14 @@ class Wagon {
       if (game.currentScene.constructor.name != "CombatScene" && game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
         mainCanvas.image(resources[this.cargo], screenPosition.x-resources[this.cargo].width/2, screenPosition.y+10);
         mainCanvas.text(this.usedSpace, screenPosition.x+resources[this.cargo].width/2, screenPosition.y+40)
+        // this.showHealthBar(screenPosition);
       }
       // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
     } catch {
       console.log(`Error in wagon ${this.id} ${this.name}`)
     }
+
+    
 
     
 
@@ -301,11 +328,7 @@ class LivestockWagon extends Wagon {
     super(id, name, wagonData);
   }
 }
-class BarracksWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
-  }
-}
+
 
 
 

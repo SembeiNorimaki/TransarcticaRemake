@@ -32,6 +32,7 @@ class Train {
     }
 
     this.contents = {};
+    this.owner = owner;
   }
 
   initialize(saveData) {
@@ -151,28 +152,30 @@ class Train {
     let newWagon;
     switch(wagonType) {
       case("Locomotive"):
-        newWagon = new LocomotiveWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+        newWagon = new LocomotiveWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       case("Tender"):
-        newWagon = new TenderWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+        newWagon = new TenderWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       case("Cannon"):
-        newWagon = new CannonWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+      case("Cannon_vu"):
+        newWagon = new CannonWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       case("Machinegun"):
-        newWagon = new MachinegunWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+      case("Machinegun_vu"):
+        newWagon = new MachinegunWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       case("Barracks"):
-        newWagon = new BarracksWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+        newWagon = new BarracksWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       case("Livestock"):
-        newWagon = new LivestockWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+        newWagon = new LivestockWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       case("Vehicle Wagon"):
-        newWagon = new VehicleWagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+        newWagon = new VehicleWagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
       default:
-        newWagon = new Wagon(this.wagons.length, wagonType, wagonsData[wagonType]);
+        newWagon = new Wagon(this.wagons.length, wagonType, wagonsData[wagonType], this.owner);
       break;
     }
 

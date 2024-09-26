@@ -28,8 +28,8 @@ class MerchandiseWagon extends Wagon {
     };
   }
 
-  constructor(id, name, wagonData, cargo) {
-    super(id, name, wagonData);
+  constructor(id, name, wagonData, cargo, owner) {
+    super(id, name, wagonData, owner);
     this.cargo = cargo;
   }
 }

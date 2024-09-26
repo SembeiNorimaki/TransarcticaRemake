@@ -49,10 +49,6 @@ class Game {
     this.initializeBases();
     this.initializeBridges();
     this.initializeMines();
-    
-
-    
-
   
     this.objectives = [];
     this.objectivesVisible = false;
@@ -75,14 +71,15 @@ class Game {
       "PlayerTrain": {
         coal: 1000,
         gold: 1500,
-        position: createVector(78, 366),
-        orientation: 180,
+        position: createVector(72, 350),
+        orientation: 270,
         wagons: [
           {"name": "Locomotive"},
           {"name": "Tender", "content": {"resourceName": "Coal", "qty": 1000}},
-          {"name": "Barracks"},
-          {"name": "Cannon"},
-          {"name": "Crane"},
+          // {"name": "Barracks"},
+          // {"name": "Cannon"},
+          // {"name": "Machinegun"},
+          {"name": "Vehicle Wagon", "vehicles": [null, null, null, null, null]},
           {"name": "Merchandise", "content": {"resourceName": "Rails", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
@@ -95,10 +92,13 @@ class Game {
       "EnemyTrain": {
         coal: 123,
         gold: 456,
+        position: createVector(72, 354),
+        orientation: 270,
         wagons: [
           {"name": "Locomotive_vu"},
           {"name": "Tender_vu"},
           {"name": "Merchandise_vu"},
+          {"name": "Machinegun_vu"},
           {"name": "Barracks_vu"},
           {"name": "Cannon_vu"},
         ]
@@ -159,7 +159,10 @@ class Game {
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = name;
       this.cities[name].location = createVector(x, y);
-      this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
+      
+      // this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
+      this.navigationScene.tileBoard.placeBuilding(createVector(x, y), new BuildingFH(Object.keys(this.navigationScene.tileBoard.buildings).length, "Village", createVector(x, y)));
+
     }
   }
 
@@ -174,7 +177,8 @@ class Game {
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = name;
       this.industries[name].location = createVector(x, y);
-      this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
+      this.navigationScene.tileBoard.placeBuilding(createVector(x, y), new BuildingFH(Object.keys(this.navigationScene.tileBoard.buildings).length, "Base", createVector(x, y)));
+      // this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
     }
   }
 
@@ -189,6 +193,7 @@ class Game {
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = name;
       this.bases[name].location = createVector(x, y);
+      this.navigationScene.tileBoard.placeBuilding(createVector(x, y), new BuildingFH(Object.keys(this.navigationScene.tileBoard.buildings).length, "Base", createVector(x, y)));
     }
   }
 
@@ -227,7 +232,7 @@ class Game {
    
     
     this.currentScene = this.navigationScene;
-    this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
+    // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
     // this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
     // this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
     
@@ -238,6 +243,7 @@ class Game {
     // this.currentScene = new TradeScene(this.cities["Ruhr"]);
   
     this.navigationScene.locomotive.initialize(this.savedData.PlayerTrain);
+    this.navigationScene.enemyLocomotive.initialize(this.savedData.EnemyTrain);
 
     this.currentScene.initialize();
 

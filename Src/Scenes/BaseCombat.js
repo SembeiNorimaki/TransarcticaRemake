@@ -34,15 +34,19 @@ class BaseCombat {
   }
 
   unloadUnits() {
-    let units = game.playerTrain.wagons[6].unloadAll();
     let x = 86;
     let y = 89;
-    for (let unit of units) {
-      unit.setPosition(createVector(x,y))      
-      x++;
-      y--;
-    }
-    this.base.addUnits(units);
+    for (let wagon of game.playerTrain.wagons) {
+      if (wagon.constructor.name == "VehicleWagon") {
+        let units = wagon.unloadAll();
+        for (let unit of units) {
+          unit.setPosition(createVector(x,y))      
+          x++;
+          y--;
+        }
+        this.base.addUnits(units);
+      }
+    }    
   }
 
   setAction(action) {

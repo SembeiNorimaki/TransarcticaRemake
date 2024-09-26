@@ -8,6 +8,23 @@ class BuildingFH {
     this.offset = gameData.buildingsFHData[this.name].offset;
   }
 
+  generatePanelInfoData() {
+    let data = {
+      "title": this.name,
+      "image": this.img,
+      "lines": [
+      ],
+      "buttons": ""
+    };
+
+    if (this.name == "Factory") {
+      data.buttons = ["Tank", "Artillery"];
+    } else {
+      data.buttons = ["Wagon1", "Wagon2"];
+    }
+    return data;
+  }
+
   setImage(img, offset) {
     this.img = img;
     this.halfSize = createVector(this.img.width/2, this.img.height/2);
@@ -38,6 +55,6 @@ class BuildingFH {
     let screenPos = Geometry.boardToScreen(this.position, cameraPosition, game.currentScene.tileHalfSize);
     canvas.image(this.img, screenPos.x-this.offset[0], screenPos.y-this.offset[1], this.img.width, this.img.height);
     canvas.circle(screenPos.x, screenPos.y, 10)
-    this.showBoundingBox(canvas, cameraPosition);
+    // this.showBoundingBox(canvas, cameraPosition);
   }
 }

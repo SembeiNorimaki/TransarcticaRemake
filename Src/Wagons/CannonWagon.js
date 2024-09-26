@@ -15,8 +15,8 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class CannonWagon extends Wagon {
-  constructor(id, name, wagonData) {
-    super(id, name, wagonData);
+  constructor(id, name, wagonData, owner) {
+    super(id, name, wagonData, owner);
     this.reloadTime = 30;
     this.reloadCount = this.reloadTime;
   }
@@ -36,7 +36,11 @@ class CannonWagon extends Wagon {
       this.reloadCount = this.reloadTime;
       // let screenPosition = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
       let spawnPosition = createVector(this.position.x, this.position.y); 
-      game.currentScene.cannonball = new Cannonball(spawnPosition);
+      let direction = "N";
+      if (this.owner == Game.Players.Cpu) {
+        direction = "S";
+      }
+      game.currentScene.cannonballs.push(new Cannonball(spawnPosition, direction));
     }
   }
 
@@ -52,3 +56,4 @@ class CannonWagon extends Wagon {
   }
 
 }
+

@@ -30,6 +30,13 @@ class HorizontalTrain {
     this.wagons = wagons;
   }
 
+  setAccelerationsVelocities(acc, brk, maxVel, minVel) {
+    this.accelerationStrenght = acc;
+    this.brakingStrenght = brk;
+    this.maxVelocity = maxVel;
+    this.minVelocity = minVel;
+  }
+
   
   findWagonIdxByName(name) {
     let result = [];

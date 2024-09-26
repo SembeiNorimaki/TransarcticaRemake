@@ -1,10 +1,22 @@
 {
-  "0": {"fileList": ["right_down/1.png","right_down/2.png","right_down/3.png","right_down/4.png"], "offset": [-30, -30]},
-  "45": {"fileList": ["down/1.png","down/2.png","down/3.png","down/4.png"], "offset": [-24, -24]},
-  "90": {"fileList": ["left_down/1.png","left_down/2.png","left_down/3.png","left_down/4.png"], "offset": [-34, -28]},
-  "135": {"fileList": ["left/1.png","left/2.png","left/3.png","left/4.png"], "offset": [-40, -24]},
-  "180": {"fileList": ["left_up/1.png","left_up/2.png","left_up/3.png","left_up/4.png"], "offset": [-30, -30]},
-  "225": {"fileList": ["up/1.png","up/2.png","up/3.png","up/4.png"], "offset": [-24, -24]},
-  "270": {"fileList": ["right_up/1.png","right_up/2.png","right_up/3.png","right_up/4.png"], "offset": [-34, -28]},
-  "315": {"fileList": ["right/1.png","right/2.png","right/3.png","right/4.png"], "offset": [-40, -24]}
+  "Human": {
+    "0":   {"fileName": "resources/locomotive/0.png",   "offset": [-30, -30]},
+    "45":  {"fileName": "resources/locomotive/45.png",  "offset": [-30, -30]},
+    "90":  {"fileName": "resources/locomotive/90.png",  "offset": [-30, -30]},
+    "135": {"fileName": "resources/locomotive/135.png", "offset": [-30, -30]},
+    "180": {"fileName": "resources/locomotive/180.png", "offset": [-30, -30]},
+    "225": {"fileName": "resources/locomotive/225.png", "offset": [-30, -30]},
+    "270": {"fileName": "resources/locomotive/270.png", "offset": [-30, -30]},
+    "315": {"fileName": "resources/locomotive/315.png", "offset": [-30, -30]}
+  },
+  "Cpu": {
+    "0":   {"fileName": "resources/locomotive/0r.png",   "offset": [-30, -30]},
+    "45":  {"fileName": "resources/locomotive/45r.png",  "offset": [-30, -30]},
+    "90":  {"fileName": "resources/locomotive/90r.png",  "offset": [-30, -30]},
+    "135": {"fileName": "resources/locomotive/135r.png", "offset": [-30, -30]},
+    "180": {"fileName": "resources/locomotive/180r.png", "offset": [-30, -30]},
+    "225": {"fileName": "resources/locomotive/225r.png", "offset": [-30, -30]},
+    "270": {"fileName": "resources/locomotive/270r.png", "offset": [-30, -30]},
+    "315": {"fileName": "resources/locomotive/315r.png", "offset": [-30, -30]}
+  }
 }

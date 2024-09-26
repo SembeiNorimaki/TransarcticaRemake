@@ -30,27 +30,46 @@ class CombatAI {
     this.updateCounter--;
     if (this.updateCounter > 0) 
       return;
+
+    if (this.turn % 1 == 0) {
+      // Fire cannon
+      let idx = game.currentScene.enemyHTrain.findWagonIdxByName("CannonWagon");
+      if (game.currentScene.enemyHTrain.wagons[idx].isReadyToFire()) {
+        game.currentScene.enemyHTrain.wagons[idx].fire();
+      }
+
+      idx = game.currentScene.enemyHTrain.findWagonIdxByName("MachinegunWagon");
+      if (game.currentScene.enemyHTrain.wagons[idx].isReadyToFire()) {
+        game.currentScene.enemyHTrain.wagons[idx].fire();
+      }
+    }
+
     if (this.turn == 0) {
-      game.currentScene.deployEnemySoldier(-2);
-      game.currentScene.deployEnemySoldier(-1);
-      game.currentScene.deployEnemySoldier(0);
-      game.currentScene.deployEnemySoldier(1);
-      game.currentScene.deployEnemySoldier(2);
-    } else if (this.turn == 1000) {
-      game.currentScene.enemyUnits[0].setTargetPosition(createVector(500,100));
-      game.currentScene.enemyUnits[1].setTargetPosition(createVector(750,100));
-      game.currentScene.enemyUnits[2].setTargetPosition(createVector(1000,100));
-      game.currentScene.enemyUnits[3].setTargetPosition(createVector(1300,100));
-    }
-    else if (this.turn == 1000) {
-      game.currentScene.enemyUnits[0].setTargetPosition(createVector(500,700));
-      game.currentScene.enemyUnits[1].setTargetPosition(createVector(750,700));
-      game.currentScene.enemyUnits[2].setTargetPosition(createVector(1000,700));
-      game.currentScene.enemyUnits[3].setTargetPosition(createVector(1300,700));
-    }
-    if (game.currentScene.enemyUnits.length > 0) { 
+      // game.currentScene.enemyHTrain.gearUp();
+      // game.currentScene.deployEnemySoldier(-2);
+      // game.currentScene.deployEnemySoldier(-1);
+      // game.currentScene.deployEnemySoldier(0);
+      // game.currentScene.deployEnemySoldier(1);
+      // game.currentScene.deployEnemySoldier(2);
       
-    }
+    } 
+    // else if (this.turn == 1) {
+    //   game.currentScene.enemyHTrain.gearDown();
+    //   game.currentScene.enemyUnits[0].setTargetPosition(createVector(10,10));
+    //   game.currentScene.enemyUnits[1].setTargetPosition(createVector(11,10));
+    //   game.currentScene.enemyUnits[2].setTargetPosition(createVector(12,10));
+    //   game.currentScene.enemyUnits[3].setTargetPosition(createVector(13,10));
+
+      
+    // } 
+    // else if (this.turn == 1000) {
+    //   game.currentScene.enemyUnits[0].setTargetPosition(createVector(500,700));
+    //   game.currentScene.enemyUnits[1].setTargetPosition(createVector(750,700));
+    //   game.currentScene.enemyUnits[2].setTargetPosition(createVector(1000,700));
+    //   game.currentScene.enemyUnits[3].setTargetPosition(createVector(1300,700));
+    // }
+
+    
     this.updateCounter = 100;
     this.turn++;
   }

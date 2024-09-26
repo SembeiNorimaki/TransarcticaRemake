@@ -243,6 +243,16 @@ class Soldier extends Unit {
     hudCanvas.text("Rifleman", 150, 30);
   }
 
+  showRange(screenPosition) {
+    mainCanvas.push();
+    mainCanvas.noFill();
+    mainCanvas.stroke("red");
+    mainCanvas.circle(screenPosition.x, screenPosition.y, this.range*100);
+    mainCanvas.stroke("blue");
+    mainCanvas.circle(screenPosition.x, screenPosition.y, this.viewRange*100);
+    mainCanvas.pop();
+  }
+
   show(cameraPos, tileHalfSize) {
     //console.log(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
     //mainCanvas.image(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
@@ -304,13 +314,7 @@ class Soldier extends Unit {
     
     mainCanvas.fill(0,0,0,100);
     if (this.owner == Game.Players.Cpu) {
-      mainCanvas.push();
-      mainCanvas.noFill();
-      mainCanvas.stroke("red");
-      mainCanvas.circle(screenPosition.x, screenPosition.y, this.range*2);
-      mainCanvas.stroke("blue");
-      mainCanvas.circle(screenPosition.x, screenPosition.y, this.viewRange*2);
-      mainCanvas.pop();
+      this.showRange(screenPosition);
     }
   }
 }

@@ -182,7 +182,7 @@ class TradeScene {
       if (wagonName == "Merchandise") {
         wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], resourceName);  
       } else {
-        wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+        wagon = new Wagon(1, wagonName, wagonsData[wagonName], this.owner);
       }
       wagon.setPosition(this.resourceLocations[idx]);
       wagon.purchasePrice = resourceInfo.Sell;
@@ -203,7 +203,7 @@ class TradeScene {
       if (wagonName == "Merchandise") {
         wagon = new MerchandiseWagon(1, wagonName, wagonsData[wagonName], "");  
       } else {
-        wagon = new Wagon(1, wagonName, wagonsData[wagonName]);
+        wagon = new Wagon(1, wagonName, wagonsData[wagonName], this.owner);
       }
       wagon.setPosition(this.wagonLocations[idx]);
       wagon.purchasePrice = wagonInfo.Sell;
@@ -488,6 +488,9 @@ class TradeScene {
     // Show City Name
     mainCanvas.push();
     mainCanvas.textSize(40);
+    mainCanvas.fill(255,255,255,150)
+    mainCanvas.noStroke();
+    mainCanvas.rect(mainCanvasDim[0]/2-150, 50-30, 300, 55)
     mainCanvas.fill(0);
     mainCanvas.textAlign(CENTER, CENTER)
     mainCanvas.text(this.city.name, mainCanvasDim[0]/2, 50);

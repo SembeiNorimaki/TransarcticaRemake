@@ -21,7 +21,9 @@ class NavigationScene {
 
     this.camera = new Camera(createVector(0,0));
     this.tileBoard = new TileBoard(gameData.mapBoard, this.tileHalfSize);
-    this.locomotive = new Locomotive(createVector(72, 363), 90.0);
+    
+    this.locomotive = new Locomotive(createVector(72, 363), 90.0, Game.Players.Human);
+    this.enemyLocomotive = new Locomotive(createVector(72, 363), 90.0, Game.Players.Cpu);
 
     this.backgroundImg = this.populateBackgroundImg();
     
@@ -160,6 +162,12 @@ class NavigationScene {
   update() {
     this.locomotive.update();
 
+    // check if we intercepted enemy locomotive
+    if (this.enemyLocomotive.position.dist(this.locomotive.position) < 0.2) {
+      game.currentScene = new CombatScene(game.playerTrain, game.enemyTrain);
+      return;
+    }
+
     // Center sensor puts the locomotive in a new orientation and computes next intersection
     if (this.locomotive.enteredNewTile(1)) { // center sensor
       this.locomotive.newOrientation();
@@ -221,9 +229,7 @@ class NavigationScene {
   }
 
   show() {
-
     mainCanvas.background(0);
-    // mainCanvas.image(this.backgroundImg, 0, 0);
     
     let showOptions = { 
       "outOfBoardTile": 0x00,
@@ -236,18 +242,19 @@ class NavigationScene {
     }
     this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
     
-    // showOptions = { 
-    //   "outOfBoardTile": 0x00,
-    //   "baseTile": null,
-    //   "showTerrain": false,
-    //   "showBuildings": true,
-    //   "showUnits": false,
-    //   "showWalls": false,
-    //   "showMinimap": false
-    // }
-    // this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
+    showOptions = { 
+      "outOfBoardTile": 0x00,
+      "baseTile": null,
+      "showTerrain": false,
+      "showBuildings": true,
+      "showUnits": false,
+      "showWalls": false,
+      "showMinimap": false
+    }
+    this.tileBoard.show(mainCanvas, this.camera.position, showOptions);
 
     this.locomotive.show();   
+    this.enemyLocomotive.show();   
     
     // show selected intersection
     if (this.selectedIntersection) {

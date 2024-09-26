@@ -23,6 +23,8 @@ class BaseScene {
     this.infoPanel = new InfoPanel();
     this.trafficLight = new TrafficLight(createVector(71, 22));
 
+    this.unitBuildingPosition = createVector(50,27)
+
   }
 
   initialize() {
@@ -115,9 +117,51 @@ class BaseScene {
 
     // check Info Panel    
     if (this.infoPanel.active) {
-      this.infoPanel.checkClick(mousePos)
-      console.log(`Clicked wagon ${wagonId}`);
-      return;
+      let result = this.infoPanel.onClick(mousePos);
+      if (result !== null) {
+        switch(result) {
+          case("Tank"):
+            this.infoPanel.fillData({
+              "title": "Tank",
+              "image": gameData.unitsData.Tank.Human.idle[270][0],
+              "lines": [
+                `HP: 100`,
+                `AP: 20`,
+                `Cost: 200`
+              ],
+              "buttons": ["Build Tank", "Cancel"]
+            });
+          break;
+          case("Artillery"):
+            this.infoPanel.fillData({
+              "title": "Artillery",
+              "image": gameData.unitsData.Artillery.Human.idle[270][0],
+              "lines": [
+                `HP: 50`,
+                `AP: 30`,
+                `Cost: 400`
+              ],
+              "buttons": ["Build Artillery", "Cancel"]
+            });
+          break;
+          case("Build Tank"):
+            this.base.addUnit(new Tank("Tank", this.unitBuildingPosition.copy(), Game.Players.Human));
+            this.unitBuildingPosition.x++;
+          break;
+          case("Build Artillery"):
+            this.base.addUnit(new Artillery("Artillery", this.unitBuildingPosition.copy(), Game.Players.Human));
+            this.unitBuildingPosition.x++;
+          break;
+          case("Load to Train"):
+            console.log(`Loading unit ${this.selectedUnit.name} to train`);
+            game.playerTrain.wagons[2].loadVehicle(this.selectedUnit);
+          break;
+          case("Cancel"):
+          break;
+        }
+
+        return;
+      }
     }
 
     // TrafficLight
@@ -131,6 +175,12 @@ class BaseScene {
     let wagonId = this.horizontalTrain.onClick(mousePos, this.camera.position)
     if (wagonId !== null) {
       console.log(`Clicked wagon ${wagonId}`);
+      // Show infoPanel for that wagon
+      let panelData = game.playerTrain.wagons[wagonId].generatePanelInfoDataBase();
+      panelData.buttons = ["Repair", "Sell"];
+      this.infoPanel.fillData(panelData);
+      this.infoPanel.active = true;
+
       return;
     }
    
@@ -140,6 +190,13 @@ class BaseScene {
     // check if we clicked a unit
     if (tile.isUnit()) {
       console.log(`Clicked unit ${tile.unitId}`)
+      let unit = this.base.tileBoard.units[tile.unitId];
+      this.selectedUnit = unit;
+      let panelData = unit.generatePanelInfoData();
+      this.infoPanel.fillData(panelData);
+      this.infoPanel.active = true;
+
+      return;
     }
 
     // check if we clicked a building
@@ -147,6 +204,9 @@ class BaseScene {
     for (let building of this.base.buildings) {
       if (building.checkClick(mousePos, this.camera.position)) {
         console.log(`Clicked building ${building.name}`);
+        let panelData = building.generatePanelInfoData();
+        this.infoPanel.fillData(panelData);
+        this.infoPanel.active = true;
         return;
       }
     }
@@ -166,7 +226,8 @@ class BaseScene {
       if (this.base.tileBoard.board[tilePosition.y][tilePosition.x].isBuilding()) {
         console.log("Building clicked")        
       }
-      console.log(tilePosition.array())
+      console.log(tilePosition.array());
+      this.infoPanel.active = false;
     }
   }
   onMouseReleased() {
@@ -307,6 +368,6 @@ class BaseScene {
       }
     }
 
-    //this.infoPanel.show();
+    this.infoPanel.show();
   }
 }
