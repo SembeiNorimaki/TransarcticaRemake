@@ -3,334 +3,277 @@
     "name": "Alexandria",
     "resources": {},
     "wagons": {},
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
+    "objectives": [
+      {
+        "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+        "summary": [
+          "Please help us, the city is starving!",
+          "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+        ],
+        "completed": false,
+        "resources": {
+          "Oil": {
+            "needed": 500,
+            "delivered": 0,
+            "completed": false
+          },
+          "Iron": {
+            "needed": 400,
+            "delivered": 0,
+            "completed": false
+          }
         }
       }
-    }
+    ]
   },
   "Bayreuth": {
     "name": "Beyrouth",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Delhi": {
     "name": "Delhi",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Kanosa": {
     "name": "Kanosa",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
 },
   "Mashad": {
     "name": "Machad",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Mont Saint Michel": {
     "name": "Mont Saint Michel",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Rome": {
     "name": "Rome",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
 
   "Cairo": {
     "name": "Cairo",
     "resources": {},
     "wagons": {},
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
-      }
-    }
+    "objectives": []
   },
   "Marrakesh": {
     "name": "Marrakesh",
     "resources": {},
     "wagons": {},
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
-      }
-    }
+    "objectives":  []
   },
   "Tanger": {
     "name": "Tanger",
     "resources": {},
     "wagons": {},
-    "objectives": {
-      "title": "Rebuild the bridge in the strait of Gibraltar.",
-      "summary": [
-        "The bridge that crosses the strait of Gibraltar has collapsed. Help us rebuilding it",
-        "There's a workshop near Marrakesh that can manufacture the Bridge parts needed"  
-      ],
-      "completed": false,
-      "resources": {
-        "Bridge parts": {
-          "needed": 10,
-          "delivered": 0,
-          "completed": false
-        }        
-      }
-    }
+    "objectives":  []
   },
   "Taoudeni": {
     "name": "Taoudeni",
     "resources": {},
     "wagons": {},
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
-      }
-    }
+    "objectives": []
   },
   "Tibesti": {
     "name": "Tibesti",
     "resources": {},
     "wagons": {},
-    "objectives": {
-      "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
-      "summary": [
-        "Please help us, the city is starving!",
-        "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
-      ],
-      "completed": false,
-      "resources": {
-        "Oil": {
-          "needed": 500,
-          "delivered": 0,
-          "completed": false
-        },
-        "Iron": {
-          "needed": 400,
-          "delivered": 0,
-          "completed": false
-        }
-      }
-    }
+    "objectives":  []
   },
   "Amsterdam": {
     "name": "Amsterdam",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Athens": {
     "name": "Athens",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Babylon": {
     "name": "Babylon",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Copenhagen": {
     "name": "Copenhagen",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Djirgalant": {
     "name": "Djirgalant",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Gorky": {
     "name": "Gorky",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Granada": {
     "name": "Granada",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": [
+      {
+        "title": "Deliver 500 tonnes of oil and 400 tonnes of iron to Barcelona.",
+        "summary": [
+          "Please help us, the city is starving!",
+          "We need 500 tonnes of oil and 400 tonnes of iron to survive the winter."  
+        ],
+        "completed": false,
+        "resources": {
+          "Oil": {
+            "needed": 500,
+            "delivered": 0,
+            "completed": false
+          },
+          "Iron": {
+            "needed": 400,
+            "delivered": 0,
+            "completed": false
+          }
+        }
+      },
+      {
+        "title": "This is a tilte.",
+        "summary": [
+          "Hello line 1",
+          "Hello line 2"  
+        ],
+        "completed": false,
+        "resources": {
+        }
+      }
+    ]
   },
   "Helsinki": {
     "name": "Helsinki",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Istanbul": {
     "name": "Istanbul",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Kiev": {
     "name": "Kiev",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Krasnojarsk": {
     "name": "Krasnojarsk",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Kuwait": {
     "name": "Kuwait",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "London": {
     "name": "London",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Paris": {
     "name": "Paris",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Saratov": {
     "name": "Saratov",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Sebastopol": {
     "name": "Sebastopol",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Tunis": {
     "name": "Tunis",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Turin": {
     "name": "Turin",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
 
   "In Salah": {
     "name": "In Salah",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Baku": {
     "name": "Baku",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Gdansk": {
     "name": "Gdansk",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Omsk": {
     "name": "Omsk",
     "resources": {},
     "wagons": {},    
-    "objectives": {}
+    "objectives": []
   },
   "New Peking": {
     "name": "New Peking",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Ruhr": {
     "name": "Ruhr",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Rum": {
     "name": "Rum",
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
 
   "Abu Dhabi": {
@@ -340,8 +283,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {
-    }
+    "objectives":  []
   },
   "Berlin": {
     "name": "Berlin",
@@ -351,7 +293,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Moscow": {
     "name": "Moscow",
@@ -360,7 +302,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Sparta": {
     "name": "Sparta",
@@ -370,7 +312,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Taskent": {
     "name": "Taskent",
@@ -379,7 +321,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
 
   "Luxor": {
@@ -389,7 +331,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Serov": {
     "name": "Serov",
@@ -398,7 +340,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
 
   "Bhopal": {
@@ -408,7 +350,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Casablanca": {
     "name": "Casablanca",
@@ -417,7 +359,7 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   },
   "Temir Tau": {
     "name": "Temir Tau",
@@ -426,6 +368,6 @@
     },
     "resources": {},
     "wagons": {},
-    "objectives": {}
+    "objectives": []
   }
 }

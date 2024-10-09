@@ -19,10 +19,10 @@
 let mapImage = "Src/maps/Europe.png";
 let loadFromLocalStorage = false;
 
-const TILE_WIDTH_HALF_Z1 = 33;
-const TILE_HEIGHT_HALF_Z1 = 17;
-const TILE_WIDTH_HALF_Z2 = 65;
-const TILE_HEIGHT_HALF_Z2 = 33;
+const TILE_WIDTH_HALF_Z1 = 32;
+const TILE_HEIGHT_HALF_Z1 = 16;
+const TILE_WIDTH_HALF_Z2 = 64;
+const TILE_HEIGHT_HALF_Z2 = 32;
 
 // Minimap tile size
 const TILE_MINI_WIDTH = 3;
@@ -99,18 +99,37 @@ savedGames.push(
   }
 );
 
-let ori = 7;
+// let ori = 7;
 let sounds = {};
 let explosionAnim = [];
-let table;
+// let table;
 let bridgeImage;
 
-let imgBkg;
+// let imgBkg;
 
 let characters = {};
+// let baseTemplate = {};
 
+// let atlasPlayer, atlasCpu;
 
-let atlasPlayer, atlasCpu;
+let thingsToLoad = {
+  "sounds": true,
+  "unitsFH": true,
+  "explosion": true,
+  "worldmap": true,
+  "resources": true,
+  "citiesIndustriesBasesMines": true,
+  "BuildingsFH": true,
+  "resourdcePrices, wagonPrices": true,
+  "IndustriesInfo": true,
+  "citiesIndustriesBasesBridgesMinesLocations": true,
+  "cityIndustryBaseTemplate": true,
+  "cannonball": true,
+  "hud": true,
+  "locomotiveWagons": true,
+  "tiles": true,
+}
+
 
 function preload() {
 
@@ -121,22 +140,15 @@ function preload() {
     }
   });
 
-  // Transarctica pixel font
-  loadImage("resources/font.png", img => {
-    let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
-    for (let [x, character] of alphabet.entries()) {
-      characters[character] = img.get(16*x,0,16,19);
-    }
-  });
 
-  // UnitsFH
+  // UnitsFH (Tank, Artillery and turret)
   loadJSON("Src/UnitsFH.json", jsonData => {
     for (let [name, val] of Object.entries(jsonData)) {
       const spriteSize = createVector(70, 54);
       gameData.unitsData[name] = {"Human": {"idle": {}}, "Cpu": {"idle": {}}};
 
       loadImage(val.Human, atlas => {
-        for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
+        for (let [i, ori] of [270, 225, 180, 135, 90, 45, 0, 315].entries()) {
           gameData.unitsData[name].Human.idle[ori] = [
             atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
           ];
@@ -154,7 +166,7 @@ function preload() {
 
   // Explosion
   loadImage("resources/units/x1s.png", atlas => {
-    let spriteSize = [170, 150]
+    let spriteSize = [170, 150];
     for (let i=0; i<16; i++) {
       explosionAnim.push(atlas.get(0, i*spriteSize[1], spriteSize[0], spriteSize[1]));
     }
@@ -403,17 +415,24 @@ function preload() {
     }
   });
 
+  // Base template
+  // loadJSON("Src/maps/baseTemplate.json", jsonData => {
+  //   baseTemplate = jsonData;
+  // });
+
   // Base template map into gameData.baseBoard
-  loadStrings("Src/maps/baseTemplate.txt", mapData => {
-    let NCOLS = split(mapData[0], ',').length;
-    let NROWS = mapData.length;
-    gameData.baseBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-    for (const [row, txtLine] of mapData.entries()) {
-      for (const [col, elem] of split(txtLine, ',').entries()) {
-        gameData.baseBoard[row][col] = Number("0x" + elem);
-      }
-    }
-  });
+  // loadStrings("Src/maps/baseTemplate.txt", mapData => {
+  //   let NCOLS = split(mapData[0], ',').length;
+  //   let NROWS = mapData.length;
+  //   gameData.baseBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
+  //   for (const [row, txtLine] of mapData.entries()) {
+  //     for (const [col, elem] of split(txtLine, ',').entries()) {
+  //       gameData.baseBoard[row][col] = Number("0x" + elem);
+  //     }
+  //   }
+  // });
+
+
 
   // Industry template map into industryBoard
   loadStrings("Src/maps/industryTemplate.txt", mapData => {
@@ -463,48 +482,48 @@ function preload() {
 
   // Soldiers data into gameData.unitsData.soldier
   // Structure: gameData.unitsData.soldier[soldierId (type)][action][orientation][spriteId]
-  loadImage("resources/units/soldierBlue.png", soldierAtlas => {
-    loadJSON("Src/Units/Soldier.json", jsonData => {
-      const spriteSize = jsonData.spriteSize;
-      const offset = jsonData.offset;
-      gameData.unitsData.soldier = [];
-      for (let soldierId=0; soldierId<1; soldierId++) {
-        gameData.unitsData.soldier.push({});
-        for (const [action, value] of Object.entries(jsonData.actions)) {
-          gameData.unitsData.soldier[soldierId][action] = {};
-          for (const [j, ori] of Object.entries(jsonData.orientations)) {
-            gameData.unitsData.soldier[soldierId][action][ori] = [];
-            for (let i of value) {
-              let x = spriteSize[0] * i + offset[0];
-              let y = spriteSize[1] * j + offset[1];
-              gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
-            }
-          }
-        }  
-      }
-    });
-  });
+  // loadImage("resources/units/soldierBlue.png", soldierAtlas => {
+  //   loadJSON("Src/Units/Soldier.json", jsonData => {
+  //     const spriteSize = jsonData.spriteSize;
+  //     const offset = jsonData.offset;
+  //     gameData.unitsData.soldier = [];
+  //     for (let soldierId=0; soldierId<1; soldierId++) {
+  //       gameData.unitsData.soldier.push({});
+  //       for (const [action, value] of Object.entries(jsonData.actions)) {
+  //         gameData.unitsData.soldier[soldierId][action] = {};
+  //         for (const [j, ori] of Object.entries(jsonData.orientations)) {
+  //           gameData.unitsData.soldier[soldierId][action][ori] = [];
+  //           for (let i of value) {
+  //             let x = spriteSize[0] * i + offset[0];
+  //             let y = spriteSize[1] * j + offset[1];
+  //             gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+  //           }
+  //         }
+  //       }  
+  //     }
+  //   });
+  // });
 
-  loadImage("resources/units/soldierRed.png", soldierAtlas => {
-    loadJSON("Src/Units/Soldier.json", jsonData => {
-      const spriteSize = jsonData.spriteSize;
-      const offset = jsonData.offset;
-      for (let soldierId=1; soldierId<2; soldierId++) {
-        gameData.unitsData.soldier.push({});
-        for (const [action, value] of Object.entries(jsonData.actions)) {
-          gameData.unitsData.soldier[soldierId][action] = {};
-          for (const [j, ori] of Object.entries(jsonData.orientations)) {
-            gameData.unitsData.soldier[soldierId][action][ori] = [];
-            for (let i of value) {
-              let x = spriteSize[0] * i + offset[0];
-              let y = spriteSize[1] * j + offset[1];
-              gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
-            }
-          }
-        }  
-      }
-    });
-  });
+  // loadImage("resources/units/soldierRed.png", soldierAtlas => {
+  //   loadJSON("Src/Units/Soldier.json", jsonData => {
+  //     const spriteSize = jsonData.spriteSize;
+  //     const offset = jsonData.offset;
+  //     for (let soldierId=1; soldierId<2; soldierId++) {
+  //       gameData.unitsData.soldier.push({});
+  //       for (const [action, value] of Object.entries(jsonData.actions)) {
+  //         gameData.unitsData.soldier[soldierId][action] = {};
+  //         for (const [j, ori] of Object.entries(jsonData.orientations)) {
+  //           gameData.unitsData.soldier[soldierId][action][ori] = [];
+  //           for (let i of value) {
+  //             let x = spriteSize[0] * i + offset[0];
+  //             let y = spriteSize[1] * j + offset[1];
+  //             gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+  //           }
+  //         }
+  //       }  
+  //     }
+  //   });
+  // });
 
   // loadImage("resources/units/soldierRed.png", soldierAtlas => {
   //   loadJSON("Src/Units/Soldier.json", jsonData => {
@@ -573,11 +592,20 @@ function preload() {
       tileCodes[Number(key)] = val;
     }
   });
+
+  // // Transarctica pixel font
+  // loadImage("resources/font.png", img => {
+  //   let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
+  //   for (let [x, character] of alphabet.entries()) {
+  //     characters[character] = img.get(16*x,0,16,19);
+  //   }
+  // });
   
   gameData.trafficLightData["green"] = loadImage("resources/TrafficLight/green.png");
   gameData.trafficLightData["red"] = loadImage("resources/TrafficLight/red.png");
 
   bridgeImage = loadImage("resources/bridgeScene.png")
+  questImage = loadImage("resources/exclamation.png")
   backgroundImg = loadImage('resources/misc/Transarctica.jpg');
   charactersData.Yuri = loadImage('resources/misc/comrad.png');
   charactersData.Trader = loadImage('resources/misc/trader2.png');
@@ -609,6 +637,7 @@ function setup() {
 
   mainCanvas = createGraphics(mainCanvasDim[0], mainCanvasDim[1]);
   hudCanvas = createGraphics(hudCanvasDim[0], hudCanvasDim[1]);
+  panelCanvas = createGraphics(300, mainCanvasDim[1]-300);
   
   setupCanvas();
   
@@ -619,8 +648,10 @@ function setup() {
 
 function draw() { 
   game.update();
+  
   image(mainCanvas, 0, 0);
   image(hudCanvas, 0, mainCanvasDim[1]);
+  image(panelCanvas, mainCanvasDim[0]-300, 0);
 }
 
 function keyPressed() {

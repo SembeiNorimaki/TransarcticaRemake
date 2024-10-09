@@ -26,16 +26,24 @@ class Resource {
     this.production = info.Production;
     this.sellPrice = info.Sell;
     this.buyPrice = info.Buy;
-    this.position = createVector(0, 0);
-    this.infoPanelData = {
-      "title": this.resourceName,
-      "image": this.img,
-      "lines": [
-        `Content:`,
-        `Weight:`,
-      ],
-      "buttons": ""
+    this.productionRequirements = {
+      "Clay": 10
     }
+    this.screenPosition = createVector(0, 0);
+    // this.infoPanelData = {
+    //   "title": this.resourceName,
+    //   "image": this.img,
+    //   "lines": [
+    //     `Content:`,
+    //     `Weight:`,
+    //   ],
+    //   "buttons": ""
+    // }
+
+    this.isBuyable = this.sellPrice > 0; 
+    // Manufactured resources are not bought, but manufactured in industries from other resources
+    // TODO: Set this from configuration. 
+    this.isManufactured = true;
   } 
 
   generatePanelInfoData() {
@@ -46,26 +54,48 @@ class Resource {
       "buttons": ""
     };
 
+    // if the resource is manufactured, show the price and available quantity
+    if (this.isManufactured) {
+      data.buttons = ["Manufacture 1", "Manufacture 5", "Manufacture 10", "Manufacture Max"];
+      data.lines.push("Manufacturing 1 unit requires:");
+      for (let [resourceName, qty] of Object.entries(this.productionRequirements)) {
+        data.lines.push(`  ${resourceName}: ${qty}`);
+      }
+    } 
+    // if the resource is sold, show the price and available quantity
+    else {  
+      data.buttons = ["Buy 1", "Buy 5", "Buy 10", "Buy Max"];
+      data.lines.push(`Unit Price: ${this.sellPrice} baks`);
+      data.lines.push(`Available: ${this.qtyAvailable}`);        
+    }
+
     return data;
   }
 
-  setPosition(position) {
-    this.position = position;
+  update(resourceData) {
+    this.qtyAvailable = resourceData.Available;
+    this.production = resourceData.Production;
+    this.sellPrice = resourceData.Sell;
+    this.buyPrice = resourceData.Buy;
+  }
+
+  setPosition(screenPosition) {
+    this.screenPosition = screenPosition;
   }
 
   checkClick(mousePos) {
     return (
-      mousePos.x > this.position.x  &&
-      mousePos.x < this.position.x + 100 &&
-      mousePos.y > this.position.y &&
-      mousePos.y < this.position.y + 40
+      mousePos.x > this.screenPosition.x  &&
+      mousePos.x < this.screenPosition.x + 100 &&
+      mousePos.y > this.screenPosition.y &&
+      mousePos.y < this.screenPosition.y + 40
     );
   }
 
   show() {
     // mainCanvas.rect(this.position.x, this.position.y, this.img.width, this.img.height)
-    mainCanvas.image(this.img, this.position.x, this.position.y);
+    mainCanvas.image(this.img, this.screenPosition.x, this.screenPosition.y);
     // mainCanvas.circle(this.position.x, this.position.y, 5)
-    mainCanvas.text(`${this.qtyAvailable}`, this.position.x+3, this.position.y+43);
+    mainCanvas.text(`${this.qtyAvailable}`, this.screenPosition.x+120, this.screenPosition.y+43);
   }
 }

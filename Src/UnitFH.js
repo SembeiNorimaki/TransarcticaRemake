@@ -45,7 +45,7 @@ class UnitFH {
     this.direction = createVector(0,0);
 
     this.maxAp = 200;
-    this.maxHp = 15;
+    this.maxHp = 1500;
 
     this.currentAp = this.maxAp;
     this.currentHp = this.maxHp;

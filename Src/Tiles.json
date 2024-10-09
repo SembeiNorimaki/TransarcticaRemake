@@ -56,7 +56,7 @@
     "Bridge_C": {"filename": "resources/bridges/2544_zi2.png"      },
     "Bridge_D": {"filename": "resources/bridges/2543_zi2.png"      },
     "Bridge_D2": {"filename": "resources/bridges/2543_zi2.png"      },
-    "Bridge_D1": {"filename": "resources/bridges/2500_zi2.png"      },
+
 
     "Fence_AD": {"filename": "resources/terrain/4102_zi2.png"      },
     "Fence_BC": {"filename": "resources/terrain/4103_zi2.png"      },
@@ -128,7 +128,7 @@
     "Tank": {"filename": "resources/walls/tank.png"},
     "Artillery": {"filename": "resources/walls/artillery.png"},
     "Ground7035": {"filename": "resources/terrain/Ground_small.png"},
-    "Water7035": {"filename": "resources/roadsFH/Water.png"},
+    "Water7035": {"filename": "resources/terrain/Stone_small.png"},
 
     "Track_AD_small": {"filename": "resources/tracks/AD_small.png"},
     "Track_BC_small": {"filename": "resources/tracks/BC_small.png"},

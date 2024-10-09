@@ -87,6 +87,7 @@
     "file": "BrickFactory.png",
     "files": [],    
     "resourceType": "Clay",
+    "produces": ["Bricks", "Rails"],
     "minQty": 100,
     "units": "tons",
     "price": 80,

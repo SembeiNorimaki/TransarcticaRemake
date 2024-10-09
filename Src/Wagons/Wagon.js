@@ -60,8 +60,9 @@ class Wagon {
   constructor(id, name, wagonData, owner) {
     this.id = id;
     this.name = name;
-    this.img = wagonData.img;
-    this.halfSize = createVector(wagonData.img[0].width/2, wagonData.img[0].height/2);
+    this.img = wagonData.img[0];
+
+    this.halfSize = createVector(this.img.width/2, this.img.height/2);
     this.offset = wagonData.offset;
     
     this.capacity = wagonData.capacity;
@@ -85,16 +86,14 @@ class Wagon {
 
     this.destination = null;
 
-    this.infoPanelData = this.generatePanelInfoData();
-    this.owner = owner;
-    
-
+    this.infoPanelData = null;
+    this.owner = owner;   
   }
 
   generatePanelInfoData() {
     let data = {
       "title": this.name,
-      "image": this.img[this.spriteId],
+      "image": this.img,
       "lines": [
         `Cargo: ${this.cargo}`,
         `Content: ${this.usedSpace} / ${this.capacity} ${this.unit}`,
@@ -109,7 +108,7 @@ class Wagon {
   generatePanelInfoDataBase() {
     let data = {
       "title": this.name,
-      "image": this.img[this.spriteId],
+      "image": this.img,
       "lines": [
         `Cargo: ${this.cargo}`,
         `Content: ${this.usedSpace} / ${this.capacity} ${this.unit}`,
@@ -215,12 +214,13 @@ class Wagon {
     //   position.sub(cameraPosition);
     // }
     mainCanvas.image(
-      this.img[this.spriteId], 
+      this.img, 
       screenPosition.x - this.offset[this.spriteId][0], 
       screenPosition.y - this.offset[this.spriteId][1]
     );
 
-    // this.showBoundingBox(screenPosition)
+    mainCanvas.circle(screenPosition.x, screenPosition.y, 10)
+    //this.showBoundingBox(screenPosition)
     
     // mainCanvas.line(
     //   screenPosition.x-50, screenPosition.y-50,screenPosition.x+50, screenPosition.y+50,
@@ -232,7 +232,7 @@ class Wagon {
     try {
       if (game.currentScene.constructor.name != "CombatScene" && game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
         mainCanvas.image(resources[this.cargo], screenPosition.x-resources[this.cargo].width/2, screenPosition.y+10);
-        mainCanvas.text(this.usedSpace, screenPosition.x+resources[this.cargo].width/2, screenPosition.y+40)
+        mainCanvas.text(`${this.usedSpace}/${this.capacity}`, screenPosition.x, screenPosition.y+70)
         // this.showHealthBar(screenPosition);
       }
       // mainCanvas.rect(position.x-resources[this.cargo].width/2, position.y+10, resources[this.cargo].width, resources[this.cargo].height);
@@ -284,7 +284,7 @@ class Wagon {
 
   showHud() {
     hudCanvas.background(100);
-    hudCanvas.image(this.img[this.spriteId],100, 30);
+    hudCanvas.image(this.img,100, 30);
     hudCanvas.text(this.name,300, 30);
 
     // hudCanvas.image(gameData.unitsData.soldier[90][0], 700, 30, 32, 54);

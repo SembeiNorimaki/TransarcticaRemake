@@ -17,14 +17,32 @@ class BaseScene {
 
     this.draggedWagonTrainId = null;
     this.draggedWagonDepotId = null;
+    this.selectedWagon = null;
     let binId = null;
 
     let hudData = [];
     this.infoPanel = new InfoPanel();
-    this.trafficLight = new TrafficLight(createVector(71, 22));
+    this.conversationPanel = new ConversationPanel();
 
-    this.unitBuildingPosition = createVector(50,27)
+    this.panel = new Panel(createVector(0, mainCanvasDim[1]-200), createVector(mainCanvasDim[0], 200));
 
+    // this.testFactory = new Factory(55, "Factory", createVector(0,0));
+    // let panelElements = this.testFactory.generatePanelData();
+    // this.panel.addElements(panelElements);
+
+    // this.testBay = new Bay(55, "Factory", createVector(0,0));
+    // let panelElements = this.testBay.generatePanelData();
+    // this.panel.addElements(panelElements);
+
+    this.panel.addElements(this.base.generateBuildMenu());
+
+
+    
+
+    this.trafficLight = new 
+    TrafficLight(createVector(71, 22));
+
+    this.unitBuildingPosition = createVector(50,27);
   }
 
   initialize() {
@@ -113,7 +131,16 @@ class BaseScene {
       return;
     }
 
-
+    // check Panel
+    let result = this.panel.onClick(mousePos);
+    if (result !== null) {
+      console.log(result)
+      
+      if (result.startsWith("BuildWagon")) {
+        this.base.addWagonToStorage(new Wagon(null, "Tender", wagonsData.Tender, Game.Players.Human))
+      }
+      return;
+    }
 
     // check Info Panel    
     if (this.infoPanel.active) {
@@ -152,10 +179,24 @@ class BaseScene {
             this.base.addUnit(new Artillery("Artillery", this.unitBuildingPosition.copy(), Game.Players.Human));
             this.unitBuildingPosition.x++;
           break;
+
           case("Load to Train"):
             console.log(`Loading unit ${this.selectedUnit.name} to train`);
             game.playerTrain.wagons[2].loadVehicle(this.selectedUnit);
           break;
+
+          case("Store"):
+            console.log(`Storing unit ${this.selectedWagon.name} to base`);
+            game.playerTrain.removeWagon(this.selectedWagon.id);
+            this.base.addWagonToStorage(this.selectedWagon);
+          break;
+          case("Repair"):
+            console.log(`Repair unit ${this.selectedWagon.name}`);
+          break;
+          case("Sell"):
+            console.log(`Sell unit ${this.selectedWagon.name}`);
+          break;
+
           case("Cancel"):
           break;
         }
@@ -177,10 +218,10 @@ class BaseScene {
       console.log(`Clicked wagon ${wagonId}`);
       // Show infoPanel for that wagon
       let panelData = game.playerTrain.wagons[wagonId].generatePanelInfoDataBase();
-      panelData.buttons = ["Repair", "Sell"];
+      panelData.buttons = ["Repair", "Sell", "Store"];
       this.infoPanel.fillData(panelData);
       this.infoPanel.active = true;
-
+      this.selectedWagon = this.horizontalTrain.wagons[wagonId];
       return;
     }
    
@@ -205,6 +246,9 @@ class BaseScene {
       if (building.checkClick(mousePos, this.camera.position)) {
         console.log(`Clicked building ${building.name}`);
         let panelData = building.generatePanelInfoData();
+
+        // this.conversationPanel.generateConversationPanelData();
+
         this.infoPanel.fillData(panelData);
         this.infoPanel.active = true;
         return;
@@ -230,6 +274,7 @@ class BaseScene {
       this.infoPanel.active = false;
     }
   }
+
   onMouseReleased() {
   }
 
@@ -326,29 +371,31 @@ class BaseScene {
 
     // show dragged wagon
     if (this.draggedWagonTrainId !== null) {
-      mainCanvas.image(game.playerTrain.wagons[this.draggedWagonTrainId].img[0], mouseX - game.playerTrain.wagons[this.draggedWagonTrainId].halfSize.x, mouseY);
+      
+      mainCanvas.image(game.playerTrain.wagons[this.draggedWagonTrainId].img, mouseX - game.playerTrain.wagons[this.draggedWagonTrainId].halfSize.x, mouseY);
+      
       for (let [i, wagon] of game.playerTrain.wagons.entries()) {
-        let screenPos = Geometry.boardToScreen(wagon.position, this.camera.position, this.tileHalfSize);
         if (mouseY < screenPos.y && mouseY > screenPos.y-100 && mouseX > screenPos.x) {
           if (i !== this.binId) {
             console.log(`Bin Id: ${i}`)
           }
           this.binId = i;
+          let screenPos = Geometry.boardToScreen(wagon.position, this.camera.position, this.tileHalfSize);
           mainCanvas.line(screenPos.x+wagon.halfSize.x, screenPos.y, screenPos.x+wagon.halfSize.x, screenPos.y-100)
           return;
         }
       }
-      let screenPos = Geometry.boardToScreen(this.base.wagonStorageLocations[0], this.camera.position, this.tileHalfSize);
-      if (mouseY < screenPos.y && mouseY > screenPos.y-60) {
-        mainCanvas.rect(100, screenPos.y-60,1000,60);
-        this.binId = -1;
-        return;
-      }
+      // Rectangle in storage
+      // if (mouseY < screenPos.y && mouseY > screenPos.y-60) {
+      //   mainCanvas.rect(100, screenPos.y-60,1000,60);
+      //   this.binId = -1;
+      //   return;
+      // }
     }
 
     // show dragged wagon
     if (this.draggedWagonDepotId !== null) {
-      mainCanvas.image(this.base.wagons[this.draggedWagonDepotId].img[0], mouseX - this.base.wagons[this.draggedWagonDepotId].halfSize.x, mouseY);
+      mainCanvas.image(this.base.wagons[this.draggedWagonDepotId].img, mouseX - this.base.wagons[this.draggedWagonDepotId].halfSize.x, mouseY);
       for (let [i, wagon] of game.playerTrain.wagons.entries()) {
         let screenPos = Geometry.boardToScreen(wagon.position, this.camera.position, this.tileHalfSize);
         if (mouseY < screenPos.y && mouseY > screenPos.y-100 && mouseX > screenPos.x) {
@@ -369,5 +416,6 @@ class BaseScene {
     }
 
     this.infoPanel.show();
+    this.panel.show();
   }
 }

@@ -18,13 +18,28 @@ class Industry {
   constructor(industryData) {
     this.name = industryData.name;
     this.industryType = industryData.industryType;
-    this.resources = industryData.resources;
-    this.wagons = industryData.wagons;
-    this.location = null;
+    this.tileHalfSize = tileHalfSizes.Z2;
+    
+    this.resources = {};
+    this.resourceLocations = [
+      createVector(12, 3),
+      createVector(12, 1),
+      createVector(12, -1),
+      createVector(12, -3),
+    ];
+    this.resourceLocationIdx = 0;
 
-    this.resourceName = Object.keys(this.resources)[0];
+    this.accepts = [];
+
+    this.wagons = industryData.wagons;
+
+    this.location = null;  // TODO: What is location?
+    
+    this.objectivesData = [];
+    this.objectives = [];
+
+    // this.resourceName = Object.keys(this.resources)[0];
     this.produces = industryData.produces;
-    this.requires = industryData.requires;
     this.qty = industryData.qty;
 
 
@@ -38,7 +53,7 @@ class Industry {
     }    
 
     this.buildings = [];
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(11,5)));
+    this.buildings.push(new BuildingFH(this.buildings.length, this.industryType, createVector(11,5)));
     this.buildings.at(-1).setImage(industriesInfo[this.industryType].imgTrade, this.offsetTrade = industriesInfo[this.industryType].offsetTrade);
 
     this.imgTrade = industriesInfo[this.industryType].imgTrade;
@@ -56,46 +71,52 @@ class Industry {
       ],
       "buttons": "Buy",
     }
-    let i = 2;
-    for (let [resourceName, requiredQty] of Object.entries(this.requires)) {
-      this.panelInfo.lines[i] = `  - ${requiredQty} wagons of ${resourceName}`
-      i++;
+    // let i = 2;
+    // for (let [resourceName, requiredQty] of Object.entries(this.requires)) {
+    //   this.panelInfo.lines[i] = `  - ${requiredQty} wagons of ${resourceName}`
+    //   i++;
+    // }
+
+
+  }
+
+  addNewResource(resourceData) {
+    this.resources[resourceData.Name] = new Resource(resourceData.Name, resourceData);
+    if (this.resources[resourceData.Name].isBuyable) {
+      // Assign the resource a position
+      this.resources[resourceData.Name].setPosition(Geometry.boardToScreen(this.resourceLocations[this.resourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
+      this.resourceLocationIdx++;
+      console.log(this.resourceLocationIdx)
     }
 
+    
+    for (let [dummy, resourceData] of Object.entries(this.produces)) {
+      for (let [requiredResourceName, requiredResourceQty] of Object.entries(resourceData.require)) {
+        this.accepts.push(requiredResourceName);
+      }
+    }
+      
+    
+  }
+  editResource(resourceData) {
+    if (resourceData.Name in this.resources) {
+      this.resources[resourceData.Name].update(resourceData);
+    } else {
+      this.addNewResource(resourceData);
+    }
+  }
+  addQtyToResource(resourceName, qty) {
+    this.resources[resourceName].qtyAvailable += qty;
+  }
 
+  initialize(savedData) {
+    for (let [resourceName, resourceData] of Object.entries(savedData.resources)) {
+      resourceData.Name = resourceName;
+      this.addNewResource(resourceData);
+    }
   }
 
   onClick() {
 
   }
-
-  // show(cameraPos) {
-  //   mainCanvas.noFill();
-
-  //   let screenPos = Geometry.boardToScreen(this.position, cameraPos);
-  //   mainCanvas.image(
-  //     industriesInfo[this.name].img2, 
-  //     screenPos.x-industriesInfo[this.name].offset[0]*2, 
-  //     screenPos.y-industriesInfo[this.name].offset[1]*3
-  //   );
-  //   mainCanvas.circle(screenPos.x, screenPos.y, 20);
-  //   mainCanvas.rect(screenPos.x-this.size[0]/2,screenPos.y-this.size[1], this.size[0], this.size[1])
-
-
-  //   // show wagons
-  //   for (let i=0; i<this.industryAvailableQty; i++) {
-  //     screenPos = Geometry.boardToScreen(this.wagonPositions[i], cameraPos);
-  //     mainCanvas.image(
-  //       wagonsData[this.wagonType].img[2], 
-  //       screenPos.x, 
-  //       screenPos.y - wagonsData[this.wagonType].offset[2]
-  //     );
-  //     mainCanvas.rect(
-  //       screenPos.x, screenPos.y-wagonsData[this.wagonType].dimensions[1], 
-  //       wagonsData[this.wagonType].dimensions[0],
-  //       wagonsData[this.wagonType].dimensions[1]
-  //     );
-  //   }
-    
-  // }
 }

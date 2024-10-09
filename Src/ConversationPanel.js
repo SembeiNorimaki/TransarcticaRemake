@@ -31,11 +31,17 @@ class ConversationPanel {
     this.active = false;
   }
 
+
+  addButton(buttonData) {
+    this.buttons.push(new Button(this.buttons.length, buttonData.active, buttonData.halfSize, buttonData.position, buttonData.text, buttonData.color));
+  }
+
+
   fillData(data) {
     this.characterName = data.characterName;
     this.textLines = data.textLines;
     for (let [i, buttonData] of Object.entries(data.buttons)) {
-      this.buttons.push(new Button(i, true, createVector(mainCanvasDim[0]-120,mainCanvasDim[1]-150+100*buttonData.row), createVector(100,40), buttonData.text, buttonData.color))
+      this.buttons.push(new Button(buttonData.id, true, createVector(mainCanvasDim[0]-120,mainCanvasDim[1]-150+100*buttonData.row), createVector(100,40), buttonData.text, buttonData.color))
     }
   }
 

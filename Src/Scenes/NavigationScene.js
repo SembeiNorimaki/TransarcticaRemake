@@ -208,13 +208,18 @@ class NavigationScene {
           this.locomotive.inmediateStop();        
           this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
-          game.currentScene = new IndustryTradeScene(game.industries[locationName]);  
+          game.currentScene = new TradeScene(game.industries[locationName]);  
         } else if (locationName in game.bases) {
           console.log(`Arrived to base ${locationName} at ${tileString}`);
           this.locomotive.inmediateStop();        
           this.locomotive.position = this.locomotive.prevTile.copy();
           this.locomotive.turn180();
-          game.currentScene = new BaseScene(game.bases[locationName]);  
+          // If it's one of our bases, go to BaseScene, otherwise to BaseCombat
+          if (game.bases[locationName].owner == Game.Players.Human) {
+            game.currentScene = new BaseScene(game.bases[locationName]);  
+          } else {
+            game.currentScene = new BaseCombat(game.bases[locationName]);  
+          }
         } else if (locationName in game.mines) {
           console.log("Arrived to a minee");
           game.currentScene = new MineScene(locationName);

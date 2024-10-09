@@ -43,15 +43,18 @@ class Button {
       return;
     }
     canvas.push();    
-    if (this.image !== null) {
-      canvas.image(this.image, this.position.x, this.position.y)
-    } else {
-      if (this.color !== null) {
-        canvas.fill(this.color);
-      }
-      canvas.rect(this.position.x - this.halfSize.x, this.position.y - this.halfSize.y, 2*this.halfSize.x, 2*this.halfSize.y);
-    
+    if (this.color !== null) {
+      canvas.fill(this.color);
     }
+    canvas.rect(this.position.x - this.halfSize.x, this.position.y - this.halfSize.y, 2*this.halfSize.x, 2*this.halfSize.y);
+
+    if (this.image !== null) {
+      canvas.imageMode(CENTER, CENTER)
+      canvas.image(this.image, this.position.x, this.position.y)
+    } 
+    
+        
+    
 
     if (this.text !== null) {
       canvas.fill(0);

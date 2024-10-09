@@ -55,9 +55,9 @@ class Train {
       if ("vehicles" in wagonSaveData) {
         for (let vehicleName of wagonSaveData.vehicles) {
           if (vehicleName == "Artillery") {
-            this.wagons.at(-1).loadVehicle(new Artillery(vehicleName, null, Game.Players.Human));
+            this.wagons.at(-1).loadVehicle(new Artillery(vehicleName, null, this.owner));
           } else if (vehicleName == "Tank") {
-            this.wagons.at(-1).loadVehicle(new Tank(vehicleName, null, Game.Players.Human));
+            this.wagons.at(-1).loadVehicle(new Tank(vehicleName, null, this.owner));
           }
         }
       }
@@ -76,7 +76,7 @@ class Train {
   buyResource(resourceName, qty, unitCost) {
     // check if we have enough gold
     if (unitCost*qty > this.gold) {
-      return false;
+      return "Not enough gold to complete the transaction";
     }
 
     if (resourceName in this.contents === false) {
@@ -102,7 +102,7 @@ class Train {
           wagon.addResource(qty, unitCost);
           this.contents[resourceName] += qty;
           this.gold -= unitCost * qty;
-          return true;
+          return "OK";
         } else {
           // If there's not enough space to store all the qty, fill the wagon and continue iterating to find
           // a suitable wagon to store the remaider qty
@@ -113,7 +113,7 @@ class Train {
         }
       }
     }
-    return false;    
+    return "Not enough space to store the resource";    
   }
 
   sellResource(wagonId, qty, unitPrice) {
@@ -145,6 +145,17 @@ class Train {
       }
     }
     return false;
+  }
+
+  buyWagon(wagonType, price) {
+    if (price > this.gold) {
+      return "Not enough gold to complete the transaction";
+    }
+    this.addWagon(wagonType);
+    this.wagons.at(-1).purchasePrice = price;
+    // Substract wagon cost from player gold
+    this.gold -= price;
+    return("OK");
   }
 
   addWagon(wagonType) { 

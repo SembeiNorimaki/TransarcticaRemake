@@ -17,6 +17,12 @@ class BaseCombat {
     this.currentEnemyUnit = this.base.units[0];
     this.conversationPanel = new ConversationPanel();
 
+    if (this.base.owner == Game.Players.Human) {
+      this.attacker = Game.Players.Cpu;
+    } else {
+      this.attacker = Game.Players.Human;
+    }
+
 
     
     // sounds.battle.setVolume(0.5)
@@ -28,15 +34,26 @@ class BaseCombat {
 
 
   initialize() {
-    this.horizontalTrain = new HorizontalTrain(Game.Players.Human, game.playerTrain.wagons);
-    this.horizontalTrain.setPosition(createVector(74, 98));
+    // TODO: What if it's the enemy attacking the base?
+    // Then the horizontal Train doesn't belong to the player.
+    // Also there could be 2 enemy trains attacking: Nord and South
+    if (this.attacker == Game.Players.Human) { 
+      this.horizontalTrain = new HorizontalTrain(Game.Players.Human, game.playerTrain.wagons);
+      this.horizontalTrain.setPosition(createVector(74, 98));
+      this.attackerTrain = game.playerTrain;
+    } else {
+      this.horizontalTrain = new HorizontalTrain(Game.Players.Cpu, game.enemyTrain.wagons);
+      this.horizontalTrain.setPosition(createVector(74, 98));
+      this.attackerTrain = game.enemyTrain;
+    }
+
     this.horizontalTrain.setVelocity(0.2);
   }
 
   unloadUnits() {
     let x = 86;
     let y = 89;
-    for (let wagon of game.playerTrain.wagons) {
+    for (let wagon of this.attackerTrain.wagons) {
       if (wagon.constructor.name == "VehicleWagon") {
         let units = wagon.unloadAll();
         for (let unit of units) {
@@ -270,7 +287,7 @@ class BaseCombat {
       }
     }
     this.currentEnemyIdx = 0
-    this.currentEnemyUnit = this.base.units[0];
+    this.selectNextEnemyUnit();
     this.camera.setPosition(Geometry.boardToScreen(this.currentEnemyUnit.position, createVector(mainCanvasDim[0]/2,mainCanvasDim[1]/2), this.tileHalfSize));
     this.currentPlayer = Game.Players.Cpu;
     this.currentEnemyUnit.unitAI.decideAction();
@@ -280,11 +297,34 @@ class BaseCombat {
   
 
   update() {
+    let nPlayerForces = 0;
+    let nEnemyForces = 0;
+    
     for (let [i, unit] of this.base.units.entries()) {
-      if (unit !== null && unit.isDead) {
-        this.base.removeUnit(i);
+      if (unit !== null) {
+        if(unit.isDead) {
+          this.base.removeUnit(i);
+          continue;
+        }
+        if(unit.owner == Game.Players.Human) {
+          nPlayerForces++;
+        } else {
+          nEnemyForces++;
+        }
       }
     }
+
+    // if (this.enterSequence == false) {
+    //   if (nPlayerForces == 0) {
+    //     console.log("Game Over, enemy Wins");
+    //     game.currentScene = game.navigationScene;
+    //   } else if (nEnemyForces == 0) {
+    //     console.log("Game Over, player Wins");
+    //     game.currentScene = game.navigationScene;
+    //   }
+    // }
+
+    
 
     if (this.currentPlayer === Game.Players.Cpu) {
       this.enemyTurn();

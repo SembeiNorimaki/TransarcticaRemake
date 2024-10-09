@@ -2,40 +2,57 @@
   "Barcelona_Mine": {
     "name": "Barcelona_Mine",
     "industryType": "ClayMine",
-    "produces": "Clay",
-    "requires": {
-    },
+    "produces": {},
+    "requires": {},
 
     "resources": {
       "Clay": {
         "Production": 2,
-        "Qty": 4,
+        "Available": 4,
         "Sell": 50,
         "Buy": 0
       }
     },
-    "wagons": {
-      "Gondola": {"Buy": 8}
-    },
-    "objectives": {}
+    "wagons": {},
+    "objectives": []
   },
   "Madrid_Mine": {
     "name": "Madrid_Mine",
     "industryType": "BrickFactory",
-    "produces": "Bricks",
-    "requires": {
-      "Oil": 2,
-      "Copper": 3
+    "produces": {
+      "Bricks": {
+        "require": {
+          "Clay": 2,
+          "Copper": 3
+        }
+      }
     },
     "resources": {
       "Bricks": {
         "Production": 2,
-        "Qty": 0,
-        "Sell": 30,
-        "Buy": 20
+        "Available": 0,
+        "Sell": 50,
+        "Buy": 0
       }
     },
     "wagons": {},
-    "objectives": {}
+    "objectives": []
+  },
+  "Sevilla_Mine": {
+    "name": "Sevilla_Mine",
+    "industryType": "Chemical",
+    "produces": {},
+    "requires": {},
+
+    "resources": {
+      "Oil": {
+        "Production": 2,
+        "Available": 4,
+        "Sell": 50,
+        "Buy": 0
+      }
+    },
+    "wagons": {},
+    "objectives": []
   }
 }

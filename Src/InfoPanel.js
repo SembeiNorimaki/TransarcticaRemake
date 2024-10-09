@@ -29,7 +29,7 @@ class InfoPanel {
     this.buttons = [];
 
     this.active = false;
-    
+   
   }
 
   fillData(data) {
@@ -39,8 +39,14 @@ class InfoPanel {
     this.lines = data.lines;
     let x = 60;
     this.buttons = [];
+    let buttonPositions = [
+      createVector(mainCanvasDim[0]-210,     500),
+      createVector(mainCanvasDim[0]-210+120, 500),
+      createVector(mainCanvasDim[0]-210,     440),
+      createVector(mainCanvasDim[0]-210+120, 440),
+    ];
     for (let [i, buttonText] of data.buttons.entries()) {
-      this.buttons.push(new ClickableRegion(createVector(mainCanvasDim[0]-210+120*i, 500), createVector(50, 25), null, buttonText, null));
+      this.buttons.push(new ClickableRegion(buttonPositions[i], createVector(50, 25), null, buttonText, null));
       
     }
   }
@@ -60,6 +66,7 @@ class InfoPanel {
     // }
   }
 
+
   show() {
     if (!this.active) {
       return;
@@ -71,10 +78,8 @@ class InfoPanel {
     mainCanvas.textSize(20);
     mainCanvas.textAlign(CENTER, CENTER);
     mainCanvas.imageMode(CENTER)
-    mainCanvas.rect(mainCanvasDim[0]-300,0,300,mainCanvasDim[1]-300);
-    
+    mainCanvas.rect(mainCanvasDim[0]-300,0,300,mainCanvasDim[1]-300);    
     mainCanvas.image(this.image, mainCanvasDim[0]-150, 100, this.image.width, this.image.height);
-    
     mainCanvas.fill(0);
     mainCanvas.text(this.title, mainCanvasDim[0]-150, texty);
     mainCanvas.textAlign(LEFT)
@@ -89,102 +94,5 @@ class InfoPanel {
     for (let button of this.buttons) {
       button.showText();
     }
-    
-    // if (this.activeButton !== null) {
-    //   this.buttons[this.activeButton].showText();      
-    // }    
-  }
-
-
-  showTradeWindow(canvas, train) {
-    let texty = 220;
-    mainCanvas.push();
-    mainCanvas.fill(255,255,255,100);
-    mainCanvas.rect(canvas.width-200, canvas.height/2-125, 400, canvas.height-250);
-    mainCanvas.noFill()
-    mainCanvas.textSize(20);
-    mainCanvas.fill(0);
-
-    if (this.selectedObjectType == "wagon") {
-      this.selectedObject.showHorizontal2(canvas, createVector(canvas.width-200-this.selectedObject.halfSize[0], 90));
-      mainCanvas.text(`Name: ${this.selectedObject.name}`, canvas.width-380, texty);
-      texty += 50;
-      mainCanvas.text(`Resource: ${this.selectedObject.resourceName}`, canvas.width-380, texty);
-      texty += 50;
-      //canvas.text(`Capacity: ${this.selectedObject.capacity} ${this.selectedObject.units}`, width-380, 250);  
-      //canvas.text(`Tare Weight: ${this.selectedObject.weight} tons`, width-380, 300);
-      mainCanvas.text(`Quantity: ${this.selectedObject.usedSpace} / ${this.selectedObject.capacity} ${this.selectedObject.units}`,width-380, texty);
-      texty += 50;
-
-      // Selling price:
-      // If the city needs it: double price
-      // If the city produces it: half price
-      // Otherwise: 110% of normal price
-      let sellingPrice = this.calculateSellingPrice(this.selectedObject.resourceName);
-      // if (this.selectedObject.resourceName in this.needs) {
-      //   console.log("The city needs this resource");
-      //   sellingPrice = int(resourceData[this.selectedObject.resourceName].price * 2);
-      // } else if (this.selectedObject.resourceName === this.industry.resourceName) {
-      //   console.log("The city produces this resource");
-      //   sellingPrice = int(resourceData[this.selectedObject.resourceName].price * 0.5);        
-      // } else {
-      //   sellingPrice = int(resourceData[this.selectedObject.resourceName].price * 1.1);          
-      // }
-
-      mainCanvas.text(`Selling Price: ${sellingPrice}`,width-380, texty);
-      texty += 50;
-      this.activeButtons = [this.buttons.sell, this.buttons.close];
-    } else if (this.selectedObjectType == "industry") {
-      mainCanvas.image(this.selectedObject.img, width-200, 120, this.selectedObject.img.width/3, this.selectedObject.img.height/3);
-      mainCanvas.textAlign(CENTER, CENTER);
-      //canvas.textSize(26)
-      mainCanvas.text(`${this.selectedObject.industryName}`,width-200, texty);
-      texty += 50;
-      mainCanvas.textAlign(LEFT, CENTER);
-      mainCanvas.text(`Production: ${this.selectedObject.resourceName}`, width-380, texty);
-      texty += 50;
-      mainCanvas.text(`Available: ${this.industryAvailableQty} ${this.industry.units}`, width-380, texty);
-      texty += 50;
-      mainCanvas.text(`Min qty: ${this.industry.minQty} ${this.industry.units}`, width-380, texty);
-      texty += 50;
-      mainCanvas.text(`Unit Price: ${resourceData[this.selectedObject.resourceName].price}`, width-380, texty);
-      texty += 50;
-      mainCanvas.text(`Train capacity: ${train.usedSpace[this.selectedObject.resourceName]} / ${train.capacity[this.selectedObject.resourceName]}`, width-380, texty);
-      texty += 50;
-      this.activeButtons = [this.buttons.buy, this.buttons.close];
-    } else if (this.selectedObjectType == "house") {
-      mainCanvas.image(this.selectedObject.img, width-200, 100);  
-      mainCanvas.textAlign(CENTER, CENTER);
-      //canvas.textSize(26)
-      mainCanvas.text(`${this.cityData.name}`,width-200, texty);
-      texty += 50;
-      mainCanvas.textAlign(LEFT, CENTER);
-      mainCanvas.text(`City needs:`, width-380, texty);
-      texty += 30;
-      for(const [key, val] of Object.entries(this.needs)) {
-        if (this.fulfilled[key] >= val)
-          mainCanvas.fill("green");
-        else
-          mainCanvas.fill("black");
-        
-        mainCanvas.text(`    ${key}: ${this.fulfilled[key]} / ${val}`, width-380, texty);
-        texty += 30;  
-      }
-      texty += 20;  
-      
-      //canvas.text(`Reward: ${this.cityData.reward}`, width-380, texty);
-      
-      //this.activeButtons = [this.buttons.buy];
-      
-    }
-    mainCanvas.fill(255,0,0);
-    mainCanvas.text(this.errorMsg, width-380, texty);
-    mainCanvas.fill(0);
-
-    for (let button of this.activeButtons) {
-      button.showText();
-    }
-    mainCanvas.pop();
-
   }
 }

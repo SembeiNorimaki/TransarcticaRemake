@@ -22,6 +22,16 @@ class Objective {
     this.resources = data.resources;
   }
 
+  generateConversationPanelData() {
+    return {
+      "characterName": "Trader",
+      "textLines": this.summary,
+      "buttons": {
+        "Accept": {"text": "Accept", "row": 0, "color": "green"},
+        "Reject": {"text": "Reject", "row": 1, "color": "red"},
+      }
+    }
+  }
   checkCompleted() {
     for (let [resource, val] of Object.entries(this.resources)) {
       if (!val.completed) {

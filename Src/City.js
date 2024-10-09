@@ -16,21 +16,21 @@
 
 class City {
   constructor(cityData) {
-    this.building = null;
     this.position = null;
 
+    this.tileHalfSize = tileHalfSizes.Z2;
+
     this.name = cityData.name;
-    this.resources = cityData.resources;
+    // this.resources = cityData.resources;
     this.wagons = cityData.wagons;
     this.location = null;
-    this.objectiveData = cityData.objectives;    
-    if (Object.keys(cityData.objectives).length === 0) {
-      this.objectiveData = null;
-      this.objective = null;
-    } else {
-      this.objectiveData = cityData.objectives;    
-      this.objective = new Objective(this.objectiveData);    
-    }    
+    this.objectivesData = [];
+    this.objectives = [];
+
+    for (let [i, objectiveData] of cityData.objectives.entries()) {
+      this.objectivesData.push(objectiveData);    
+      this.objectives.push(new Objective(objectiveData));
+    }  
 
     this.buildings = [];
     this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,5)));
@@ -40,11 +40,52 @@ class City {
     this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,2)));
     this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,-1)));    
 
+    this.resources = {};   //  {resourceName: resourceInstance}
+    this.resourceLocations = [
+      createVector(12, 3),
+      createVector(12, 1),
+      createVector(12, -1),
+      createVector(12, -3),
+      createVector(12, -5),
+      createVector(12, -7),
+      createVector(12, -9),
+      createVector(12, -11),
+      createVector(12, -13),
+      createVector(12, -15),
+      createVector(12, -17),
+      createVector(12, -19),
+      createVector(12, -21),
+      createVector(12, -23),
+      createVector(12, -25),
+    ];
+
+    this.resourceLocationIdx = 0;
+
   }  
 
+  addNewResource(resourceData) {
+    this.resources[resourceData.Name] = new Resource(resourceData.Name, resourceData);
+    if (this.resources[resourceData.Name].isBuyable) {
+      // Assign the resource a position
+      this.resources[resourceData.Name].setPosition(Geometry.boardToScreen(this.resourceLocations[this.resourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
+      this.resourceLocationIdx++;
+    }
+  }
+  editResource(resourceData) {
+    if (resourceData.Name in this.resources) {
+      this.resources[resourceData.Name].update(resourceData);
+    } else {
+      addNewResource(resourceData);
+    }
+  }
+  addQtyToResource(resourceName, qty) {
+    this.resources[resourceName].qtyAvailable += qty;
+  }
+
   initialize(savedData) {
-    for (let [resourceName, resourceInfo] of Object.entries(savedData.resources)) {
-      this.resources[resourceName].Available = resourceInfo.Available;
+    for (let [resourceName, resourceData] of Object.entries(savedData.resources)) {
+      resourceData.Name = resourceName;
+      this.addNewResource(resourceData);
     }
   }
 

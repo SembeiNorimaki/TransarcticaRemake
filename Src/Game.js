@@ -44,26 +44,25 @@ class Game {
     this.bases = {};
     this.bridges = {};
     this.mines = {};
-    this.initializeCities();
-    this.initializeIndustries();
-    this.initializeBases();
-    this.initializeBridges();
-    this.initializeMines();
+
+    this.newGame();
+
+
   
     this.objectives = [];
     this.objectivesVisible = false;
 
     this.currentScene = new MainMenu();
 
-    this.savedData = getItem("Save1");
-    if (this.savedData === null) {
-      console.log("Starting a new game");
-      this.newGame();
-    } else {
-      console.log("Game loaded");
-    }
+    // this.savedData = getItem("Save1");
+    // if (this.savedData === null) {
+    //   console.log("Starting a new game");
+    //   this.newGame();
+    // } else {
+    //   console.log("Game loaded");
+    // }
 
-    this.newGame();
+    
   }
 
   newGame() {
@@ -71,11 +70,12 @@ class Game {
       "PlayerTrain": {
         coal: 1000,
         gold: 1500,
-        position: createVector(72, 350),
+        position: createVector(139, 401),
         orientation: 270,
         wagons: [
           {"name": "Locomotive"},
           {"name": "Tender", "content": {"resourceName": "Coal", "qty": 1000}},
+          {"name": "Gondola", "content": {"resourceName": "Clay", "qty": 70}},
           // {"name": "Barracks"},
           // {"name": "Cannon"},
           // {"name": "Machinegun"},
@@ -101,8 +101,11 @@ class Game {
           {"name": "Machinegun_vu"},
           {"name": "Barracks_vu"},
           {"name": "Cannon_vu"},
+          {"name": "Vehicle Wagon", "vehicles": ["Artillery", "Artillery", "Artillery", "Tank", "Artillery"]}
         ]
-      }
+      },
+      "Cities": {},
+      "Industries": {}
     }
   }
 
@@ -151,6 +154,8 @@ class Game {
   initializeCities() {
     for (let [name, value] of Object.entries(gameData.citiesData)) {
       this.cities[name] = new City(value);
+      this.savedData.Cities[name] = value;
+      this.cities[name].initialize(value);
     }
 
     for (let [location, name] of Object.entries(citiesLocations)) {
@@ -169,6 +174,8 @@ class Game {
   initializeIndustries() {
     for (let [name, value] of Object.entries(gameData.industriesData)) {
       this.industries[name] = new Industry(value);
+      this.savedData.Industries[name] = value;
+      this.industries[name].initialize(value);
     }
 
     for (let [location, name] of Object.entries(industriesLocations)) {
@@ -177,8 +184,15 @@ class Game {
       let y = int(aux[1]); 
       this.events[`${x},${y}`] = name;
       this.industries[name].location = createVector(x, y);
-      this.navigationScene.tileBoard.placeBuilding(createVector(x, y), new BuildingFH(Object.keys(this.navigationScene.tileBoard.buildings).length, "Base", createVector(x, y)));
-      // this.navigationScene.tileBoard.board[y][x+1].setTileId(0xA0);
+      this.navigationScene.tileBoard.placeBuilding(
+        createVector(x, y), 
+        new BuildingFH(
+          Object.keys(this.navigationScene.tileBoard.buildings).length, 
+          `${this.industries[name].industryType}_nav`, 
+          createVector(x, y)
+        )
+      );
+      
     }
   }
 
@@ -226,6 +240,12 @@ class Game {
   }
 
   initialize() {
+    this.initializeCities();
+    this.initializeIndustries();
+    this.initializeBases();
+    this.initializeBridges();
+    this.initializeMines();
+
     // Apply saveData
     this.playerTrain.initialize(this.savedData.PlayerTrain);
     this.enemyTrain.initialize(this.savedData.EnemyTrain);
@@ -234,12 +254,13 @@ class Game {
     this.currentScene = this.navigationScene;
     // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
     // this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
-    // this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
+    this.currentScene = new BaseCombat(this.bases["MadridBase"]);
     
-    // this.currentScene = new TradeScene(this.industries["Barcelona_Mine"]);
+    // this.currentScene = new TradeScene(this.industries["Madrid_Mine"]);
    
     // this.currentScene = new TradeScene(this.cities["Alexandria"]);
     // this.currentScene = new TradeScene(this.cities["Granada"]);
+
     // this.currentScene = new TradeScene(this.cities["Ruhr"]);
   
     this.navigationScene.locomotive.initialize(this.savedData.PlayerTrain);
@@ -311,7 +332,7 @@ class Game {
 
 
 
-    if (this.gameTime.getMinutes() == 0) {
+    if (this.gameTime.getDay() == 0 && this.gameTime.getHours() == 0 && this.gameTime.getMinutes() == 0) {
       // let mineLocation = minesLocations[Math.floor(Math.random() * minesLocations.length)];
       // game.navigationScene.tileBoard.board[mineLocation.y][mineLocation.x].setTileId(0x4A);
 
