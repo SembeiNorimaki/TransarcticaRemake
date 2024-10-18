@@ -1,12 +1,20 @@
 class BuildingFH {
+
+  static Images = {}
+  static initialize(data) {
+    for (let [name, imgData] of Object.entries(data)) {
+      BuildingFH.Images[name] = imgData;
+    }
+  }
+
   constructor(id, name, position) {
     this.id = id;
     this.name = name;
     this.position = position;
     console.log(name)
-    this.img = gameData.buildingsFHData[this.name].img;
+    this.img = BuildingFH.Images[this.name].img;
     this.halfSize = createVector(this.img.width/2, this.img.height/2);
-    this.offset = gameData.buildingsFHData[this.name].offset;
+    this.offset = BuildingFH.Images[this.name].offset;
     this.hasQuest = true;
   }
 
@@ -60,7 +68,7 @@ class BuildingFH {
   
   show(canvas, cameraPosition) {
     let screenPos = Geometry.boardToScreen(this.position, cameraPosition, game.currentScene.tileHalfSize);
-    canvas.image(this.img, screenPos.x-this.offset[0], screenPos.y-this.offset[1], this.img.width, this.img.height);
+    canvas.image(this.img, screenPos.x-this.img.width/2, screenPos.y-this.img.height+game.currentScene.tileHalfSize.y, this.img.width, this.img.height);
     if (this.hasQuest) {
       canvas.image(questImage, screenPos.x-7, screenPos.y-this.halfSize.y*2.7);
     }

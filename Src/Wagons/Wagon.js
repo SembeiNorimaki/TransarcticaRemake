@@ -28,7 +28,7 @@ class Wagon {
   static resourceToWagon = {
     "Alcohol":             "Merchandise", 
     "Antiques":            "Merchandise", 
-    "Wood":                "Merchandise", 
+    "Wood":                "Wood Wagon", 
     "Fishing Rods":         "Merchandise", 
     "Caviar":              "Merchandise", 
     "Line Inspection Car": "Merchandise", 
@@ -231,7 +231,7 @@ class Wagon {
     
     try {
       if (game.currentScene.constructor.name != "CombatScene" && game.currentScene.horizontalTrain.velocity == 0 && this.usedSpace > 0) {
-        mainCanvas.image(resources[this.cargo], screenPosition.x-resources[this.cargo].width/2, screenPosition.y+10);
+        mainCanvas.image(resources[this.cargo].img, screenPosition.x-resources[this.cargo].img.width/2, screenPosition.y+10);
         mainCanvas.text(`${this.usedSpace}/${this.capacity}`, screenPosition.x, screenPosition.y+70)
         // this.showHealthBar(screenPosition);
       }

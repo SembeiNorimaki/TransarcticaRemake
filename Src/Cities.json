@@ -1,4 +1,33 @@
 {
+  "Barcelona": {
+    "name": "Barcelona",
+    "resources": {
+      "Coal": {
+        "Available": 10,
+        "Production": 1,
+        "Sell": 10,
+        "Buy": 8
+      }      
+    },
+    "wagons": {},
+    "objectives": [
+      {
+        "title": "Deliver 500 tonnes of coal to Barcelona.",
+        "summary": [
+          "Alright boy, the city needs coal to survive the winter.",
+          "There's a coal mine to the South, go and bring 500 tons of coal"
+        ],
+        "completed": false,
+        "resources": {
+          "Coal": {
+            "needed": 500,
+            "delivered": 0,
+            "completed": false
+          }
+        }
+      }
+    ]
+  },
   "Alexandria": {
     "name": "Alexandria",
     "resources": {},

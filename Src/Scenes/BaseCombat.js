@@ -1,7 +1,7 @@
 class BaseCombat {
   constructor(base) {
     this.tileHalfSize = tileHalfSizes.Z1;
-    sounds.CityMusic2.play();
+    // sounds.CityMusic2.play();
     this.base = base;
     this.camera = new Camera(createVector(0, 86*35));
     // this.camera = new Camera(createVector(0, 0));
@@ -24,6 +24,8 @@ class BaseCombat {
     }
 
 
+
+
     
     // sounds.battle.setVolume(0.5)
     // sounds.battle.play()
@@ -39,7 +41,7 @@ class BaseCombat {
     // Also there could be 2 enemy trains attacking: Nord and South
     if (this.attacker == Game.Players.Human) { 
       this.horizontalTrain = new HorizontalTrain(Game.Players.Human, game.playerTrain.wagons);
-      this.horizontalTrain.setPosition(createVector(74, 98));
+      this.horizontalTrain.setPosition(createVector(200, 0));
       this.attackerTrain = game.playerTrain;
     } else {
       this.horizontalTrain = new HorizontalTrain(Game.Players.Cpu, game.enemyTrain.wagons);
@@ -63,7 +65,10 @@ class BaseCombat {
         }
         this.base.addUnits(units);
       }
-    }    
+    }  
+    
+    this.base.addUnit(new Rifleman(this.base.units.length, createVector(95,95), Game.Players.Human))
+    this.base.addUnit(new Wolf(this.base.units.length, createVector(95,95), Game.Players.Human))
   }
 
   setAction(action) {
@@ -76,19 +81,12 @@ class BaseCombat {
   }
 
   onClick(mousePos) {
-    // right click deselects all
-    if (mouseButton === RIGHT) {
-      console.log("Deselecting all");      
-      if (this.selectedUnitId !== null) {
-        this.base.units[this.selectedUnitId].isSelected = false;
-      }
-      this.selectedUnitId = null;
-      this.selectedBuildingId = null;
-      // this.base.tileBoard.floodBoard = undefined;
-      this.setAction(UnitFH.Actions.Move);
+    // right click makes a unit look at mousePosition
+    if (mouseButton === RIGHT && this.selectedUnitId !== null) {
+      this.base.units[this.selectedUnitId].lookAt(Geometry.screenToBoard(mousePos, this.camera.position, this.tileHalfSize));
       return;
     }
-
+    
     // mouse pressed in the hud
     if (mousePos.y > mainCanvasDim[1]) {  
       console.log("Hud pressed");
@@ -173,8 +171,8 @@ class BaseCombat {
 
 
   }
-  onMouseReleased() {
 
+  onMouseReleased() {
   }
 
   processKey(key) {
@@ -193,6 +191,16 @@ class BaseCombat {
       this.setAction(UnitFH.Actions.Move);
     } else if (key == "e") {
       this.endTurn();
+    } else if (key == "Escape") {
+      // Deselect code
+      console.log("Deselecting all");      
+      if (this.selectedUnitId !== null) {
+        this.base.units[this.selectedUnitId].isSelected = false;
+      }
+      this.selectedUnitId = null;
+      this.selectedBuildingId = null;
+      // this.base.tileBoard.floodBoard = undefined;
+      this.setAction(UnitFH.Actions.Move);
     }
   }
 
@@ -356,6 +364,13 @@ class BaseCombat {
       if (unit !== null && unit.owner == this.currentPlayer) {
         //this.base.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(null);
         unit.update();
+        
+        // let viewTiles = unit.generateViewTiles();
+        // for (let tilePos of viewTiles) {
+        //   if (tilePos.x>=0 && tilePos.y >= 0) {
+        //     this.base.tileBoard.board[tilePos.y][tilePos.x].reveal();
+        //   }
+        // }
         //this.tileBoard.board[unit.tilePos.y][unit.tilePos.x].setUnitId(unit.id);
         //this.idxBoard.showSmall();
       }

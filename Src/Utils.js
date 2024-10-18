@@ -483,25 +483,36 @@ function showSoldiersShoot() {
   }
 }
 
-function showSoldiersWalk() {
+function showSoldiersWalk(unitName) {
   background(255);
   noFill();
+
+
+  nImgs = gameData.unitsData[unitName].Human.Move[0].length;
+
   let x = 100;
   let y = 10;
-  let ori = [90, 45, 0, 135, 180, 225, 270, 315];
-  let img;
-  for (let j=0; j<8; j++) {
-    fill(0)
-    text(ori[j],50,y)
-    noFill();
-    for (let i=0;i<6;i++) {
-      img = gameData.unitsData.soldier[0].walk[ori[j]][i];
 
-      rect(x,y,img.width,img.height);
+  let ori = [135, 90, 45, 0, 315, 270, 225, 180];
+  let img;
+  for (let j=0; j<ori.length; j++) {
+    
+    
+    noFill();
+    for (let i=0;i<nImgs;i++) {
+      img = gameData.unitsData[unitName].Human.Move[ori[j]][i];
+
+      rect(x, y, img.width, img.height);
       image(img, x,y);
+      stroke("red")
+      line(x+img.width/2, y, x+img.width/2, y+img.height);
+      line(x, y+img.height/2, x+img.width, y+img.height/2);
+      stroke("black")
       x+=img.width;
     }
-    y+=55;
+    fill(0);
+    text(ori[j], 50, y+img.height/2)
+    y+=img.height;
     x=100;
   }
 }

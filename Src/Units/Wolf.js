@@ -16,7 +16,8 @@
 
 class Wolf extends Unit {
   constructor(id, position, owner) {
-    super(id, position, owner);
+    super(id, "Wolf", position, owner);
+    return;
     this.role = "";
     if (this.owner == Game.Players.Cpu) {
       this.soldierAI = new SoldierAI(this.role, this);
@@ -36,6 +37,7 @@ class Wolf extends Unit {
     this.hp = 100;
     this.walkSpeed = 1;
   }
+  /*
   setOrientation(ori) {
     this.orientation = ori;
     this.sprite.setOrientation(ori);
@@ -272,7 +274,7 @@ class Wolf extends Unit {
     //}
   }
 
-
+ */
 
 
 }

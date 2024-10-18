@@ -552,6 +552,7 @@ class Tile {
     this.buildingId = null;
     this.buildingTypeId = null;
     this.isOccupied = false;
+    this.isExplored = true;
 
     this.setTileId(tileId);
 
@@ -561,6 +562,10 @@ class Tile {
     this.isIntersection = this.tileName in Tile.tileChanges;
     
     
+  }
+
+  reveal() {
+    this.isExplored = true;
   }
 
   setTileId(tileId) {
@@ -599,7 +604,7 @@ class Tile {
   }
 
   isWall() {
-    return this.tileId >= 0x60 && this.tileId <= 0x69;
+    return ((this.tileId >= 0x60 && this.tileId <= 0x69) || this.tileId == 0x23);
   }
   
   changeTile() {
@@ -690,8 +695,11 @@ class Tile {
       Tile.draw(canvas, 0x01, screenPos, this.tileHalfSize);
       
     }
-    
-    Tile.draw(canvas, this.tileId, screenPos.copy(), this.tileHalfSize)
+    if (this.isExplored) {
+      Tile.draw(canvas, this.tileId, screenPos.copy(), this.tileHalfSize)
+    } else {
+      Tile.draw(canvas, 0x20, screenPos.copy(), this.tileHalfSize)
+    }
     
     if (this.tileId === 0xA0) {
       let cityName = citiesLocations[`${this.boardPosition.x-1},${this.boardPosition.y}`];

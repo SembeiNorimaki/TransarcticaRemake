@@ -1,14 +1,17 @@
 class Base {
   constructor(baseData) {
     this.tileHalfSize = tileHalfSizes.Z1;
-    this.baseData = baseData;
     this.name = baseData.name;
+    this.baseData = baseData;    
+    
     this.units = [];
-    this.buildings = [];
-    this.location = null;
+    this.buildings = [];    
+    this.location = null;  // ??
     this.owner = baseData.owner;
     
+    this.tileBoard = new TileBoard(TileBoard.createEmptyBoard(createVector(100, 100), 0x22), this.tileHalfSize);
 
+    // TODO: Make this into a class
     this.wagonStorage = [
       {"position": createVector(71-0*3.2,33+0*3.2), "wagon": null},
       {"position": createVector(71-1*3.2,33+1*3.2), "wagon": null},
@@ -25,18 +28,6 @@ class Base {
       {"position": createVector(71-12*3.2,33+12*3.2), "wagon": null},
     ];
     this.nStoredWagons = 0;
-
-    // empty baseboard
-    let NROWS = 100;
-    let NCOLS = 100;
-    let baseBoard = Array.from(Array(NROWS), () => new Array(NCOLS));
-    for (let row=0; row<NROWS; row++) {
-      for (let col=0; col<NCOLS; col++) {
-        baseBoard[row][col] = 0x6E;
-      }
-    }
-
-    this.tileBoard = new TileBoard(baseBoard, this.tileHalfSize);
     
     this.initialize();
   }
@@ -75,31 +66,23 @@ class Base {
     return wagon;
   }
 
-
-  populateBackgroundImg() {
-    let img = createGraphics(mainCanvasDim[0]+this.tileHalfSize.x*2, mainCanvasDim[1]+this.tileHalfSize.y*6);
-    let nCols = 29;
-    let nRows = 29;
-    let x, y;
-    for (let row=0; row<nRows; row++) {
-      y = row * this.tileHalfSize.y*2;
-      for (let col=0;col<nCols; col++) {
-        x = col * this.tileHalfSize.x*2;
-        Tile.draw(img, 0x6E, createVector(x,y),this.tileHalfSize)
-        Tile.draw(img, 0x6E, createVector(x+this.tileHalfSize.x, y+this.tileHalfSize.y),this.tileHalfSize)
-      }
-    }
-    return img;
-  }
+  // populateBackgroundImg() {
+  //   let img = createGraphics(mainCanvasDim[0]+this.tileHalfSize.x*2, mainCanvasDim[1]+this.tileHalfSize.y*6);
+  //   let nCols = 29;
+  //   let nRows = 29;
+  //   let x, y;
+  //   for (let row=0; row<nRows; row++) {
+  //     y = row * this.tileHalfSize.y*2;
+  //     for (let col=0;col<nCols; col++) {
+  //       x = col * this.tileHalfSize.x*2;
+  //       Tile.draw(img, 0x6E, createVector(x,y),this.tileHalfSize)
+  //       Tile.draw(img, 0x6E, createVector(x+this.tileHalfSize.x, y+this.tileHalfSize.y),this.tileHalfSize)
+  //     }
+  //   }
+  //   return img;
+  // }
 
   initialize() {
-    this.backgroundImg = this.populateBackgroundImg();
-
-    // populate walls
-    // for (let position of this.baseData.walls) {
-    //   this.addWall(createVector(position[0], position[1]));
-    // }
-
     // populate units
     let unit;
     for (let unitData of this.baseData.units) {
@@ -107,6 +90,8 @@ class Base {
         unit = new Artillery(unitData.name, createVector(unitData.position[0], unitData.position[1]), this.owner);
       else if(unitData.name == "Tank")
         unit = new Tank(unitData.name, createVector(unitData.position[0], unitData.position[1]), this.owner);
+      else if(unitData.name == "Rifleman")
+        unit = new Rifleman(unitData.name, createVector(unitData.position[0], unitData.position[1]), this.owner);
       this.addUnit(unit);
     }
 
@@ -114,14 +99,20 @@ class Base {
     for (let buildingData of this.baseData.buildings) {
       let building = new BuildingFH(this.buildings.length, buildingData.name, createVector(buildingData.position[0], buildingData.position[1]));
       this.addBuilding(building);
-
     }
 
+    // Populate wagons
     for (let wagonData of this.baseData.wagons) {
       let wagon = new Wagon(this.nStoredWagons, wagonData.name, wagonsData[wagonData.name], Game.Players.Human);
       this.addWagonToStorage(wagon);
     }
 
+    // populate trees 
+    for (let treePos of this.baseData.trees) {
+      this.tileBoard.placeTree(createVector(treePos[0], treePos[1]));
+    }
+
+    return;
 
     // build central rail
     for (let x=0; x<99; x++) {
@@ -200,7 +191,7 @@ class Base {
     this.tileBoard.placeUnit(unit.position, unit);
     this.units.push(unit);
   }
-
+  
   addUnits(units) {
     for (let unit of units) {
       this.addUnit(unit);
@@ -224,13 +215,12 @@ class Base {
   }
 
   show(cameraPosition) {
-    //let start = performance.now()
     mainCanvas.background(0);
-    mainCanvas.image(this.backgroundImg, -cameraPosition.x % (this.tileHalfSize.x*2), -cameraPosition.y % (this.tileHalfSize.y*2));
+    //mainCanvas.image(this.backgroundImg, -cameraPosition.x % (this.tileHalfSize.x*2), -cameraPosition.y % (this.tileHalfSize.y*2));
        
     let showOptions = { 
-      "outOfBoardTile": 0x6F,
-      "baseTile": 0x6E,
+      "outOfBoardTile": 0x21,
+      "baseTile": null,
       "showTerrain": true,
       "showBuildings": true,
       "showUnits": false,
@@ -240,8 +230,8 @@ class Base {
     this.tileBoard.show(mainCanvas, cameraPosition, showOptions);
     
     showOptions = { 
-      "outOfBoardTile": 0x6F,
-      "baseTile": 0x6E,
+      "outOfBoardTile": 0x21,
+      "baseTile": null,
       "showTerrain": false,
       "showBuildings": false,
       "showUnits": true,
@@ -250,7 +240,7 @@ class Base {
     }
     this.tileBoard.show(mainCanvas, cameraPosition, showOptions);
 
-
+    return;
     for (let elem of this.wagonStorage) {
       if (elem.wagon !== null) {
         elem.wagon.showHorizontal(cameraPosition);
@@ -258,13 +248,6 @@ class Base {
     }
 
     this.showWagonStorageLocations(cameraPosition)
-
-    // this.tileBoard.showMinimap(mainCanvas)
-
-    //let end = performance.now()
-    //console.log(end-start)
-    // hudCanvas.background(0)
-    // hudCanvas.text(cameraPosition.y%tileHalfSizes.Z1.y,100,30)
   }
 }
 

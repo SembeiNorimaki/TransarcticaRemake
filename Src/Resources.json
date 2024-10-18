@@ -1,22 +1,108 @@
 {
-  "Alcohol": "/resources/resources/alcohol.png",
-  "Antiques": "/resources/resources/antiques.png",
-  "Caviar": "/resources/resources/caviar.png",
-  "Mammoth Dung": "/resources/resources/dung.png",
-  "Fish": "/resources/resources/fish.png",
-  "Fishing Rods": "/resources/resources/fishing_rods.png",
-  "Furs": "/resources/resources/furs.png",
-  "Gasoline": "/resources/resources/gasoline.png",
-  "Wolf Meat": "/resources/resources/meat.png",
-  "Missiles": "/resources/resources/missiles.png",
-  "Oil": "/resources/resources/oil.png",
-  "Plants": "/resources/resources/plants.png",
-  "Rails": "/resources/resources/rails.png",
-  "Salt": "/resources/resources/salt.png",
-  "Line Inspection Car": "/resources/resources/vehicle_inspection.png",
-  "Wood": "/resources/resources/wood.png",
-  "Coal": "/resources/resources/coal.png",
-  "Clay": "/resources/resources/clay.png",
-  "Bricks": "/resources/resources/bricks.png",
-  "Mamooth": "/resources/resources/mamooth.png"
+  "Alcohol":{ 
+    "filename": "/resources/resources/alcohol.png", 
+    "requires": {}
+  },
+  "Antiques":{ 
+    "filename": "/resources/resources/antiques.png", 
+    "requires": {}
+  },
+  "Caviar":{ 
+    "filename": "/resources/resources/caviar.png", 
+    "requires": {}
+  },
+  "Mammoth Dung": { 
+    "filename": "/resources/resources/dung.png", 
+    "requires": {}
+  },
+  "Fish":{ 
+    "filename": "/resources/resources/fish.png", 
+    "requires": {}
+  },
+  "Fishing Rods": { 
+    "filename": "/resources/resources/fishing_rods.png", 
+    "requires": {}
+  },
+  "Furs":{ 
+    "filename": "/resources/resources/furs.png", 
+    "requires": {}
+  },
+  "Wolf Meat":{ 
+    "filename": "/resources/resources/meat.png", 
+    "requires": {}
+  },
+  "Missiles":{ 
+    "filename": "/resources/resources/missiles.png", 
+    "requires": {}
+  },
+  "Petroleum":{ 
+    "filename": "/resources/resources/Crude_oil_barrel.png", 
+    "requires": {}
+  },
+  "Plants":{ 
+    "filename": "/resources/resources/plants.png", 
+    "requires": {}
+  },
+  "Salt":{ 
+    "filename": "/resources/resources/salt.png", 
+    "requires": {}
+  },
+  "Line Inspection Car": { 
+    "filename": "/resources/resources/vehicle_inspection.png", 
+    "requires": {}
+  },
+  "Wood":{
+    "filename": "/resources/resources/wood.png", 
+    "requires": {}
+  },
+  "Coal": {
+    "filename": "/resources/resources/coal.png", 
+    "requires": {}
+  },
+  "Clay":{
+    "filename": "/resources/resources/clay.png", 
+    "requires": {}
+  },
+  "Water":{
+    "filename": "/resources/resources/Water.png", 
+    "requires": {}
+  },
+
+  "Rails":{ 
+    "filename": "/resources/resources/rails.png", 
+    "requires": {
+      "Steel": 5,
+      "Wood": 10
+    }
+  },
+  "Bricks":{
+    "filename": "/resources/resources/bricks.png", 
+    "requires": {
+      "Clay": 10,
+      "Furs": 50
+    }
+  },
+  "Gasoline":{ 
+    "filename": "/resources/resources/gasoline.png", 
+    "requires": {
+      "Petroleum": 5
+    }
+  },
+  "Oil":{ 
+    "filename": "/resources/resources/oil.png", 
+    "requires": {
+      "Petroleum": 3
+    }
+  },
+  "Steel":{
+    "filename": "/resources/resources/steel.png", 
+    "requires": {
+      "Iron": 10,
+      "Coal": 10
+    }
+  },
+  "Mamooth":{
+    "filename": "/resources/resources/mamooth.png",
+    "requires": {}
+  }
 }

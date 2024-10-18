@@ -1,18 +1,19 @@
 {
-  "Laboratory":          { "filename": "resources/buildings/lab.png",       "offset": [65, 115] },
-  "AirBase":             { "filename": "resources/buildings/air.png",       "offset": [0, 0] },
+  "Laboratory":          { "filename": "resources/buildings/lab.png", "offset": [65, 115] },
+  "AirBase":             { "filename": "resources/buildings/air.png", "offset": [0, 0] },
   "Barracks":            { "filename": "resources/buildings/Barracks2.png", "offset": [80, 90] },
-  "ConstructionBay":     { "filename": "resources/buildings/bay2.png",      "offset": [125, 163] },
-  "Factory":             { "filename": "resources/buildings/factory2.png",  "offset": [108, 168] },
-  "Mining":              { "filename": "resources/buildings/mining.png",    "offset": [0, 0] },
-  "Missiles":            { "filename": "resources/buildings/missiles.png",  "offset": [0, 0] },
-  "Power":               { "filename": "resources/buildings/power.png",     "offset": [0, 0] },
-  "Radar":               { "filename": "resources/buildings/radar.png",     "offset": [90, 115] },
-  "Silo":                { "filename": "resources/buildings/silo.png",      "offset": [0, 0] },
-  "FactoryHud":          { "filename": "resources/buildings/factoryHud.png","offset": [0, 0] } ,
-  "ConstructionBayHud":  { "filename": "resources/buildings/bayHud.png",    "offset": [0, 0] },
-  "Village":             { "filename": "resources/Village_small.png",       "offset": [124, 136] },
-  "Base":                { "filename": "resources/Base.png",                "offset": [140, 200] },
+  "ConstructionBay":     { "filename": "resources/buildings/bay2.png", "offset": [125, 163] },
+  "Factory":             { "filename": "resources/buildings/factory2.png", "offset": [108, 168] },
+  "Mining":              { "filename": "resources/buildings/mining.png", "offset": [0, 0] },
+  "Missiles":            { "filename": "resources/buildings/missiles.png", "offset": [0, 0] },
+  "Power":               { "filename": "resources/buildings/power.png", "offset": [0, 0] },
+  "Radar":               { "filename": "resources/buildings/radar.png", "offset": [90, 115] },
+  "Silo":                { "filename": "resources/buildings/silo.png", "offset": [0, 0] },
+  "FactoryHud":          { "filename": "resources/buildings/factoryHud.png", "offset": [0, 0] } ,
+  "ConstructionBayHud":  { "filename": "resources/buildings/bayHud.png", "offset": [0, 0] },
+
+  "Village":  { "filename": "resources/Village_small.png", "offset": [124, 136] },
+  "Base":  { "filename": "resources/Base.png", "offset": [140, 200] },
 
   "OilRig":  { "filename": "resources/industries/OilRig.png", "offset": [140, 200] },
   "Forest":  { "filename": "resources/industries/Forest.png", "offset": [140, 200] },
@@ -24,7 +25,7 @@
   "BrickFactory":  { "filename": "resources/industries/BrickFactory.png", "offset": [140, 200] },
   "Farm":  { "filename": "resources/industries/Farm.png", "offset": [140, 200] },
   "Powerplant":  { "filename": "resources/industries/Powerplant.png", "offset": [140, 200] },
-  "Oil":  { "filename": "resources/industries/OilProcessing.png", "offset": [140, 200] },
+  "Oil":  { "filename": "resources/industries/Oil.png", "offset": [140, 200] },
   "Grain":  { "filename": "resources/industries/Grain.png", "offset": [140, 200] },
   "Chemical":  { "filename": "resources/industries/Chemical.png", "offset": [140, 200] },
   "Lumber":  { "filename": "resources/industries/LumberMill.png", "offset": [140, 200] },
@@ -39,11 +40,14 @@
   "BrickFactory_nav":  { "filename": "resources/industries/BrickFactory_nav.png", "offset": [129, 130] },
   "Farm_nav":  { "filename": "resources/industries/Farm_nav.png", "offset": [193, 186] },
   "Powerplant_nav":  { "filename": "resources/industries/Powerplant_nav.png", "offset": [200, 275] },
-  "Oil_nav":  { "filename": "resources/industries/OilProcessing_nav.png", "offset": [193, 271] },
+  "Oil_nav":  { "filename": "resources/industries/Oil_nav.png", "offset": [193, 271] },
   "Grain_nav":  { "filename": "resources/industries/Grain_nav.png", "offset": [200, 275] },
   "Chemical_nav":  { "filename": "resources/industries/Chemical_nav.png", "offset": [129, 200] },
   "Lumber_nav":  { "filename": "resources/industries/LumberMill_nav.png", "offset": [195, 275] },
 
 
-  "House2":   { "filename": "resources/buildings/4598_zi4.png", "offset": [124, 124] }
+  "House1":   { "filename": "resources/buildings/4597_zi4.png", "offset": [96, 96] },
+  "House2":   { "filename": "resources/buildings/4598_zi4.png", "offset": [124, 124] },
+  "House3":   { "filename": "resources/buildings/4599_zi4.png", "offset": [96, 96] },
+  "House4":   { "filename": "resources/buildings/4600_zi4.png", "offset": [96, 96] }
 }

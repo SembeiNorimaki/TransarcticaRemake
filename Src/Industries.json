@@ -18,20 +18,52 @@
   },
   "Madrid_Mine": {
     "name": "Madrid_Mine",
-    "industryType": "BrickFactory",
+    "industryType": "Forest",
+    "produces": {
+      "Wood": {
+        "require": {}
+      }
+    },
+    "resources": {
+      "Wood": {
+        "Production": 1,
+        "Available": 200,
+        "Sell": 0,
+        "Buy": 0
+      }
+    },
+    "wagons": {},
+    "objectives": []
+  },
+  "Madrid2_Mine": {
+    "name": "Madrid_Mine",
+    "industryType": "Forest",
     "produces": {
       "Bricks": {
         "require": {
           "Clay": 2,
-          "Copper": 3
+          "Coal": 3,
+          "Missiles": 3
+        }
+      },
+      "Caviar": {
+        "require": {
+          "Furs": 2,
+          "Coal": 3
         }
       }
     },
     "resources": {
       "Bricks": {
-        "Production": 2,
+        "Production": 0,
         "Available": 0,
-        "Sell": 50,
+        "Sell": 0,
+        "Buy": 0
+      },
+      "Caviar": {
+        "Production": 0,
+        "Available": 0,
+        "Sell": 0,
         "Buy": 0
       }
     },

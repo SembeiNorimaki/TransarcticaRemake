@@ -16,6 +16,19 @@
 
 
 class TileBoard {
+
+  static createEmptyBoard(boardSize, defaultTileId) {
+    let NCOLS = boardSize.x;
+    let NROWS = boardSize.y;    
+    let board = Array.from(Array(NROWS), () => new Array(NCOLS));
+    for (let row=0; row<NROWS; row++) {
+      for (let col=0; col<NCOLS; col++) {
+        board[row][col] = defaultTileId;
+      }
+    }
+    return board;
+  }
+
   constructor(mapData, tileHalfSize) {
     this.tileHalfSize = tileHalfSize;
     this.boardDim = createVector(mapData[0].length, mapData.length);
@@ -58,6 +71,10 @@ class TileBoard {
 
   placeWall(position, tileId) {
     this.board[position.y][position.x].setTileId(tileId);
+  }
+  
+  placeTree(position) {
+    this.board[position.y][position.x].setTileId(0x23);
   }
 
   moveUnit(ori, dst) {
@@ -142,27 +159,6 @@ class TileBoard {
         }    
         
       }      
-      // tilePos = createVector(tilePos.value.x+1, tilePos.value.y)
-      // if (tilePos.x < 0 || tilePos.y < 0 || tilePos.x >= this.boardDim.x || tilePos.y >= this.boardDim.y) {
-      //   if (showOptions.showTerrain) {
-      //     screenPos = Geometry.boardToScreen(tilePos, cameraPos,  this.tileHalfSize);
-      //     Tile.draw(canvas, showOptions.outOfBoardTile, screenPos, this.tileHalfSize);
-      //   }
-      // } else {
-      //   tile = this.board[tilePos.y][tilePos.x];        
-      //   if (showOptions.showTerrain && tile.tileId != showOptions.baseTile) {
-      //     tile.showTerrain(canvas, cameraPos, tilePos.z);
-      //   }
-      //   if (showOptions.showBuildings && tile.isBuilding()) {
-      //     tile.showBuilding(canvas, cameraPos);
-      //   }
-      //   if (showOptions.showUnits && tile.isUnit()) {
-      //     tile.showUnit(canvas, cameraPos);
-      //   }
-      //   if (showOptions.showWalls && tile.isWall()) {
-      //     tile.showWall(canvas, cameraPos);
-      //   }       
-      // }
       tilePos = generator.next();
     }
   }

@@ -1,5 +1,6 @@
 {
   "ArtilleryShoot": {"filename": "resources/sounds/artilleryShoot.mp3"},
+  "SniperShoot": {"filename": "resources/sounds/SniperFire2.wav"},
   "BattleMusic": {"filename": "resources/sounds/battle.mp3"},
   "MoveTrack": {"filename": "resources/sounds/MOVETRK.WAV"},
   "VehicleExplosion": {"filename": "resources/sounds/EXPVEHIC.WAV"},

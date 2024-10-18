@@ -81,33 +81,65 @@ class TradeScene {
       Tile.draw(img, 0x33, createVector(x+this.tileHalfSize.x,y-this.tileHalfSize.y), this.tileHalfSize);
     }
 
-    // Resource plattoforms only if the city sells resources
-    if (Object.keys(this.city.resources).length > 0) {  
-      for (let y=-6; y<=4; y++) {
-        Tile.draw(img, 0x4C, Geometry.boardToScreen(createVector(13,y), this.camera.position, this.tileHalfSize), this.tileHalfSize);
-      }
-    }
+    // Resource plattoforms only if the city sells resources and if its a city
+    // if (Object.keys(this.city.resources).length > 0 && this.city.constructor.name == "City") {  
+    //   for (let y=-6; y<=4; y++) {
+    //     Tile.draw(img, 0x4C, Geometry.boardToScreen(createVector(13,y), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    //   }
+    // }
 
-    // Wagon rails only if the city sells wagons
-    if (Object.keys(this.city.wagons).length > 0) {
-      let row;
-      for (let col=10; col<=19; col++) {
-        row = 10-col
-        Tile.draw(img, 0x32, Geometry.boardToScreen(createVector(col,row), this.camera.position, this.tileHalfSize), this.tileHalfSize);
-        Tile.draw(img, 0x33, Geometry.boardToScreen(createVector(col,row-1), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    // // Wagon rails only if the city sells wagons
+    // if (Object.keys(this.city.wagons).length > 0) {
+    //   let row;
+    //   for (let col=10; col<=19; col++) {
+    //     row = 10-col
+    //     Tile.draw(img, 0x32, Geometry.boardToScreen(createVector(col,row), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    //     Tile.draw(img, 0x33, Geometry.boardToScreen(createVector(col,row-1), this.camera.position, this.tileHalfSize), this.tileHalfSize);
 
-        Tile.draw(img, 0x32, Geometry.boardToScreen(createVector(col+2,row+2), this.camera.position, this.tileHalfSize), this.tileHalfSize);
-        Tile.draw(img, 0x33, Geometry.boardToScreen(createVector(col+2,row+2-1), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    //     Tile.draw(img, 0x32, Geometry.boardToScreen(createVector(col+2,row+2), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    //     Tile.draw(img, 0x33, Geometry.boardToScreen(createVector(col+2,row+2-1), this.camera.position, this.tileHalfSize), this.tileHalfSize);
 
-        Tile.draw(img, 0x32, Geometry.boardToScreen(createVector(col+4,row+4), this.camera.position, this.tileHalfSize), this.tileHalfSize);
-        Tile.draw(img, 0x33, Geometry.boardToScreen(createVector(col+4,row+4-1), this.camera.position, this.tileHalfSize), this.tileHalfSize);
-      }
-    }
+    //     Tile.draw(img, 0x32, Geometry.boardToScreen(createVector(col+4,row+4), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    //     Tile.draw(img, 0x33, Geometry.boardToScreen(createVector(col+4,row+4-1), this.camera.position, this.tileHalfSize), this.tileHalfSize);
+    //   }
+    // }
+
 
     for (let building of this.city.buildings) {
       //Tile.draw(img, 0xA1, Geometry.boardToScreen(building.position, this.camera.position, this.tileHalfSize), this.tileHalfSize);
       building.show(img, this.camera.position)
     }
+
+    // Input zones
+    img.beginShape();
+    let aux;
+    for (let pos of [[7.5, 4.5], [13.5, 4.5], [13.5, 7.5], [7.5, 7.5]]) {
+      aux = Geometry.boardToScreen(createVector(pos[0], pos[1]), this.camera.position, this.tileHalfSize);
+      img.vertex(aux.x, aux.y);
+    }
+    img.endShape(CLOSE);
+
+    // Output zones
+    img.beginShape();
+    for (let pos of [[14.5, -2.5], [14.5, 3.5], [17.5, 3.5], [17.5, -2.5]]) {
+      let aux = Geometry.boardToScreen(createVector(pos[0], pos[1]), this.camera.position, this.tileHalfSize);
+      img.vertex(aux.x, aux.y);
+    }
+    img.endShape(CLOSE);
+
+    // Arrows
+    aux = Geometry.boardToScreen(createVector(13.5, 3), createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize);
+    img.image(arrowImg.SE, aux.x,aux.y);    
+    aux = Geometry.boardToScreen(createVector(13.5, 1), createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize);
+    img.image(arrowImg.SE, aux.x,aux.y);    
+    aux = Geometry.boardToScreen(createVector(13.5, -1), createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize);
+    img.image(arrowImg.SE, aux.x,aux.y);    
+    aux = Geometry.boardToScreen(createVector(12.5, 4), createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize);
+    img.image(arrowImg.NE, aux.x,aux.y);
+    aux = Geometry.boardToScreen(createVector(10.5, 4), createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize);
+    img.image(arrowImg.NE, aux.x,aux.y);
+    aux = Geometry.boardToScreen(createVector(8.5, 4), createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize);
+    img.image(arrowImg.NE, aux.x,aux.y);
 
     return img;
   }
@@ -216,7 +248,10 @@ class TradeScene {
     }
 
     if (requirementsSatisfied) {
-
+      this.city.addQtyToResource(this.selectedBuyableResourceName, qtyToProduce);
+      for (let [resourceName, requiredUnitQty] of Object.entries(requirements)) {
+        this.city.addQtyToResource(resourceName, -requiredUnitQty);
+      }
     } 
   }
 
@@ -255,12 +290,27 @@ class TradeScene {
         "Name": resourceName,
         "Available": qty,
         "Production": 0,
+        "InputOrOutput": "Input",
         "Buy": null,
         "Sell": null
       })
     }
     game.playerTrain.sellResource(this.selectedTrainWagonIdx, qty, 0);
     
+  }
+  
+  loadResource(qty) {
+    let resource = this.city.resources[this.selectedBuyableResourceName];
+    if (resource.qtyAvailable < qty) {
+      this.displayError("Not enough availability");
+      return;
+    }
+    let result = game.playerTrain.buyResource(resource.resourceName, qty, 0);
+    if (result == "OK") {  // If the resource was succesfully bought
+      this.city.addQtyToResource(resource.resourceName, -qty);
+    } else {
+      this.displayError(result);
+    }    
   }
 
 
@@ -341,17 +391,15 @@ class TradeScene {
       let price = "0";
 
       // display wagon in the panel
-      let infoPanelData = wagon.generatePanelInfoData();
+      let infoPanelData; // = wagon.generatePanelInfoData();
       if(wagon.usedSpace > 0 && wagon.cargo in this.city.resources) {
-        price = this.city.resources[wagon.cargo].Buy
-        infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
+        infoPanelData = this.city.resources[wagon.cargo].generatePanelInfoData();
+        // price = this.city.resources[wagon.cargo].Buy
+        // infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
         infoPanelData.buttons = ["Sell 1", "Sell 5", "Sell 10", "Sell Max"];
       } 
-      else if (wagon.usedSpace > 0 && this.city.accepts.includes(wagon.cargo)) {
-        price = 0
-        infoPanelData.lines.push(`Price: ${price} (${round(100*(price-(wagon.merchandiseValue/wagon.usedSpace))/(wagon.merchandiseValue/wagon.usedSpace))}%)`);
-        infoPanelData.buttons = ["Unload 1", "Unload 10"];
-      } else {
+      else {
+        infoPanelData = wagon.generatePanelInfoData();
         infoPanelData.buttons = [];
       }
       
@@ -379,6 +427,10 @@ class TradeScene {
         else if (buttonText.startsWith("Unload")) {
           let qty = Number(buttonText.split(" ")[1]);
           this.unloadResource(qty);
+        }
+        else if (buttonText.startsWith("Load")) {
+          let qty = Number(buttonText.split(" ")[1]);
+          this.loadResource(qty);
         }
         else if (buttonText.startsWith("Manufacture")) {
           let qty = Number(buttonText.split(" ")[1]);
@@ -491,7 +543,6 @@ class TradeScene {
   show() {
     mainCanvas.background(0);
     mainCanvas.image(this.backgroundImg, 0, 0);
-    
     // for (let building of this.buildings) {
     //   building.show(this.camera.position);
     // }
@@ -500,9 +551,9 @@ class TradeScene {
     this.trafficLight.show(this.camera.position, this.tileHalfSize);
 
     for (let [resourceName, resourceInstance] of Object.entries(this.city.resources)) {
-      if (resourceInstance.isBuyable) {
+      //if (resourceInstance.isBuyable) {
         resourceInstance.show();
-      }
+      //}
     }
 
     for (let wagon of this.buyableWagons) {
@@ -524,5 +575,7 @@ class TradeScene {
 
     this.infoPanel.show();
     this.showConversation();
+
+    
   }
 }

@@ -17,6 +17,7 @@
 
 //let mapFile = "maps/Tutorial.txt";
 let mapImage = "Src/maps/Europe.png";
+let baseImage = "Src/maps/BaseTemplate.png";
 let loadFromLocalStorage = false;
 
 const TILE_WIDTH_HALF_Z1 = 32;
@@ -42,7 +43,7 @@ let tileHalfSizes = {};
 let tileCodes = {};  // contains tile Codes eg: 00: -> water
 let tileImgs = {};   // contains imges referenced by name: eg: Water -> img
 
-
+let arrowImg = {};
 
 let gameData = {
   "mapBoard": null,       // contains the navigation map
@@ -73,6 +74,8 @@ let resources = {};
 
 let wolfImg;
 let wagonsData;
+
+let kar98Img;
 
 let i=0;
 
@@ -132,37 +135,16 @@ let thingsToLoad = {
 
 
 function preload() {
+  kar98Img = loadImage("resources/kar98.png")
 
+  arrowImg.NE = loadImage("resources/ArrowNE.png");
+  arrowImg.SE = loadImage("resources/ArrowSE.png");
   // Sounds
   loadJSON("Src/Sounds.json", jsonData => {
     for (let [name, val] of Object.entries(jsonData)) {
       sounds[name] = loadSound(val.filename);
     }
   });
-
-
-  // UnitsFH (Tank, Artillery and turret)
-  loadJSON("Src/UnitsFH.json", jsonData => {
-    for (let [name, val] of Object.entries(jsonData)) {
-      const spriteSize = createVector(70, 54);
-      gameData.unitsData[name] = {"Human": {"idle": {}}, "Cpu": {"idle": {}}};
-
-      loadImage(val.Human, atlas => {
-        for (let [i, ori] of [270, 225, 180, 135, 90, 45, 0, 315].entries()) {
-          gameData.unitsData[name].Human.idle[ori] = [
-            atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
-          ];
-        }
-      });
-      loadImage(val.Cpu, atlas => {
-        for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
-          gameData.unitsData[name].Cpu.idle[ori] = [
-            atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
-          ];
-        }
-      });
-    }
-  });  
 
   // Explosion
   loadImage("resources/units/x1s.png", atlas => {
@@ -186,14 +168,92 @@ function preload() {
     gameData.mapBoard = processOther(gameData.mapBoard);   
   });
 
+
   // Load resource images
   loadJSON("Src/Resources.json", jsonData => {
-    for (const [name, filename] of Object.entries(jsonData)) {
-      resources[name] = loadImage(filename);
+    for (const [name, data] of Object.entries(jsonData)) {
+      resources[name] = {}
+      resources[name].img = loadImage(data.filename);
+      resources[name].requires = data.requires;
     }
   });
 
+  /* #region UNITS */
+
+  // UnitsFH (Tank, Artillery and turret)
+  loadJSON("Src/UnitsFH.json", jsonData => {
+    for (let [name, val] of Object.entries(jsonData)) {
+      const spriteSize = createVector(70, 54);
+      gameData.unitsData[name] = {"Human": {"Idle": {}}, "Cpu": {"Idle": {}}};
+
+      loadImage(val.Human, atlas => {
+        for (let [i, ori] of [270, 225, 180, 135, 90, 45, 0, 315].entries()) {
+          gameData.unitsData[name].Human.Idle[ori] = [
+            atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
+          ];
+        }
+      });
+      loadImage(val.Cpu, atlas => {
+        for (let [i, ori] of [270,225,180,135,90,45,0,315].entries()) {
+          gameData.unitsData[name].Cpu.Idle[ori] = [
+            atlas.get(i*spriteSize.x,0,spriteSize.x, spriteSize.y)
+          ];
+        }
+      });
+    }
+  });  
+
+  // Soldiers data into gameData.unitsData.soldier
+  // Structure: gameData.unitsData.soldier[soldierId (type)][action][orientation][spriteId]
+  loadImage("resources/units/soldierBlue.png", soldierAtlas => {
+    loadJSON("Src/Units/Soldier.json", jsonData => {
+      const spriteSize = jsonData.spriteSize;
+      const offset = jsonData.offset;
+      gameData.unitsData.Soldier = {"Human": {}, "Cpu": {}};
+      for (const [action, value] of Object.entries(jsonData.actions)) {  // Idle, Move, Attack
+        gameData.unitsData.Soldier.Human[action] = {};
+        gameData.unitsData.Soldier.Cpu[action] = {};
+        for (const [j, ori] of Object.entries(jsonData.orientations)) {
+          gameData.unitsData.Soldier.Human[action][ori] = [];
+          gameData.unitsData.Soldier.Cpu[action][ori] = [];
+          for (let i of value) {
+            let x = spriteSize[0] * i + offset[0];
+            let y = spriteSize[1] * j + offset[1];
+            gameData.unitsData.Soldier.Human[action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+            gameData.unitsData.Soldier.Cpu[action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+          }
+        }
+      }  
+      
+    });
+  });
+
+  loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
+    loadJSON("Src/Units/Wolf.json", jsonData => {
+      const spriteSize = jsonData.spriteSize;
+      const separation = jsonData.separation;
+      // const offset = jsonData.offset;
+      gameData.unitsData.Wolf = {"Human": {}, "Cpu": {}};
+      for (const [action, value] of Object.entries(jsonData.actions)) {
+        gameData.unitsData.Wolf.Human[action] = {};
+        gameData.unitsData.Wolf.Cpu[action] = {};
+        for (const [j, ori] of Object.entries(jsonData.orientations)) {
+          gameData.unitsData.Wolf.Human[action][ori] = [];
+          gameData.unitsData.Wolf.Cpu[action][ori] = [];
+          let offset = jsonData.offsets[str(ori)];
+          for (let i of value) {
+            let x = separation[0]*i+offset[0];
+            let y = offset[1];
+            gameData.unitsData.Wolf.Human[action][ori].push(wolfAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+            gameData.unitsData.Wolf.Cpu[action][ori].push(wolfAtlas.get(x, y, spriteSize[0], spriteSize[1]));
+          }
+        }
+      }
+    });
+  });
+
   // load Wolf
+
   // loadImage("resources/units/Wolf_walk.png", wolfAtlas => {
   //   let spriteSize = [70, 70];
   //   let x = 101
@@ -287,6 +347,37 @@ function preload() {
 
   // });
   
+
+  
+  // Mamooth data into gameData.unitsData.mamooth
+  // Structure: gameData.unitsData.mamooth[action][orientation][spriteId]
+  // loadJSON("Src/Units/Mamooth.json", jsonData => {    
+  //   gameData.unitsData.mamooth = {"move": {}, "idle": {}};
+  //   for (let ori of [0,45,90,135,180,225,270,315]) {
+  //     gameData.unitsData.mamooth.move[ori] = [loadImage(jsonData.move[`${ori}`])];
+  //     gameData.unitsData.mamooth.idle[ori] = gameData.unitsData.mamooth.move[ori];  
+  //   }    
+  // });
+
+  // Load ultralisk
+  // loadImage("resources/units/ultralisk.png", atlasImg => {
+  //   let spriteSize = [101, 108];
+  //   gameData.unitsData.ultralisk = {"move": {}, "attack": {}};
+  //   for (let [col, ori] of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].entries()) {
+  //     gameData.unitsData.ultralisk.move[ori] = [];
+  //     for (let spriteIdx=0; spriteIdx<9;spriteIdx++) {
+  //       let x = spriteSize[0] * col+2;
+  //       let y = spriteSize[1] * spriteIdx +2;
+  //       gameData.unitsData.ultralisk.move[ori].push(atlasImg.get(x,y,spriteSize[0]-4,spriteSize[1]-4))
+  //     }
+  //   }
+  // });
+
+  /* #endregion */
+  
+
+  /* #region CITY, INDUSTRIES, BASES, MINES */
+
   // Cities into gameData.citiesData
   loadJSON("Src/Cities.json", jsonData => {
     gameData.citiesData = jsonData;
@@ -295,6 +386,36 @@ function preload() {
   // Industries into gameData.industriesData
   loadJSON("Src/Industries.json", jsonData => {
     gameData.industriesData = jsonData;
+  });
+  
+  // Industries into industriesInfo
+  loadJSON("Src/IndustriesInfo.json", jsonData => {
+    industriesInfo = {};
+    for (const [industryName, industryData] of Object.entries(jsonData)) {
+      loadImage(`resources/industries/${industryData.file}`, img => {
+        let imgHalf = createImage(img.width/2, img.height/2);
+        let imgQuarter = createImage(img.width/4, img.height/4);
+        imgHalf.copy(img, 0, 0, img.width/2, img.height/2, 0, 0, img.width/2, img.height/2);
+        imgQuarter.copy(img, 0, 0, img.width/4, img.height/4, 0, 0, img.width/4, img.height/4);
+
+        industriesInfo[industryName] = {};
+        industriesInfo[industryName].imgTrade = img;
+        industriesInfo[industryName].imgNav  = imgHalf;
+        industriesInfo[industryName].imgInfo = imgQuarter;
+        industriesInfo[industryName].name = industryData.name;
+        industriesInfo[industryName].offsetNav = industryData.offsetNav;
+        industriesInfo[industryName].offsetTrade = industryData.offsetTrade;
+        industriesInfo[industryName].offsetInfo = industryData.offsetInfo;
+
+        // industriesInfo[industryName].imgTrade = img.get(0,0,img.width,img.height);
+        // industriesInfo[industryName].imgNav  = img.get(0,0,img.width,img.height);
+        // industriesInfo[industryName].imgInfo = img.get(0,0,img.width,img.height);
+        // industriesInfo[industryName].imgNav.resize(img.width/2, 0);
+        // industriesInfo[industryName].imgInfo.resize(img.width/4, 0);
+      });
+    }
+    //Industry.initialize(industriesInfo);
+
   });
 
   // Cities into gameData.citiesData
@@ -307,6 +428,48 @@ function preload() {
     gameData.minesData = jsonData;
   });
 
+  // Cities Locations
+  loadJSON("Src/CitiesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      citiesLocations[key] = val;
+    }
+  });
+
+  // Industry Locations
+  loadJSON("Src/IndustriesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      industriesLocations[key] = val;
+    }
+  });
+
+  // Bases Locations
+  loadJSON("Src/BasesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      basesLocations[key] = val;
+    }
+  });
+
+  // Bridges Locations
+  loadJSON("Src/BridgesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      bridgesLocations[key] = val;
+    }
+  });
+
+  // Bridges into gameData.bridgesData
+  loadJSON("Src/Bridges.json", jsonData => {
+    gameData.bridgesData = jsonData;
+  });
+
+  // Mines Locations
+  loadJSON("Src/MinesLocations.json", jsonData => {
+    for (const [key, val] of Object.entries(jsonData)) {
+      minesLocations[key] = val;
+    }
+  });
+
+  /* #endregion */
+  
   // Load buildingsFH images
   loadJSON("Src/BuildingsFH.json", jsonData => {
     gameData.buildingsFHData = jsonData;
@@ -348,60 +511,7 @@ function preload() {
       }
     }
   });
-
-  // Industries into industriesInfo
-  loadJSON("Src/IndustriesInfo.json", jsonData => {
-    industriesInfo = jsonData;
-    for (const [key, val] of Object.entries(jsonData)) {
-      loadImage(`resources/industries/${val.file}`, img => {
-        industriesInfo[key].imgTrade = img.get(0,0,img.width,img.height);
-        industriesInfo[key].imgNav  = img.get(0,0,img.width,img.height);
-        industriesInfo[key].imgInfo = img.get(0,0,img.width,img.height);
-        industriesInfo[key].imgNav.resize(img.width/2, 0);
-        industriesInfo[key].imgInfo.resize(img.width/4, 0);
-      });
-    }
-  });
-
-  // Bridges into gameData.bridgesData
-  loadJSON("Src/Bridges.json", jsonData => {
-    gameData.bridgesData = jsonData;
-  });
-
-  // Industry Locations
-  loadJSON("Src/IndustriesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      industriesLocations[key] = val;
-    }
-  });
-
-  // Cities Locations
-  loadJSON("Src/CitiesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      citiesLocations[key] = val;
-    }
-  });
-
-  // Bases Locations
-  loadJSON("Src/BasesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      basesLocations[key] = val;
-    }
-  });
-
-  // Bridges Locations
-  loadJSON("Src/BridgesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      bridgesLocations[key] = val;
-    }
-  });
-
-  // Mines Locations
-  loadJSON("Src/MinesLocations.json", jsonData => {
-    for (const [key, val] of Object.entries(jsonData)) {
-      minesLocations[key] = val;
-    }
-  });
+ 
   
   // City template map into gameData.cityBoard
   loadStrings("Src/maps/cityTemplate.txt", mapData => {
@@ -456,53 +566,9 @@ function preload() {
   });
 
 
-  // Mamooth data into gameData.unitsData.mamooth
-  // Structure: gameData.unitsData.mamooth[action][orientation][spriteId]
-  // loadJSON("Src/Units/Mamooth.json", jsonData => {    
-  //   gameData.unitsData.mamooth = {"move": {}, "idle": {}};
-  //   for (let ori of [0,45,90,135,180,225,270,315]) {
-  //     gameData.unitsData.mamooth.move[ori] = [loadImage(jsonData.move[`${ori}`])];
-  //     gameData.unitsData.mamooth.idle[ori] = gameData.unitsData.mamooth.move[ori];  
-  //   }    
-  // });
 
-  // Load ultralisk
-  // loadImage("resources/units/ultralisk.png", atlasImg => {
-  //   let spriteSize = [101, 108];
-  //   gameData.unitsData.ultralisk = {"move": {}, "attack": {}};
-  //   for (let [col, ori] of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].entries()) {
-  //     gameData.unitsData.ultralisk.move[ori] = [];
-  //     for (let spriteIdx=0; spriteIdx<9;spriteIdx++) {
-  //       let x = spriteSize[0] * col+2;
-  //       let y = spriteSize[1] * spriteIdx +2;
-  //       gameData.unitsData.ultralisk.move[ori].push(atlasImg.get(x,y,spriteSize[0]-4,spriteSize[1]-4))
-  //     }
-  //   }
-  // });
 
-  // Soldiers data into gameData.unitsData.soldier
-  // Structure: gameData.unitsData.soldier[soldierId (type)][action][orientation][spriteId]
-  // loadImage("resources/units/soldierBlue.png", soldierAtlas => {
-  //   loadJSON("Src/Units/Soldier.json", jsonData => {
-  //     const spriteSize = jsonData.spriteSize;
-  //     const offset = jsonData.offset;
-  //     gameData.unitsData.soldier = [];
-  //     for (let soldierId=0; soldierId<1; soldierId++) {
-  //       gameData.unitsData.soldier.push({});
-  //       for (const [action, value] of Object.entries(jsonData.actions)) {
-  //         gameData.unitsData.soldier[soldierId][action] = {};
-  //         for (const [j, ori] of Object.entries(jsonData.orientations)) {
-  //           gameData.unitsData.soldier[soldierId][action][ori] = [];
-  //           for (let i of value) {
-  //             let x = spriteSize[0] * i + offset[0];
-  //             let y = spriteSize[1] * j + offset[1];
-  //             gameData.unitsData.soldier[soldierId][action][ori].push(soldierAtlas.get(x, y, spriteSize[0], spriteSize[1]));
-  //           }
-  //         }
-  //       }  
-  //     }
-  //   });
-  // });
+
 
   // loadImage("resources/units/soldierRed.png", soldierAtlas => {
   //   loadJSON("Src/Units/Soldier.json", jsonData => {
@@ -567,7 +633,7 @@ function preload() {
       }
     }
   });
-  
+
   // Wagons into wagonsData
   loadJSON("Src/Wagons.json", jsonData => {
     wagonsData = jsonData;
@@ -593,6 +659,7 @@ function preload() {
     }
   });
 
+  
   // // Transarctica pixel font
   // loadImage("resources/font.png", img => {
   //   let alphabet = ' abcdefghijklmnopqrstuvwxyz0123456789'.split('');
@@ -647,6 +714,8 @@ function setup() {
 }
 
 function draw() { 
+  
+  // showSoldiersWalk("Wolf")
   game.update();
   
   image(mainCanvas, 0, 0);

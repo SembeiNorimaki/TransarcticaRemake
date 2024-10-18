@@ -16,6 +16,32 @@ class UnitFH {
     E: 0,
     NE: 45
   }
+  static AngleToOrientation(angleDegrees) {
+    let orientation = UnitFH.Orientations.N;
+    if (angleDegrees >= 0 && angleDegrees < 22.5) {
+      orientation = UnitFH.Orientations.E;
+    } else if (angleDegrees >= 22.5 && angleDegrees < 67.5) {
+      orientation = UnitFH.Orientations.SE;
+    } else if (angleDegrees >= 67.5 && angleDegrees < 112.5) {
+      orientation = UnitFH.Orientations.S;
+    } else if (angleDegrees >= 112.5 && angleDegrees < 157.5) {
+      orientation = UnitFH.Orientations.SW;
+    } else if (angleDegrees >= 157.5 && angleDegrees <= 180) {
+      orientation = UnitFH.Orientations.W;
+    } else if (angleDegrees < 0 && angleDegrees > -22.5) {
+      orientation = UnitFH.Orientations.E;
+    } else if (angleDegrees <= -22.5 && angleDegrees > -67.5) {
+      orientation = UnitFH.Orientations.NE;
+    } else if (angleDegrees <= -67.5 && angleDegrees > -112.5) {
+      orientation = UnitFH.Orientations.N;
+    } else if (angleDegrees <= -112.5 && angleDegrees > -157.5) {
+      orientation = UnitFH.Orientations.NW;
+    } else if (angleDegrees <= -157.5 && angleDegrees >= -180) {
+      orientation = UnitFH.Orientations.W;
+    }
+    return orientation;
+
+  }
 
   constructor(name, position, owner) {
     this.id = null;
@@ -61,9 +87,9 @@ class UnitFH {
     
     let spriteData = {
       "imgs": null,
-      "actions": ["idle"],
-      "nSprites": {"idle": 1},
-      "spriteDuration": {"idle": 100}
+      "actions": ["Idle"],
+      "nSprites": {"Idle": 1},
+      "spriteDuration": {"Idle": 100}
     }
     if (this.owner == Game.Players.Human) {
       spriteData.imgs = gameData.unitsData[this.name].Human;
@@ -71,7 +97,7 @@ class UnitFH {
       spriteData.imgs = gameData.unitsData[this.name].Cpu;
     }
 
-    this.sprite = new Sprite("idle", this.orientation, spriteData);
+    this.sprite = new Sprite(UnitFH.Actions.Idle, this.orientation, spriteData);
     this.offset = createVector(0,5);
     this.destination = null;
 
@@ -89,6 +115,29 @@ class UnitFH {
     return data;
   }
 
+  generateViewTiles() {
+    let points =[
+      [3, 4], [4, -3], [4, 3], [-5, 0], [5, -2], [5, -1], [5, 1], [0, 5], [2, -4], [2, 5], [-4, -2], 
+      [-4, 4], [-2, -5], [-1, -5], [-2, 4], [4, -4], [4, 2], [-5, 2], [5, 0], [-3, -4], [0, -5], 
+      [2, -5], [2, 4], [1, 5], [-4, -3], [-2, 5], [-4, 3], [4, -2], [3, -4], [-5, -1], [-5, -2], 
+      [5, 2], [4, 4], [-5, 1], [-3, 4], [1, -5], [-4, -4], [-4, 2], [-2, -4], [-1, 5]
+    ];
+
+    let viewTiles = []
+    for (let point of points) {
+      let tilePos = createVector(this.tilePosition.x + point[0], this.tilePosition.y + point[1]);
+      viewTiles.push(tilePos);
+    }
+    return viewTiles;
+
+  }
+
+  lookAt(targetPosition) {
+    let delta = p5.Vector.sub(targetPosition, this.position);
+    let angle = degrees(atan2(delta.y, delta.x));
+    let orientation = UnitFH.AngleToOrientation(angle);
+    this.setOrientation(orientation);    
+  }
 
   setPosition(position) {
     this.position = createVector(position.x, position.y);
@@ -104,6 +153,7 @@ class UnitFH {
     this.sprite.setOrientation(newOrientation);
   }
 
+  //Migrated
   setAction(action) {
     this.action = action;
     if (action == UnitFH.Actions.Move) {
@@ -111,6 +161,7 @@ class UnitFH {
     }
   }
   
+  //Migrated
   setPath(path) {
     this.path = path;
     if (this.path.length > 0) {
@@ -150,6 +201,7 @@ class UnitFH {
     return prob;
   }
 
+  // Migrated
   receiveDamage(val) {
     this.currentHp -= val;
     if (this.currentHp <= 0) {
@@ -159,6 +211,7 @@ class UnitFH {
     }
   }
 
+  //Migrated
   shoot(targetPos) {
     if (this.attackCost > this.currentAp) {
       return false;
@@ -183,6 +236,7 @@ class UnitFH {
     return true;
   }
 
+  //Migrated
   showPath(cameraPosition) {
     let ori, dst;    
     if (this.path.length > 0) {
@@ -198,6 +252,7 @@ class UnitFH {
     }
   }
 
+  //Migrated
   setDestination(destination) {
     this.destination = destination;
     if (destination === null) {
@@ -401,6 +456,7 @@ class UnitFH {
 
   // }
 
+  //Migrated
   showRangeCircle(screenPos) {
     // let aux1, aux2;
     // if (this.orientation === UnitFH.Orientations.SE) {
@@ -443,7 +499,8 @@ class UnitFH {
     mainCanvas.rect(screenPos.x-20, screenPos.y+25, 50*this.currentAp/this.maxAp,5);    
     mainCanvas.pop();
   }
-  
+
+  //Migrated
   showHud() {
     let currentX = 100;
     hudCanvas.background(100)

@@ -21,14 +21,14 @@
 class Resource {
   constructor(name, info) {
     this.resourceName = name;
-    this.img = resources[this.resourceName];
+    console.log(this.resourceName)
+    this.img = resources[this.resourceName].img;
     this.qtyAvailable = info.Available;
     this.production = info.Production;
     this.sellPrice = info.Sell;
     this.buyPrice = info.Buy;
-    this.productionRequirements = {
-      "Clay": 10
-    }
+    this.inputOrOutput = info.InputOrOutput;
+    this.requires = resources[this.resourceName].requires;
     this.screenPosition = createVector(0, 0);
     // this.infoPanelData = {
     //   "title": this.resourceName,
@@ -43,7 +43,7 @@ class Resource {
     this.isBuyable = this.sellPrice > 0; 
     // Manufactured resources are not bought, but manufactured in industries from other resources
     // TODO: Set this from configuration. 
-    this.isManufactured = true;
+    this.manufacturedOrSold = info.ManufacturedOrSold;
   } 
 
   generatePanelInfoData() {
@@ -55,18 +55,22 @@ class Resource {
     };
 
     // if the resource is manufactured, show the price and available quantity
-    if (this.isManufactured) {
-      data.buttons = ["Manufacture 1", "Manufacture 5", "Manufacture 10", "Manufacture Max"];
+    if (this.manufacturedOrSold == "Manufactured" && this.inputOrOutput == "Output") {
+      data.buttons = ["Manufacture 1", "Manufacture Max", "Load 1", "Load Max"];
       data.lines.push("Manufacturing 1 unit requires:");
-      for (let [resourceName, qty] of Object.entries(this.productionRequirements)) {
+      for (let [resourceName, qty] of Object.entries(this.requires)) {
         data.lines.push(`  ${resourceName}: ${qty}`);
       }
     } 
     // if the resource is sold, show the price and available quantity
-    else {  
+    else if (this.manufacturedOrSold == "Sold" && this.inputOrOutput == "Output"){  
       data.buttons = ["Buy 1", "Buy 5", "Buy 10", "Buy Max"];
       data.lines.push(`Unit Price: ${this.sellPrice} baks`);
       data.lines.push(`Available: ${this.qtyAvailable}`);        
+    } else if (this.manufacturedOrSold == "Manufactured" && this.inputOrOutput == "Input"){  
+      data.buttons = ["Unload 1", "Unload 5", "Unload 10", "Unload Max"];
+    } else if (this.manufacturedOrSold == "Sold" && this.inputOrOutput == "Input"){  
+      data.buttons = ["Sell 1", "Sell 5", "Sell 10", "Sell Max"];
     }
 
     return data;
@@ -85,17 +89,17 @@ class Resource {
 
   checkClick(mousePos) {
     return (
-      mousePos.x > this.screenPosition.x  &&
-      mousePos.x < this.screenPosition.x + 100 &&
-      mousePos.y > this.screenPosition.y &&
-      mousePos.y < this.screenPosition.y + 40
+      mousePos.x > this.screenPosition.x  - this.img.width/2 &&
+      mousePos.x < this.screenPosition.x + this.img.width/2 &&
+      mousePos.y > this.screenPosition.y - this.img.height/2 &&
+      mousePos.y < this.screenPosition.y + this.img.height/2
     );
   }
 
   show() {
-    // mainCanvas.rect(this.position.x, this.position.y, this.img.width, this.img.height)
-    mainCanvas.image(this.img, this.screenPosition.x, this.screenPosition.y);
-    // mainCanvas.circle(this.position.x, this.position.y, 5)
-    mainCanvas.text(`${this.qtyAvailable}`, this.screenPosition.x+120, this.screenPosition.y+43);
+    // mainCanvas.rect(this.screenPosition.x, this.screenPosition.y, this.img.width, this.img.height)
+    mainCanvas.image(this.img, this.screenPosition.x-this.img.width/2, this.screenPosition.y-this.img.height/2);
+    mainCanvas.circle(this.screenPosition.x, this.screenPosition.y, 5)
+    mainCanvas.text(`${this.qtyAvailable}`, this.screenPosition.x+30, this.screenPosition.y+30);
   }
 }

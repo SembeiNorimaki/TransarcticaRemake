@@ -3,8 +3,8 @@
   "spriteSize": [32, 52],
   "offset": [16, 8],
   "actions": {
-    "idle" : [6],
-    "walk" : [0, 1, 2, 3, 4, 5],
-    "shoot" : [6, 7]
+    "Idle" : [6],
+    "Move" : [0, 1, 2, 3, 4, 5],
+    "Attack" : [6, 7]
   }
 }

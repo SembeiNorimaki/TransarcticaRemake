@@ -15,19 +15,41 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class Industry {
+
+  static Data = {};  // Basically contains name, imgs and imgOffsets
+
+  static initialize(data) {
+    for (let [industryName, industryData] of Object.entries(data)) {
+      Industry.Data[industryName] = industryData;
+    }
+  }
+
+  // industryData contains:
+  // name, industryType, produces, requires, resources, wagons
   constructor(industryData) {
     this.name = industryData.name;
     this.industryType = industryData.industryType;
     this.tileHalfSize = tileHalfSizes.Z2;
     
     this.resources = {};
-    this.resourceLocations = [
-      createVector(12, 3),
-      createVector(12, 1),
-      createVector(12, -1),
-      createVector(12, -3),
+    
+    this.inputResourceLocations = [
+      createVector(12, 5),
+      createVector(10, 5),
+      createVector(8, 5),
+      createVector(6, 5),
     ];
+
+    this.resourceLocations = [
+      createVector(15, 3),
+      createVector(15, 1),
+      createVector(15, -1),
+      createVector(15, -3),
+    ];
+
+
     this.resourceLocationIdx = 0;
+    this.inputResourceLocationIdx = 0;
 
     this.accepts = [];
 
@@ -53,18 +75,19 @@ class Industry {
     }    
 
     this.buildings = [];
-    this.buildings.push(new BuildingFH(this.buildings.length, this.industryType, createVector(11,5)));
-    this.buildings.at(-1).setImage(industriesInfo[this.industryType].imgTrade, this.offsetTrade = industriesInfo[this.industryType].offsetTrade);
+    this.buildings.push(new BuildingFH(this.buildings.length, this.industryType, createVector(13,3)));   // was 11,5
+    
+    //this.buildings.at(-1).setImage(Industry.Data[this.industryType].imgTrade);
 
-    this.imgTrade = industriesInfo[this.industryType].imgTrade;
-    this.imgNav = industriesInfo[this.industryType].imgNav;
+    this.imgTrade = Industry.Data[this.industryType].imgTrade;
+    this.imgNav = Industry.Data[this.industryType].imgNav;
 
-    this.offsetTrade = industriesInfo[this.industryType].offsetTrade;
-    this.offsetNav = industriesInfo[this.industryType].offsetNav;
+    this.offsetTrade = Industry.Data[this.industryType].offsetTrade;
+    this.offsetNav = Industry.Data[this.industryType].offsetNav;
 
     this.panelInfo = {
       "title": this.name,
-      "image": industriesInfo[this.industryType].imgInfo,
+      "image": Industry.Data[this.industryType].imgInfo,
       "lines": [
         `Produces: ${this.resourceName}`, 
         "Requires: ", 
@@ -82,17 +105,37 @@ class Industry {
 
   addNewResource(resourceData) {
     this.resources[resourceData.Name] = new Resource(resourceData.Name, resourceData);
-    if (this.resources[resourceData.Name].isBuyable) {
-      // Assign the resource a position
+    if (resourceData.InputOrOutput == "Output") {
       this.resources[resourceData.Name].setPosition(Geometry.boardToScreen(this.resourceLocations[this.resourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
       this.resourceLocationIdx++;
-      console.log(this.resourceLocationIdx)
+    } else if (resourceData.InputOrOutput == "Input") {
+      this.resources[resourceData.Name].setPosition(Geometry.boardToScreen(this.inputResourceLocations[this.inputResourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
+      this.inputResourceLocationIdx++;
+    } else {
+      this.resources[resourceData.Name].setPosition(createVector(5000,5000));
     }
 
     
     for (let [dummy, resourceData] of Object.entries(this.produces)) {
       for (let [requiredResourceName, requiredResourceQty] of Object.entries(resourceData.require)) {
-        this.accepts.push(requiredResourceName);
+        if (requiredResourceName in this.resources) {
+          continue;
+        }
+        let resourceData = {
+          "Name": requiredResourceName,
+          "Available": 0,
+          "Production": 0,
+          "InputOrOutput": "Input",
+          "ManufacturedOrSold": "Manufactured",
+          "Buy": 0,
+          "Sell": 0
+        }
+
+        this.resources[requiredResourceName] = new Resource(requiredResourceName, resourceData);
+        this.resources[requiredResourceName].setPosition(Geometry.boardToScreen(this.inputResourceLocations[this.inputResourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
+        this.inputResourceLocationIdx++;
+
+        // this.accepts.push(requiredResourceName);
       }
     }
       
@@ -112,6 +155,8 @@ class Industry {
   initialize(savedData) {
     for (let [resourceName, resourceData] of Object.entries(savedData.resources)) {
       resourceData.Name = resourceName;
+      resourceData.InputOrOutput = "Output";
+      resourceData.ManufacturedOrSold = "Manufactured";
       this.addNewResource(resourceData);
     }
   }

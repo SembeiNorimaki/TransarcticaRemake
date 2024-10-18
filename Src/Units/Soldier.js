@@ -57,11 +57,13 @@ class Soldier extends Unit {
     }
   }
 
+  // Migrated
   setOrientation(ori) {
     this.orientation = ori;
     this.sprite.setOrientation(ori);
   }
 
+  //Migrated
   setRole(roleData) {
     this.role = roleData.role;
     this.soldierAI.setRole(roleData);
@@ -91,7 +93,7 @@ class Soldier extends Unit {
     }
     this.path = [firstPoint, secondPoint, dst.copy()];
   }
-
+  //Migrated
   setTargetPosition(destination) {
     this.calculatePath(this.position, destination);
     this.direction = p5.Vector.sub(this.path[0], this.position).normalize().mult(this.walkSpeed);
@@ -115,7 +117,7 @@ class Soldier extends Unit {
   inAttackRange(targetPosition) {
     return p5.Vector.dist(targetPosition, this.position) <= this.attackRange;
   }
-
+  //Migrated
   setAction(action) {
     if (this.action == action) {
       return;
@@ -135,6 +137,7 @@ class Soldier extends Unit {
     }
   }
 
+  //Migrated
   checkClick(mousePos) {
     let screenPos = Geometry.boardToScreen(this.position, game.currentScene.camera.position, game.currentScene.tileHalfSize);
     return (
@@ -226,6 +229,7 @@ class Soldier extends Unit {
     this.targetUnit = unit;
   }
 
+  // Migrated
   receiveDamage(amount) {
     this.hp -= amount;
     if (this.hp <= 0) {
@@ -237,6 +241,7 @@ class Soldier extends Unit {
     targetUnit.receiveDamage(1);
   }
 
+  // Migrated
   showHud() {
     hudCanvas.background(100);
     hudCanvas.image(gameData.unitsData.soldier[this.soldierType].idle[270][0], 60, 25, 32, 54);
@@ -257,7 +262,7 @@ class Soldier extends Unit {
     //console.log(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation], this.spriteIdx)
     //mainCanvas.image(gameData.unitsData.soldier[this.soldierType][this.action][this.orientation][this.spriteIdx], this.position.x-12, this.position.y-22, 32, 54)
     
-    let screenPosition = Geometry.boardToScreen(this.position, cameraPos, tileHalfSize);
+    let screenPosition = Geometry.boardToScreen(this.position, cameraPos, game.currentScene.tileHalfSize);
     
     this.sprite.show(screenPosition);
     mainCanvas.circle(screenPosition.x, screenPosition.y, 10);

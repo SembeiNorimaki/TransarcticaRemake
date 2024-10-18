@@ -355,8 +355,8 @@
       "resources/tr_wagons/27_zi4.png"
     ],
     "name": "Wood Wagon",
-    "dimensions": [136, 68],
-    "offset": [[0,42], [0,42], [0,42]],
+    "dimensions": [80, 68],
+    "offset": [[80,54], [80,60], [80,60]],
     
     "cargo": "Wood Wagon",
     "units": "tons",

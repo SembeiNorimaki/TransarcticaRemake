@@ -21,12 +21,6 @@
     "Saddle_WE": {"filename": "resources/terrain/Saddle_WE.png" }, 
     "Saddle_NS": {"filename": "resources/terrain/Saddle_NS.png" }, 
 
-    "BlackSmall": {"filename": "resources/terrain/Black_small.png"},
-    "WaterSmall": {"filename": "resources/terrain/Water_small.png"},
-    "GroundSmall": {"filename": "resources/terrain/Ground_small.png"},
-    "ForestSmall": {"filename": "resources/terrain/Forest_small.png"},
-
-
     "Rail_AD":   {"filename": "resources/tracks/Rail_AD.png"    }, 
     "Rail_BC":   {"filename": "resources/tracks/Rail_BC.png"    },
     "Rail_AB":   {"filename": "resources/tracks/Rail_AB.png"    },
@@ -70,6 +64,9 @@
     "Rock1": {"filename": "resources/rock1.png"      },
     "Rock2": {"filename": "resources/rock2.png"      },
     "Rock3": {"filename": "resources/rock3.png"      },
+
+
+
 
     "Road_AD":  {"filename": "resources/roadsFH/Road_AD.png"},
     "Road_BC":  {"filename": "resources/roadsFH/Road_BC.png"},
@@ -130,7 +127,6 @@
     "Turret": {"filename": "resources/walls/turret.png"},
     "Tank": {"filename": "resources/walls/tank.png"},
     "Artillery": {"filename": "resources/walls/artillery.png"},
-
     "Ground7035": {"filename": "resources/terrain/Ground_small.png"},
     "Water7035": {"filename": "resources/terrain/Stone_small.png"},
 
@@ -177,13 +173,6 @@
     "0x1D": {"imgName": "Valley_S"   ,  "offset": [0,  -16]},
     "0x1E": {"imgName": "Saddle_WE"  ,  "offset": [0,   0]},
     "0x1F": {"imgName": "Saddle_NS"  ,  "offset": [0,   0]},
-
-    "0x20": {"imgName": "BlackSmall"      ,  "offset": [0, 0]},
-    "0x21": {"imgName": "WaterSmall"      ,  "offset": [0, 0]},
-    "0x22": {"imgName": "GroundSmall"      , "offset": [0, 0]},
-    "0x23": {"imgName": "ForestSmall"      , "offset": [0, -19]},
-
-
 
     "0x30": {"imgName": "Rail_AD"  , "offset": [0, 0]},
     "0x31": {"imgName": "Rail_BC"  , "offset": [0, 0]},

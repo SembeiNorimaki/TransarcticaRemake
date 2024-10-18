@@ -83,5 +83,7 @@ class Hud {
 
     
     hudCanvas.text(`${game.gameTime.getDay()} ${this.months[game.gameTime.getMonth()-1]} ${game.gameTime.getFullYear()} ${game.gameTime.getHours()}h`,600,30)    
+
+    hudCanvas.image(kar98Img, 500,30)
   }
 }

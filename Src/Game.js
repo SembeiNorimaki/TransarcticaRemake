@@ -70,7 +70,7 @@ class Game {
       "PlayerTrain": {
         coal: 1000,
         gold: 1500,
-        position: createVector(139, 401),
+        position: createVector(121, 452),
         orientation: 270,
         wagons: [
           {"name": "Locomotive"},
@@ -81,6 +81,8 @@ class Game {
           // {"name": "Machinegun"},
           {"name": "Vehicle Wagon", "vehicles": [null, null, null, null, null]},
           {"name": "Merchandise", "content": {"resourceName": "Rails", "qty": 7}},
+          {"name": "Merchandise"},
+          {"name": "Wood Wagon"},
           // {"name": "Merchandise", "content": {"resourceName": "Mamooth Dung", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Missiles", "qty": 7}},
           // {"name": "Merchandise", "content": {"resourceName": "Antiques", "qty": 7}},
@@ -172,6 +174,9 @@ class Game {
   }
 
   initializeIndustries() {
+
+    Industry.initialize(industriesInfo);
+
     for (let [name, value] of Object.entries(gameData.industriesData)) {
       this.industries[name] = new Industry(value);
       this.savedData.Industries[name] = value;
@@ -191,8 +196,7 @@ class Game {
           `${this.industries[name].industryType}_nav`, 
           createVector(x, y)
         )
-      );
-      
+      );      
     }
   }
 
@@ -240,6 +244,9 @@ class Game {
   }
 
   initialize() {
+
+    BuildingFH.initialize(gameData.buildingsFHData);
+
     this.initializeCities();
     this.initializeIndustries();
     this.initializeBases();
@@ -254,12 +261,14 @@ class Game {
     this.currentScene = this.navigationScene;
     // this.currentScene = new CombatScene(this.playerTrain, this.enemyTrain);
     // this.currentScene = new BaseScene(this.bases["BarcelonaBase"]);
-    this.currentScene = new BaseCombat(this.bases["MadridBase"]);
+    // this.currentScene = new NewCombat(this.bases["BarcelonaBase"]);
+    this.currentScene = new BaseCombat(this.bases["BarcelonaBase"]);
     
     // this.currentScene = new TradeScene(this.industries["Madrid_Mine"]);
+    // this.currentScene = new NewCombat();
    
     // this.currentScene = new TradeScene(this.cities["Alexandria"]);
-    // this.currentScene = new TradeScene(this.cities["Granada"]);
+    // this.currentScene = new TradeScene(this.cities["Barcelona"]);
 
     // this.currentScene = new TradeScene(this.cities["Ruhr"]);
   

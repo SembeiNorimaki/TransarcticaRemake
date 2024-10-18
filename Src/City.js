@@ -33,30 +33,38 @@ class City {
     }  
 
     this.buildings = [];
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,5)));
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,2)));
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,-1)));
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,5)));
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,2)));
-    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,-1)));    
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(13,3)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(13,0)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(13,-3)));
+
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,3)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,0)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(10,-3)));    
+
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,3)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,0)));
+    this.buildings.push(new BuildingFH(this.buildings.length, "House2", createVector(7,-3)));    
 
     this.resources = {};   //  {resourceName: resourceInstance}
     this.resourceLocations = [
-      createVector(12, 3),
-      createVector(12, 1),
-      createVector(12, -1),
-      createVector(12, -3),
-      createVector(12, -5),
-      createVector(12, -7),
-      createVector(12, -9),
-      createVector(12, -11),
-      createVector(12, -13),
-      createVector(12, -15),
-      createVector(12, -17),
-      createVector(12, -19),
-      createVector(12, -21),
-      createVector(12, -23),
-      createVector(12, -25),
+      createVector(15,  3),
+      createVector(15,  1),
+      createVector(15, -1),
+      createVector(15, -3),
+
+      createVector(16,  2),
+      createVector(16,  0),
+      createVector(16, -2),
+      
+      createVector(17,  3),
+      createVector(17,  1),
+      createVector(17, -1),
+      createVector(17, -3),
+
+      createVector(18,  2),
+      createVector(18,  0),
+      createVector(18, -2),
+      
     ];
 
     this.resourceLocationIdx = 0;
@@ -65,10 +73,15 @@ class City {
 
   addNewResource(resourceData) {
     this.resources[resourceData.Name] = new Resource(resourceData.Name, resourceData);
-    if (this.resources[resourceData.Name].isBuyable) {
-      // Assign the resource a position
+    if (resourceData.InputOrOutput == "Output" && resourceData.Sell > 0) {
+      console.log(this.resourceLocationIdx)
       this.resources[resourceData.Name].setPosition(Geometry.boardToScreen(this.resourceLocations[this.resourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
       this.resourceLocationIdx++;
+    } else if (resourceData.InputOrOutput == "Input") {
+      this.resources[resourceData.Name].setPosition(Geometry.boardToScreen(this.inputResourceLocations[this.inputResourceLocationIdx], createVector(mainCanvasDim[0]/2, mainCanvasDim[1]/2), this.tileHalfSize));
+      this.inputResourceLocationIdx++;
+    } else {
+      this.resources[resourceData.Name].setPosition(createVector(5000,5000));
     }
   }
   editResource(resourceData) {
@@ -85,6 +98,8 @@ class City {
   initialize(savedData) {
     for (let [resourceName, resourceData] of Object.entries(savedData.resources)) {
       resourceData.Name = resourceName;
+      resourceData.InputOrOutput = "Output";
+      resourceData.ManufacturedOrSold = "Sold";
       this.addNewResource(resourceData);
     }
   }

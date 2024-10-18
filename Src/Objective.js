@@ -27,8 +27,8 @@ class Objective {
       "characterName": "Trader",
       "textLines": this.summary,
       "buttons": {
-        "Accept": {"text": "Accept", "row": 0, "color": "green"},
-        "Reject": {"text": "Reject", "row": 1, "color": "red"},
+        "Accept": {id: "Accept", "text": "Accept", "row": 0, "color": "green"},
+        "Reject": {id: "Reject", "text": "Reject", "row": 1, "color": "red"},
       }
     }
   }

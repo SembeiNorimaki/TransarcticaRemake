@@ -52,7 +52,7 @@ class Sprite {
     this.#orientation = orientation;
     this.#spriteIdx = 0;
     this.#frameCount = 0;
-    this.#currentImg = this.#imgs[this.#currentAction][this.#orientation][this.#spriteIdx];
+    this.#currentImg = this.#imgs[Unit.Actions[this.#currentAction]][this.#orientation][this.#spriteIdx];
   }
 
   setOrientation(ori) {
@@ -65,10 +65,10 @@ class Sprite {
   }
 
   getHudImg() {
-    return this.#imgs["idle"][270][0]
+    return this.#imgs.Idle[270][0]
   }
   getHorizontalImg() {
-    return this.#imgs["idle"][45][0]
+    return this.#imgs.Idle[45][0]
   }
   setAction(action) {
     if (action == this.#currentAction) {
@@ -92,15 +92,15 @@ class Sprite {
 
   update() {
     this.#frameCount++;
-    if (this.#frameCount == this.#frameDuration[this.#currentAction]) {
+    if (this.#frameCount == this.#frameDuration[Unit.Actions[this.#currentAction]]) {
       this.#frameCount = 0;
       this.#spriteIdx++;
-      if (this.#spriteIdx == this.#nSprites[this.#currentAction]) {
+      if (this.#spriteIdx == this.#nSprites[Unit.Actions[this.#currentAction]]) {
         this.#spriteIdx = 0;
       }
     }
     try {
-      this.#currentImg = this.#imgs[this.#currentAction][this.#orientation][this.#spriteIdx];
+      this.#currentImg = this.#imgs[Unit.Actions[this.#currentAction]][this.#orientation][this.#spriteIdx];
     }catch{
       console.log("aaa")
     }
@@ -115,6 +115,6 @@ class Sprite {
     //   screenPos.x, 
     //   screenPos.y
     // );
-    // mainCanvas.circle(screenPos.x, screenPos.y, 10);
+    mainCanvas.circle(screenPos.x, screenPos.y, 5);
   }
 }
